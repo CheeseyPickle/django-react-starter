@@ -7,7 +7,7 @@ const HeatMap = ({ heatMapImage }) => {
 
   const heatmapLayout = {
     autosize: true,
-    margin: { l: 50, r: 20, b: 40, t: 20 },
+    margin: { l: 50, r: 0, b: 25, t: 25 },
     xaxis: {
       title: { text: 'Longitude' },
       automargin: true,
@@ -18,7 +18,7 @@ const HeatMap = ({ heatMapImage }) => {
       title: { text: 'Latitude' },
       automargin: true,
       scaleanchor: "x",
-      scaleratio: 2,
+      scaleratio: 4,
       showgrid: false
     },
     coloraxis: {
@@ -48,14 +48,13 @@ const HeatMap = ({ heatMapImage }) => {
   return (
     <div className="heat_map">
       {heatMapImage && Object.keys(heatMapImage).length > 0 ? (
-        <div className="hm_plot">
           <Plot
             className="hm_plotly"
             data={heatMapImage.data}
             layout={heatmapLayout}
             frames={heatMapImage.frames}
-            config={heatmapConfig} />
-        </div>
+            config={heatmapConfig} 
+            style={{ width: "100%", height: "100%" }}/>
       ) : (
         <div className="hm_plot">
           No Heat Map Data
