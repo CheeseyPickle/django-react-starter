@@ -18,7 +18,7 @@ const HeatMap = ({ heatMapImage }) => {
       title: { text: 'Latitude' },
       automargin: true,
       scaleanchor: "x",
-      scaleratio: 1,
+      scaleratio: 2,
       showgrid: false
     },
     coloraxis: {
@@ -47,8 +47,6 @@ const HeatMap = ({ heatMapImage }) => {
 
   return (
     <div className="heat_map">
-      <div className="hm_inputs">
-      </div>
       {heatMapImage && Object.keys(heatMapImage).length > 0 ? (
         <div className="hm_plot">
           <Plot
