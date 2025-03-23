@@ -36,8 +36,6 @@ const TimeSeries = ({ timeSeriesImage }) => {
   // TODO: Add warning if temporal res is less than date start/end differences
   return (
     <div className="time_series">
-      <div className="ts_inputs">
-      </div>
       {timeSeriesImage && Object.keys(timeSeriesImage).length > 0 ? (
         <div className='ts_plot'>
           <Plot

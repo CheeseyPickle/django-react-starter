@@ -10,14 +10,6 @@
   flex-basis: auto;
 }
 
-.ts_inputs {
-  height: 60%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-grow: 1;
-}
-
 .ts_plot {
   text-align: center;
   flex-grow: 6;

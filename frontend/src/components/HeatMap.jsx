@@ -7,7 +7,7 @@ const HeatMap = ({ heatMapImage }) => {
 
   const heatmapLayout = {
     autosize: true,
-    margin: { l: 50, r: 0, b: 25, t: 25 },
+    margin: { l: 0, r: 0, b: 25, t: 25 },
     xaxis: {
       title: { text: 'Longitude' },
       automargin: true,
@@ -22,11 +22,10 @@ const HeatMap = ({ heatMapImage }) => {
       showgrid: false
     },
     coloraxis: {
-      colorscale: 'RdBu',
+      colorscale: 'YlOrRd',
       colorbar: {
         title: 'Temperature (°K)',
         ticksuffix: '°K',
-        outlinewidth: 1
       }
     },
     hovermode: 'closest',
@@ -37,12 +36,12 @@ const HeatMap = ({ heatMapImage }) => {
     displayModeBar: true,
     responsive: true,
     displaylogo: false,
-    scrollZoom: true,
+    scrollZoom: false,
     toImageButtonOptions: {
       format: 'png',
       filename: 'heatmap_image'
     },
-    modeBarButtonsToRemove: ['zoomOut2d', 'zoomIn2d'],
+    modeBarButtonsToRemove: [],
   };
 
   return (
