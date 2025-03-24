@@ -45,7 +45,9 @@ const TimeSeries = ({ timeSeriesImage }) => {
             config={defaultConfig} />
         </div>
       ) : (
-        <div className='ts_plot'>No Time Series Data</div>
+        <div className='ts_plot'>
+          Values aggregated over region.
+        </div>
       )}
     </div>
   )

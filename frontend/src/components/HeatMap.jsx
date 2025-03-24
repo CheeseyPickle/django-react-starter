@@ -48,7 +48,7 @@ const HeatMap = ({ heatMapImage }) => {
             config={heatmapConfig} />
       ) : (
         <div className="hm_plot">
-          No Heat Map Data
+          Values aggregated over time.
         </div>
       )}
     </div>

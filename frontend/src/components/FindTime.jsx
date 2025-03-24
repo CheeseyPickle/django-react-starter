@@ -39,7 +39,7 @@ const FindTime = ({ findTimeImage }) => {
         </div>
       ) : (
         <div className="ft_plot">
-          No Find Time Data
+          Boolean of values with respect to the Find Control Value and Predicate.
         </div>
       )}
     </div>

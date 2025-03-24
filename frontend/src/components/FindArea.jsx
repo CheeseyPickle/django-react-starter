@@ -63,7 +63,7 @@ const FindArea = ({ findAreaImage, formData }) => {
         </div>
       ) : (
         <div className="fa_plot">
-          No Find Area Data
+          Boolean of values with respect to the Find Control Value and Predicate.
         </div>
       )}
     </div>
