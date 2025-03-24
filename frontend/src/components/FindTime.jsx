@@ -5,7 +5,6 @@ import "../styles/findtime.css";
 const FindTime = ({ findTimeImage }) => {
 
   const findTimeLayout = {
-    title: "Time Series Plot",
     xaxis: {
       title: "Time",
       tickformat: "%Y-%m-%d %H:%M:%S",
@@ -16,8 +15,8 @@ const FindTime = ({ findTimeImage }) => {
       showgrid: true,
     },
     showlegend: false,
-    margin: { t: 50, l: 60, r: 30, b: 50 },
-    plot_bgcolor: "#f9f9f9",
+    margin: { t: 0, l: 0, r: 0, b: 50 },
+    plot_bgcolor: "#ffffff",
     paper_bgcolor: "#ffffff",
   };
 
