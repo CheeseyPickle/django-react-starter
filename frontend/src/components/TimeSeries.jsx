@@ -14,12 +14,10 @@ const TimeSeries = ({ timeSeriesImage }) => {
     xaxis: {
       title: 'Time',
       showgrid: true,
-      automargin: true,
     },
     yaxis: {
       title: 'Value',
       showgrid: true,
-      automargin: true,
     }
   };
 
