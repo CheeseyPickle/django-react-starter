@@ -16,8 +16,6 @@ function CustomTabPanel({ children, value, index, ...other }) {
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
       style={{
-        width: "100%",
-        height: "100%",
         dislpay: value == index ? "flex" : "none",
         alignItems: "center",
         justifyContent: "center",
@@ -59,10 +57,10 @@ const Tabs = ({
 
   return (
     <div className="tabs_wrapper">
-      <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
+      <Box sx={{ display: "flex"}}>
         {/* Render 3 Panels */}
         {["panel1", "panel2", "panel3"].map((panelId) => (
-          <div key={panelId} className="panel-container" style={{ flex: "1 1 33%", maxWidth: "33%", height: "100%"}}>
+          <div key={panelId} className="panel-container" style={{ maxWidth: "33%", height: "100%"}}>
             {/* Dropdown to select tab for each panel */}
             <FormControl variant="filled" fullWidth>
               <InputLabel id={`tab-select-label-${panelId}`}>Select Plot</InputLabel>
