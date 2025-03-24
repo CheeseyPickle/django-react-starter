@@ -21,13 +21,6 @@ const HeatMap = ({ heatMapImage }) => {
       scaleratio: 4,
       showgrid: false
     },
-    coloraxis: {
-      colorscale: 'YlOrRd',
-      colorbar: {
-        title: 'Temperature (°K)',
-        ticksuffix: '°K',
-      }
-    },
     hovermode: 'closest',
     showlegend: false
   };
@@ -41,7 +34,7 @@ const HeatMap = ({ heatMapImage }) => {
       format: 'png',
       filename: 'heatmap_image'
     },
-    modeBarButtonsToRemove: [],
+    modeBarButtonsToRemove: ["resetScale"],
   };
 
   return (
@@ -52,8 +45,7 @@ const HeatMap = ({ heatMapImage }) => {
             data={heatMapImage.data}
             layout={heatmapLayout}
             frames={heatMapImage.frames}
-            config={heatmapConfig} 
-            style={{ width: "100%", height: "100%" }}/>
+            config={heatmapConfig} />
       ) : (
         <div className="hm_plot">
           No Heat Map Data

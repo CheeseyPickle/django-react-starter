@@ -9,7 +9,7 @@
 
 .hm_plot {
   text-align: center;
-  flex-grow: 6;
+  /* flex-grow: 6; */
 }
 
 .hm_plotly {

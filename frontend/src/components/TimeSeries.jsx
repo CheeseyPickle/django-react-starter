@@ -7,12 +7,7 @@ const TimeSeries = ({ timeSeriesImage }) => {
   const defaultLayout = {
     ...timeSeriesImage.layout,
     autosize: true,
-    margin: {
-      l: 50,
-      r: 20,
-      b: 40,
-      t: 20
-    },
+    margin: { l: 0, r: 0, b: 25, t: 25 },
     xaxis: {
       title: 'Time',
       automargin: true,
@@ -30,7 +25,8 @@ const TimeSeries = ({ timeSeriesImage }) => {
     toImageButtonOptions: {
       format: 'png',
       filename: 'plot_image'
-    }
+    },
+  modeBarButtonsToRemove: ["resetScale", "lasso2d", "select2d"],
   };
 
   // TODO: Add warning if temporal res is less than date start/end differences
