@@ -7,7 +7,6 @@ const FindTime = ({ findTimeImage }) => {
   const findTimeLayout = {
     xaxis: {
       title: "Time",
-      tickformat: "%Y-%m-%d %H:%M:%S",
       showgrid: true,
     },
     yaxis: {
@@ -15,14 +14,14 @@ const FindTime = ({ findTimeImage }) => {
       showgrid: true,
     },
     showlegend: false,
-    margin: { t: 0, l: 0, r: 0, b: 50 },
+    margin: { t: 10, l: 50, r: 0, b: 50 },
     plot_bgcolor: "#ffffff",
     paper_bgcolor: "#ffffff",
   };
 
   const findTimeConfig = {
-    responsive: true,
-    scrollZoom: true,
+    responsive: false,
+    scrollZoom: false,
     displaylogo: false,
     modeBarButtonsToRemove: ['select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d'],
   };

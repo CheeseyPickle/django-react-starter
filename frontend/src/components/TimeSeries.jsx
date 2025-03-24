@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import Plot from 'react-plotly.js';
 import "../styles/timeseries.css"
+import { useColorScheme } from "@mui/material";
 
 const TimeSeries = ({ timeSeriesImage }) => {
 
@@ -8,12 +9,16 @@ const TimeSeries = ({ timeSeriesImage }) => {
     ...timeSeriesImage.layout,
     autosize: true,
     margin: { l: 0, r: 0, b: 25, t: 25 },
+    plot_bgcolor: "#ffffff",
+    paper_bgcolor: "#ffffff", 
     xaxis: {
       title: 'Time',
+      showgrid: true,
       automargin: true,
     },
     yaxis: {
       title: 'Value',
+      showgrid: true,
       automargin: true,
     }
   };
