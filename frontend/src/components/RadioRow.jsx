@@ -4,6 +4,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import '../styles/sidebar.css';
 
 const RadioButtonsRow = ({ label, options, val, setVal, subLabel, defaultValue }) => {
 
@@ -11,6 +12,7 @@ const RadioButtonsRow = ({ label, options, val, setVal, subLabel, defaultValue }
         <FormControl sx={{}}>
             <FormLabel id={label}>{label}</FormLabel>
             <RadioGroup
+                className="radio_label"
                 defaultValue={defaultValue}
                 row
                 aria-labelledby={label}
