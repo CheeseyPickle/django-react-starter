@@ -43,7 +43,7 @@ const Sidebar = ({
                 />
                 
                 <div className="control_section">
-                    <p className="section_title">Spatial Controls</p>
+                    <p className="section_title">Spatial Predicate</p>
                     <div className="pred_value" >
                         <TextField
                             id="outlined-number"
@@ -84,7 +84,7 @@ const Sidebar = ({
                     </div>
                     <div className="padding"/>
                     <RadioButtonsRow 
-                        label="Coordinate Degree Resolution" 
+                        label="Resolution (degree)" 
                         options={[0.25, 0.5, 1]} 
                         var={formData.spatialResolution} 
                         setVal={handleChange} 
@@ -93,7 +93,7 @@ const Sidebar = ({
                 </div>
 
                 <div className="control_section">
-                    <p className="section_title">Temporal Controls</p>
+                    <p className="section_title">Temporal Predicate</p>
                     <div className="row_wrapper">
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <div className="half_column_wrapper">
@@ -132,7 +132,7 @@ const Sidebar = ({
                 </div>
 
                 <div className="control_section">
-                    <p className="section_title">Find Controls</p>
+                    <p className="section_title">Filters</p>
                     <div className="pred_value">
                         <Input 
                             name="predicate" 
