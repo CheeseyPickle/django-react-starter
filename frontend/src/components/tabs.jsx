@@ -57,10 +57,13 @@ const Tabs = ({
 
   return (
     <div className="tabs_wrapper">
-      <Box sx={{ display: "flex"}}>
+      <Box sx={{ display: "flex", }}>
         {/* Render 3 Panels */}
         {["panel1", "panel2", "panel3"].map((panelId) => (
-          <div key={panelId} className="panel-container" style={{ maxWidth: "33%", height: "100%", border: "0.5px solid "}}>
+          <div 
+            key={panelId} className="panel-container" 
+            style={{ maxWidth: "33%", height: "100%", border: "0.5px solid ",}}
+            >
             {/* Dropdown to select tab for each panel */}
             <FormControl variant="filled" fullWidth>
               <InputLabel id={`tab-select-label-${panelId}`}>Select Plot</InputLabel>
@@ -68,9 +71,13 @@ const Tabs = ({
                 labelId={`tab-select-label-${panelId}`}
                 value={activeTabs[panelId]}
                 onChange={(event) => handleTabChange(panelId, event)}
+                sx={{
+                  '& .MuiInputBase-root': { fontSize: '50px', fontFamily: "Georgia, serif" },
+                  '& .MuiInputLabel-root': { fontSize: '50px', fontFamily: "Georgia, serif" }
+                }}
               >
                 {tabOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
+                  <MenuItem key={option.value} value={option.value} sx={{ fontSize: '25px', fontFamily: "Georgia, serif", justifyContent: "center" }}>
                     {option.label}
                   </MenuItem>
                 ))}

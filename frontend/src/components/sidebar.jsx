@@ -57,7 +57,7 @@ const Sidebar = ({
                             label="North"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                '& .MuiInputBase-root': { fontSize: '20px' , fontFamily: "monospace"},
                                  '& .MuiInputLabel-root': { fontSize: '20px', fontFamily: "Georgia, serif" },
                             }}
                             type="number"
@@ -71,7 +71,7 @@ const Sidebar = ({
                             label="South"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                '& .MuiInputBase-root': { fontSize: '20px' , fontFamily: "monospace"},
                                  '& .MuiInputLabel-root': { fontSize: '20px', fontFamily: "Georgia, serif"  },
                             }}
                             type="number"
@@ -85,7 +85,7 @@ const Sidebar = ({
                             label="East"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                '& .MuiInputBase-root': { fontSize: '20px' , fontFamily: "monospace"},
                                  '& .MuiInputLabel-root': { fontSize: '20px' , fontFamily: "Georgia, serif" },
                             }}
                             type="number"
@@ -99,7 +99,7 @@ const Sidebar = ({
                             label="West"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                '& .MuiInputBase-root': { fontSize: '20px' , fontFamily: "monospace"},
                                  '& .MuiInputLabel-root': { fontSize: '20px', fontFamily: "Georgia, serif"  },
                             }}
                             max="180"
@@ -201,8 +201,8 @@ const Sidebar = ({
                             variant="contained" 
                             color="success"
                             sx={{ width: "95%",
-                                '& .MuiInputBase-root': { fontSize: '18px' },
-                                '& .MuiInputLabel-root': { fontSize: '18px' },
+                                '& .MuiInputBase-root': { fontSize: '18px' , fontFamily: "Georgia, serif"},
+                                '& .MuiInputLabel-root': { fontSize: '18px', fontFamily: "Georgia, serif" },
                             }}
                             size={"medium"}
                             disabled={isLoading} 
