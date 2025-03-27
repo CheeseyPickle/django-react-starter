@@ -32,6 +32,9 @@ const Sidebar = ({
                 <div className="title_container">
                     <p className='title'>POLARIS</p>
                 </div>
+                <div className='subtitle_container'>
+                    Interactive and Scalable Interface for Polar Science
+                </div>
                 <div className="padding"/>
                 <Input
                     val={variable}
@@ -39,8 +42,8 @@ const Sidebar = ({
                     label={"Variable"}
                     options={["2m_temperature", "total_precipitation", "surface_pressure", "snow_depth", "snowfall", "snowmelt", "temperature_of_snow_layer", "ice_temperature_layer_1", "ice_temperature_layer_2", "ice_temperature_layer_3", "ice_temperature_layer_4"]}
                     sx={{ width: "96%",
-                        '& .MuiInputBase-root': { fontSize: '25px' },
-                        '& .MuiInputLabel-root': { fontSize: '23px' },
+                        '& .MuiInputBase-root': { fontSize: '23px' , fontFamily: "Georgia, serif" },
+                        '& .MuiInputLabel-root': { fontSize: '23px' , fontFamily: "Georgia, serif" },
                     }}
                     size={"small"}
                     varLabel={"variable"}
@@ -54,8 +57,8 @@ const Sidebar = ({
                             label="North"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '23px' },
-                                 '& .MuiInputLabel-root': { fontSize: '20px' },
+                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                 '& .MuiInputLabel-root': { fontSize: '20px', fontFamily: "Georgia, serif" },
                             }}
                             type="number"
                             value={formData.north}
@@ -68,8 +71,8 @@ const Sidebar = ({
                             label="South"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '23px' },
-                                 '& .MuiInputLabel-root': { fontSize: '20px' },
+                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                 '& .MuiInputLabel-root': { fontSize: '20px', fontFamily: "Georgia, serif"  },
                             }}
                             type="number"
                             max="90"
@@ -82,8 +85,8 @@ const Sidebar = ({
                             label="East"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '23px' },
-                                 '& .MuiInputLabel-root': { fontSize: '20px' },
+                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                 '& .MuiInputLabel-root': { fontSize: '20px' , fontFamily: "Georgia, serif" },
                             }}
                             type="number"
                             max="180"
@@ -96,8 +99,8 @@ const Sidebar = ({
                             label="West"
                             size={"small"}
                             sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '23px' },
-                                 '& .MuiInputLabel-root': { fontSize: '20px' },
+                                '& .MuiInputBase-root': { fontSize: '22px' , fontFamily: "monospace"},
+                                 '& .MuiInputLabel-root': { fontSize: '20px', fontFamily: "Georgia, serif"  },
                             }}
                             max="180"
                             min="-180"
@@ -111,6 +114,7 @@ const Sidebar = ({
                         label="Resolution (degree)" 
                         options={[0.25, 0.5, 1]} 
                         var={formData.spatialResolution} 
+                        sx={{fontFamily: "Georgia, serif" }}
                         setVal={handleChange} 
                         subLabel="spatialResolution" 
                         defaultValue={1} />
@@ -125,8 +129,8 @@ const Sidebar = ({
                                 label="Start Date Time" 
                                 views={['year', 'day', 'hours']} 
                                 size={"small"}
-                                sx={{ '& .MuiInputBase-root': { fontSize: '20px' },
-                                      '& .MuiInputLabel-root': { fontSize: '20px' },
+                                sx={{ '& .MuiInputBase-root': { fontSize: '17.5px' , fontFamily: "monospace" },
+                                      '& .MuiInputLabel-root': { fontSize: '20px' , fontFamily: "Georgia, serif" },
                                     }}
                                 ampm={false} 
                                 value={startDate ? dayjs(startDate) : null} 
@@ -135,8 +139,8 @@ const Sidebar = ({
                                 label="End Date Time" 
                                 views={['year', 'day', 'hours']} 
                                 size={"small"}
-                                sx={{ '& .MuiInputBase-root': { fontSize: '20px' },
-                                      '& .MuiInputLabel-root': { fontSize: '20px' },
+                                sx={{ '& .MuiInputBase-root': { fontSize: '17.5px' , fontFamily: "monospace"},
+                                      '& .MuiInputLabel-root': { fontSize: '20px', fontFamily: "Georgia, serif" },
                                     }}
                                 ampm={false} 
                                 value={endDate ? dayjs(endDate) : null} 
@@ -163,41 +167,74 @@ const Sidebar = ({
                         defaultValue={"mean"} />
                 </div>
 
-                <div className="control_section">
-                    <p className="section_title">Filters</p>
-                    <div className="pred_value">
-                        <Input 
-                            name="predicate" 
-                            label={"Predicate"} 
-                            options={["<", ">", "<=", ">=", "!="]} 
-                            sx={{ width: "30%",
-                                '& .MuiInputBase-root': { fontSize: '20px' },
-                                 '& .MuiInputLabel-root': { fontSize: '20px' },
+                <div className="row_wrapper">
+                    <div className='half_control_section'>
+                        <p className="section_title">Filters</p>
+                        <div className="pred_value">
+                            <Input 
+                                name="predicate" 
+                                label={"Predicate"} 
+                                options={["<", ">", "<=", ">=", "!="]} 
+                                sx={{ width: "50%",
+                                    '& .MuiInputBase-root': { fontSize: '18px' },
+                                    '& .MuiInputLabel-root': { fontSize: '18px' },
+                                }}
+                                size={"small"} 
+                                val={formData.filterPredicate} 
+                                setVal={setPredicate} />
+                            <TextField 
+                                id="outlined-number" 
+                                label="Value"
+                                type="number" 
+                                sx={{ width: "50%",
+                                    '& .MuiInputBase-root': { fontSize: '18px' },
+                                    '& .MuiInputLabel-root': { fontSize: '18px' },
+                                }}
+                                size={"small"}
+                                value={formData.filterValue} 
+                                onChange={(e) => { setComparisonVal(e.target.value) }} />
+                        </div>
+                    </div>
+                    <div className='half_column_wrapper'>
+                        <Button 
+                            onClick={() => queryData()} 
+                            variant="contained" 
+                            color="success"
+                            sx={{ width: "95%",
+                                '& .MuiInputBase-root': { fontSize: '18px' },
+                                '& .MuiInputLabel-root': { fontSize: '18px' },
                             }}
-                            size={"small"} 
-                            val={formData.filterPredicate} 
-                            setVal={setPredicate} />
-                        <TextField 
-                            id="outlined-number" 
-                            label="Value"
-                            type="number" 
-                            sx={{ width: "25%",
-                                '& .MuiInputBase-root': { fontSize: '20px' },
-                                 '& .MuiInputLabel-root': { fontSize: '20px' },
+                            size={"medium"}
+                            disabled={isLoading} 
+                            className="query_button"
+                            >
+                            <div className="button-content">
+                                {isLoading && <div className="loading-spinner" />} 
+                                Query Data
+                            </div>
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            color="success"
+                            sx={{ width: "95%",
+                                '& .MuiInputBase-root': { fontSize: '18px' },
+                                '& .MuiInputLabel-root': { fontSize: '18px' },
                             }}
-                            size={"small"}
-                            value={formData.filterValue} 
-                            onChange={(e) => { setComparisonVal(e.target.value) }} />
+                        >
+                        <div className='button-content'>
+                            Available Data
+                        </div>
+                        </Button>
                     </div>
                 </div>
-                <Button 
+                {/* <Button 
                     onClick={() => queryData()} 
                     variant="contained" 
                     color="success"
                     disabled={isLoading} 
                     className="query_button">
                 <div className="button-content">{isLoading && <div className="loading-spinner" />} Query</div>
-                </Button>
+                </Button> */}
             </div>
         </>
     )

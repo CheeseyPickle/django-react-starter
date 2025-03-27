@@ -7,25 +7,27 @@ import FormLabel from '@mui/material/FormLabel';
 import '../styles/sidebar.css';
 
 const RadioButtonsRow = ({ label, options, val, setVal, subLabel, defaultValue }) => {
-
     return (
         <FormControl sx={{}}>
-            <FormLabel id={label}>{label}</FormLabel>
+            <FormLabel id={label} sx={{ fontFamily: "Georgia, serif" , fontSize: "20px"}}>{label}</FormLabel>
             <RadioGroup
-                className="radio_label"
                 defaultValue={defaultValue}
                 row
                 aria-labelledby={label}
                 name={subLabel}
-                sx={{ width: "100%", scale: "100%", justifyContent: "center", border: "" }}
+                sx={{ width: "100%", justifyContent: "center" }}
                 value={val}
                 onChange={setVal}
             >
-                {options.map((option) => {
-                    return (
-                        <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
-                    );
-                })}
+                {options.map((option) => (
+                    <FormControlLabel 
+                        key={option} 
+                        value={option} 
+                        control={<Radio />} 
+                        label={option} 
+                        sx={{ fontFamily: "monospace" }} 
+                    />
+                ))}
             </RadioGroup>
         </FormControl>
     );
@@ -33,8 +35,7 @@ const RadioButtonsRow = ({ label, options, val, setVal, subLabel, defaultValue }
 
 RadioButtonsRow.propTypes = {
     label: PropTypes.string,
-    options: PropTypes.arrayOf(
-        PropTypes.string),
+    options: PropTypes.arrayOf(PropTypes.string),
     val: PropTypes.string,
     setVal: PropTypes.func,
     subLabel: PropTypes.string,

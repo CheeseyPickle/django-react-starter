@@ -9,7 +9,7 @@ import { Grid2 } from "@mui/material";
 const RadioButtonsCol = ({ label, options, val, setVal, subLabel, defaultValue }) => {
     return (
         <FormControl sx={{ width: "48%" }}>
-            <FormLabel id={label}>{label}</FormLabel>
+            <FormLabel id={label} sx={{ fontFamily: "Georgia, serif" , fontSize: "20px"}}>{label}</FormLabel>
             <RadioGroup
                 defaultValue={defaultValue}
                 aria-labelledby={label}
@@ -24,7 +24,7 @@ const RadioButtonsCol = ({ label, options, val, setVal, subLabel, defaultValue }
                                 value={option} 
                                 control={<Radio size="x-small" />} 
                                 label={option} 
-                                sx={{ margin: 0 }}
+                                sx={{ margin: 0, fontFamily: "Georgia, serif", fontSize: "18px" }}
                             />
                         </Grid2>
                     ))}
