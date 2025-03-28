@@ -134,6 +134,8 @@ const Sidebar = ({
                                     }}
                                 ampm={false} 
                                 value={startDate ? dayjs(startDate) : null} 
+                                minDateTime={dayjs('2004-01-01T00:00')}
+                                maxDateTime={dayjs('2023-12-31T23:00')}
                                 onChange={(newValue) => setStartDate(newValue ? newValue.format('YYYY-MM-DD HH:mm') : null)} />
                             <DateTimePicker 
                                 label="End Date Time" 
@@ -144,6 +146,8 @@ const Sidebar = ({
                                     }}
                                 ampm={false} 
                                 value={endDate ? dayjs(endDate) : null} 
+                                minDateTime={dayjs('2004-01-01T01:00')}
+                                maxDateTime={dayjs('2023-12-31T23:00')}
                                 onChange={(newValue) => setEndDate(newValue ? newValue.format('YYYY-MM-DD HH:mm') : null)} />
                         </div>
                     </LocalizationProvider>
@@ -213,28 +217,21 @@ const Sidebar = ({
                                 Query Data
                             </div>
                         </Button>
-                        <Button
+                        {/* <Button
                             variant="outlined"
                             color="success"
                             sx={{ width: "95%",
                                 '& .MuiInputBase-root': { fontSize: '18px' },
                                 '& .MuiInputLabel-root': { fontSize: '18px' },
                             }}
+
                         >
                         <div className='button-content'>
                             Available Data
                         </div>
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
-                {/* <Button 
-                    onClick={() => queryData()} 
-                    variant="contained" 
-                    color="success"
-                    disabled={isLoading} 
-                    className="query_button">
-                <div className="button-content">{isLoading && <div className="loading-spinner" />} Query</div>
-                </Button> */}
             </div>
         </>
     )
