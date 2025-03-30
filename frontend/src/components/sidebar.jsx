@@ -221,8 +221,8 @@ const Sidebar = ({
                                     }}
                                 ampm={false} 
                                 value={startDate ? dayjs(startDate) : null} 
-                                minDateTime={dayjs('2004-01-01T00:00')}
-                                maxDateTime={dayjs('2023-12-31T23:00')}
+                                minDateTime={dayjs('2015-01-01T00:00')}
+                                maxDateTime={dayjs('2024-12-31T23:00')}
                                 onChange={(newValue) => setStartDate(newValue ? newValue.format('YYYY-MM-DD HH:mm') : null)} />
                             <DateTimePicker 
                                 label="End Date Time" 
@@ -233,8 +233,8 @@ const Sidebar = ({
                                     }}
                                 ampm={false} 
                                 value={endDate ? dayjs(endDate) : null} 
-                                minDateTime={dayjs('2004-01-01T01:00')}
-                                maxDateTime={dayjs('2023-12-31T23:00')}
+                                minDateTime={dayjs('2015-01-01T01:00')}
+                                maxDateTime={dayjs('2024-12-31T23:00')}
                                 onChange={(newValue) => setEndDate(newValue ? newValue.format('YYYY-MM-DD HH:mm') : null)} />
                         </div>
                     </LocalizationProvider>
