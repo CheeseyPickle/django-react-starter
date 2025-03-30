@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Input from './input';
 import CardinalDirections from './CardinalDirections';
 import RadioButtonsRow from './RadioRow';
@@ -7,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import '../styles/sidebar.css';
 import '../styles/loading.css';
 import { alignProperty } from '@mui/material/styles/cssUtils';
@@ -26,6 +27,92 @@ const Sidebar = ({
     queryData,
     isLoading,
 }) => {
+    const [showInfo, setShowInfo] = useState(false);
+
+    const variables = [
+        "2m_temperature",
+        "total_precipitation",
+        "surface_pressure",
+        "snow_depth",
+        "snowfall",
+        "snowmelt",
+        "temperature_of_snow_layer",
+        "ice_temperature_layer_1",
+        "ice_temperature_layer_2",
+        "ice_temperature_layer_3",
+        "ice_temperature_layer_4",
+    ]
+    const regions = {
+        "Greenland": { North: 84, South: 58, West: -75, East: -10 },
+        "Alaska": { North: 72, South: 50, West: -170, East: -130 },
+        "Antarctica": { North: -60, South: -90, West: -180, East: 180 }
+    }
+
+    const tableData = {}
+    Object.keys(regions).forEach(region => {
+        variables.forEach(variable => {
+            tableData[`${variable} (${region})`] = {
+                variable: variable,
+                spatialRegion: region,
+                North: regions[region].North,
+                South: regions[region].South,
+                West: regions[region].West,
+                East: regions[region].East,
+                spatialResolution: "0.25°, 0.5°, 1°",
+                temporalRange: "2015-2024",
+                temporalResolution: "hour, day, month, year"
+            }
+        })
+    })
+    
+    // Data display component for showing the tableData
+    const DataInfoDisplay = () => {
+        if (!showInfo) return null;
+        
+        return (
+            <div className="data-info-overlay">
+                <div className="data-info-content">
+                    <div className="data-info-header">
+                        <h2>Available Data</h2>
+                        <Button onClick={() => setShowInfo(false)}>Close</Button>
+                    </div>
+                    <TableContainer component={Paper} style={{ maxHeight: '70vh', overflow: 'auto' }}>
+                        <Table stickyHeader>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Variable</TableCell>
+                                    <TableCell>Region</TableCell>
+                                    <TableCell>North</TableCell>
+                                    <TableCell>South</TableCell>
+                                    <TableCell>East</TableCell>
+                                    <TableCell>West</TableCell>
+                                    <TableCell>Spatial Resolution</TableCell>
+                                    <TableCell>Temporal Range</TableCell>
+                                    <TableCell>Temporal Resolution</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {Object.entries(tableData).map(([key, data], index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{data.variable}</TableCell>
+                                        <TableCell>{data.spatialRegion}</TableCell>
+                                        <TableCell>{data.North}</TableCell>
+                                        <TableCell>{data.South}</TableCell>
+                                        <TableCell>{data.East}</TableCell>
+                                        <TableCell>{data.West}</TableCell>
+                                        <TableCell>{data.spatialResolution}</TableCell>
+                                        <TableCell>{data.temporalRange}</TableCell>
+                                        <TableCell>{data.temporalResolution}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </div>
+            </div>
+        );
+    };
+    
     return (
         <>
             <div className="sidebar_wrapper">
@@ -217,22 +304,23 @@ const Sidebar = ({
                                 Query Data
                             </div>
                         </Button>
-                        {/* <Button
+                        <Button
                             variant="outlined"
                             color="success"
                             sx={{ width: "95%",
                                 '& .MuiInputBase-root': { fontSize: '18px' },
                                 '& .MuiInputLabel-root': { fontSize: '18px' },
                             }}
-
+                            onClick={() => setShowInfo(!showInfo)}
                         >
-                        <div className='button-content'>
-                            Available Data
-                        </div>
-                        </Button> */}
+                            <div className='button-content'>
+                                Available Data
+                            </div>
+                        </Button>
                     </div>
                 </div>
             </div>
+            <DataInfoDisplay />
         </>
     )
 }

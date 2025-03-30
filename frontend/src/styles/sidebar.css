@@ -127,3 +127,39 @@
 .padding {
     margin-top: 18px;
 }
+
+/* Add these styles for the data info overlay */
+.data-info-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.data-info-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.data-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.data-info-header h2 {
+    margin: 0;
+    font-family: "Georgia, serif";
+}
