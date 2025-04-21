@@ -87,6 +87,49 @@ def get_raster_query(request):
 
 
 @api_view(["POST"])
+def get_raster_query_xa(request):
+    logger.info("Get Raster Query, Return Xarray")
+    serializer = GetRasterSeriazlier(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        logger.info(request.data)
+
+        variable = request.data.get("variable")
+        start_datetime = request.data.get("startDateTime")
+        end_datetime = request.data.get("endDateTime")
+        time_resolution = request.data.get("temporalResolution")
+        north = round(float(request.data.get("north")), 3)
+        south = round(float(request.data.get("south")), 3)
+        east = round(float(request.data.get("east")), 3)
+        west = round(float(request.data.get("west")), 3)
+        spatial_resolution = float(request.data.get("spatialResolution"))
+        aggregation = request.data.get("aggregation")
+
+        formatted_start = format_datetime_string(start_datetime)
+        formatted_end = format_datetime_string(end_datetime)
+
+        qe = GetRasterExecutor(
+            metadata=metadata_fpath,
+            variable=variable,
+            start_datetime=formatted_start,
+            end_datetime=formatted_end,
+            min_lat=south,
+            max_lat=north,
+            min_lon=west,
+            max_lon=east,
+            temporal_resolution=time_resolution,
+            spatial_resolution=spatial_resolution,
+            aggregation=aggregation,
+        )
+        ds = qe.execute()
+
+        return Response(ds, status=201)
+
+    print("Serializer errors:", serializer.errors)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(["POST"])
 def download_query(request):
     logger.info("Get Raster Query")
     serializer = GetRasterSeriazlier(data=request.data)
