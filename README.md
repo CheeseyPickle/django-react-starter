@@ -1,4 +1,4 @@
-# django-react-starter
+# iharpv-ana
 
 bash init_venv.sh
 
@@ -25,21 +25,19 @@ npm run dev
 
 npm run build
 
-Then copy /home/huan1531/django-react-starter/frontend/dist to /home/huan1531/django-react-starter/backend/frontend/dist
+Then copy /home/huan1531/iharpv-ana/frontend/dist to /home/huan1531/iharpv-ana/backend/frontend/dist
 
-rm -rf /home/huan1531/django-react-starter/backend/frontend/dist
+rm -rf /home/huan1531/iharpv-ana/backend/frontend/dist
 
-cp -r /home/huan1531/django-react-starter/frontend/dist /home/huan1531/django-react-starter/backend/frontend/dist
+cp -r /home/huan1531/iharpv-ana/frontend/dist /home/huan1531/iharpv-ana/backend/frontend/dist
 
-Start backend with : python manage.py runserver 0.0.0.0:8000
+Start backend with : python manage.py runserver 0.0.0.0:8001
 
-tmux new -d -s django "python manage.py runserver 0.0.0.0:8000"
-
-nohup python -u manage.py runserver 0.0.0.0:8000 > ../output.txt &
+nohup python -u manage.py runserver 0.0.0.0:8001 > ../output.txt &
 
 pgrep -a python
 
-62932 python manage.py runserver 0.0.0.0:8000
+62932 python manage.py runserver 0.0.0.0:8001
 
 kill 62932
 
