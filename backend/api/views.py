@@ -1,6 +1,7 @@
 import json
 import os
 import logging
+import pickle
 import geopandas as gpd
 import plotly.express as px
 import plotly.graph_objs as go
@@ -87,8 +88,8 @@ def get_raster_query(request):
 
 
 @api_view(["POST"])
-def get_raster_query_xa(request):
-    logger.info("Get Raster Query, Return Xarray")
+def get_raster_query_pickle(request):
+    logger.info("Get Raster Query, Return Pickled Object")
     serializer = GetRasterSeriazlier(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -122,8 +123,9 @@ def get_raster_query_xa(request):
             aggregation=aggregation,
         )
         ds = qe.execute()
+        pickled = pickle.dumps(ds)
 
-        return Response(ds, status=201)
+        return Response(pickled, status=201)
 
     print("Serializer errors:", serializer.errors)
     return Response(serializer.errors, status=400)
