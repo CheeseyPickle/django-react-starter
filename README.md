@@ -1,46 +1,60 @@
-# iharpv-ana
+# django-react-starter
 
+## Initialize
+
+Starting in the django-react-starter directory:
+
+``` bash
 bash init_venv.sh
+source venv/bin/activate
 
-### backend
-
+cd backend
 python manage.py makemigrations
-
 python manage.py migrate
 
-### frontend
-
+cd ../frontend
 npm install --legacy-peer-deps
 
-### backend
-
+cd ../backend
 python manage.py runserver
+```
 
-### frontend
+This will begin a development server. 
 
+In a new terminal window, run:
+
+``` bash
+source venv/bin/activate
+
+cd frontend
 npm run dev
+```
+This will give you a local host link to view the current frontend.
 
+**Quit the server with CONTROL-C***
 
-# Build
-
+## Build
+``` bash
 npm run build
 
-Then copy /home/huan1531/iharpv-ana/frontend/dist to /home/huan1531/iharpv-ana/backend/frontend/dist
+cp /home/huan1531/django-react-starter/frontend/dist /home/huan1531/django-react-starter/backend/frontend/dist
 
-rm -rf /home/huan1531/iharpv-ana/backend/frontend/dist
+rm -rf /home/huan1531/django-react-starter/backend/frontend/dist
 
-cp -r /home/huan1531/iharpv-ana/frontend/dist /home/huan1531/iharpv-ana/backend/frontend/dist
+cp -r /home/huan1531/django-react-starter/frontend/dist /home/huan1531/django-react-starter/backend/frontend/dist
 
-Start backend with : python manage.py runserver 0.0.0.0:8001
+start backend with : python manage.py runserver 0.0.0.0:8000
 
-nohup python -u manage.py runserver 0.0.0.0:8001 > ../output.txt &
+tmux new -d -s django "python manage.py runserver 0.0.0.0:8000"
+
+nohup python -u manage.py runserver 0.0.0.0:8000 > ../output.txt &
 
 pgrep -a python
 
-62932 python manage.py runserver 0.0.0.0:8001
+62932 python manage.py runserver 0.0.0.0:8000
 
 kill 62932
+```
 
-# TODO
-
+## TODO
 Deny request with large API calls
