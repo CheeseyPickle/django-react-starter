@@ -4,10 +4,17 @@
 
 Starting in the django-react-starter directory:
 
-``` bash
-bash init_venv.sh
-source venv/bin/activate
+If virtual environment does not exist:
+```bash 
+bash init_venv.sh  
+```
 
+To activate virtual environment:
+``` bash
+source venv/bin/activate
+```
+To initiate a development server:
+``` bash
 cd backend
 python manage.py makemigrations
 python manage.py migrate
@@ -18,9 +25,6 @@ npm install --legacy-peer-deps
 cd ../backend
 python manage.py runserver
 ```
-
-This will begin a development server. 
-
 In a new terminal window, run:
 
 ``` bash
@@ -31,7 +35,7 @@ npm run dev
 ```
 This will give you a local host link to view the current frontend.
 
-**Quit the server with CONTROL-C***
+**Quit the server with CONTROL-C**
 
 ## Build
 ``` bash
