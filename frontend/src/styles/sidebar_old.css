@@ -1,0 +1,165 @@
+.sidebar_wrapper {
+    background-color: rgb(236, 247, 248);
+    width: 26%;
+    height: 100vp;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Georgia, serif;
+}
+
+.title_container {
+    background-color:  rgb(9, 132, 136);
+    width: 100%;
+    height:8%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subtitle_container {
+    background-color:  rgb(9, 132, 136);
+    width: 100%;
+    height:4%;
+    color: rgb(9, 132, 136);
+    font-size: 0.8rem;
+    position: relative;
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    align-items: center;
+    justify-content: center;
+    font-family: Georgia, serif;
+}
+
+.title {
+    margin: 10px;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: Georgia, serif;
+}
+
+.control_section {
+    width: 94%;
+    border: 1.5px solid rgb(9, 132, 136);
+    padding: 6px;
+    margin-bottom: 3px;
+    margin-top: 3px;
+}
+
+.half_control_section {
+    width: 50%;
+    border: 1.5px solid rgb(9, 132, 136);
+    padding: 6px;
+    justify-content: top;
+    margin-bottom: 3px;
+    margin-top: 3px;
+}
+
+.section_title {
+    font-weight: bold;
+    color:rgb(9, 132, 136);
+    text-transform: uppercase;
+    font-size: larger;
+    margin-bottom: 14px;
+    margin-top: 5px;
+    font-family: Georgia, serif;
+}
+
+.query_button {
+    width: 95%;
+}
+
+.radio_buttons_col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width:100%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width:100%;
+}
+
+.row_wrapper {
+    color: black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 95%;
+}
+
+.half_column_wrapper {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 52%;
+    gap: 12px;
+}
+
+.pred_value {
+    color: black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: top;
+    width: 100%;
+    gap: 4px;
+}
+
+.padding {
+    margin-top: 18px;
+}
+
+/* Add these styles for the data info overlay */
+.data-info-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.data-info-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.data-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.data-info-header h2 {
+    margin: 0;
+    font-family: "Georgia, serif";
+}

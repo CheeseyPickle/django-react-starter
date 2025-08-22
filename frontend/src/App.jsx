@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { BoundsContext } from './util/context/BoundsContext'
-import Sidebar from './components/sidebar'
+import Sidebar from './components/Sidebar/Sidebar'
 import MyMap from "./components/map"
 import Tabs from './components/tabs'
 import dayjs from 'dayjs'
@@ -8,6 +8,9 @@ import './App.css'
 
 
 function App() {
+
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [bottomBarCollapsed, setBottomBarCollapsed] = useState(false);
 
   const [variable, setVariable] = useState("2m_temperature");
   const [startDate, setStartDate] = useState(dayjs("2020-01-01T00:00Z"));
@@ -535,8 +538,42 @@ function App() {
   }
 
   return (
-    <>
-      <div className="main_wrapper">
+    <div
+      className={`app-layout 
+        ${sidebarCollapsed ? "sidebar-collapsed" : ""} 
+        ${bottomBarCollapsed ? "bottombar-collapsed" : ""}`}
+    >
+      <div className="sidebar">
+        <button onClick={() => setSidebarCollapsed(s => !s)}>
+          {sidebarCollapsed ? "Sidebar" : "Collapse"}
+        </button>
+        <Sidebar
+        setComparisonVal={setComparisonVal}
+          setPredicate={setPredicate}
+          variable={formData.variable}
+          setVariable={setVariable}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          formData={formData}
+          handleChange={handleChange}
+          queryData={queryData}
+          isLoading={isLoading} />
+
+      </div>
+
+      <div className="main-content">
+        <p>Main content area</p>
+      </div>
+
+      <div className="bottom-bar">
+        <button onClick={() => setBottomBarCollapsed(b => !b)}>
+          {bottomBarCollapsed ? "Plots" : "Collapse"}
+        </button>
+        <p>Bottom bar content</p>
+      </div>
+      {/* <div className="main_wrapper">
         <Sidebar
           setComparisonVal={setComparisonVal}
           setPredicate={setPredicate}
@@ -561,9 +598,9 @@ function App() {
             heatMapImage={heatMapImage}
             findTimeImage={findTimeImage}
             findAreaImage={findAreaImage} />
-        </div>
-      </div>
-    </>
+        </div> */}
+      {/* </div> */}
+    </div>
   )
 }
 
