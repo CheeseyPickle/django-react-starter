@@ -9,6 +9,9 @@ import SidebarButtons from "./SidebarButtons";
 import { VARIABLES } from "../../constants/data";
 import "../../styles/sidebar.css";
 import "../../styles/loading.css";
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 
 const Sidebar = ({
   setComparisonVal,
@@ -44,7 +47,20 @@ const Sidebar = ({
           varLabel="variable"
         />
 
-        <SpatialPredicateControls formData={formData} handleChange={handleChange} />
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className="accordion-title">Spatial Predicate</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <SpatialPredicateControls formData={formData} handleChange={handleChange} />
+          </AccordionDetails>
+        </Accordion>
+
+         <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className="accordion-title">Temporal Predicate</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
         <TemporalPredicateControls
           startDate={startDate}
           endDate={endDate}
@@ -53,21 +69,36 @@ const Sidebar = ({
           formData={formData}
           handleChange={handleChange}
         />
-        <AggregationControls formData={formData} handleChange={handleChange} />
+        </AccordionDetails>
+        </Accordion>
 
-        <div className="row_wrapper">
-          <FiltersControls
-            formData={formData}
-            setPredicate={setPredicate}
-            setComparisonVal={setComparisonVal}
-          />
-          <SidebarButtons
+        <Accordion defaultExpanded>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className="accordion-title">Aggregation</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <AggregationControls formData={formData} handleChange={handleChange} />
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography className="accordion-title">Filters</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <FiltersControls
+                    formData={formData}
+                    setPredicate={setPredicate}
+                    setComparisonVal={setComparisonVal}
+            />
+            </AccordionDetails>
+        </Accordion>
+        <SidebarButtons
             isLoading={isLoading}
             queryData={queryData}
             showInfo={showInfo}
             setShowInfo={setShowInfo}
           />
-        </div>
       <DataInfoDisplay showInfo={showInfo} setShowInfo={setShowInfo} />
     </>
   );
