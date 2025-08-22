@@ -548,7 +548,7 @@ function App() {
           {sidebarCollapsed ? "Sidebar" : "Collapse"}
         </button>
         <Sidebar
-        setComparisonVal={setComparisonVal}
+          setComparisonVal={setComparisonVal}
           setPredicate={setPredicate}
           variable={formData.variable}
           setVariable={setVariable}
@@ -560,7 +560,6 @@ function App() {
           handleChange={handleChange}
           queryData={queryData}
           isLoading={isLoading} />
-
       </div>
 
       <div className="main-content">

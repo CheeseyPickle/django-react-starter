@@ -24,24 +24,24 @@ html, body, #root {
 .sidebar {
   grid-column: 1;
   grid-row: 1 / 3;
-  background: #25637D;
-  color: white;
+  background: #4999BB;
+  color: #F4F7F0;
   transition: width 0.3s ease;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .main-content {
   grid-column: 2;
   grid-row: 1;
-  background: #FFFFFF;
+  background: #F4F7F0;
   overflow: auto;
 }
 
 .bottom-bar {
   grid-column: 2;
   grid-row: 2;
-  background: #A0DCDE;
-  color: white;
+  background: #BAD4DC;
+  color: #F4F7F0;
   transition: height 0.3s ease;
 }
 

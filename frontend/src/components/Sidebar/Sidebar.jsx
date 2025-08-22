@@ -28,9 +28,8 @@ const Sidebar = ({
 
   return (
     <>
-      <div className="sidebar">
         <div className="title_container">
-          <p className="title">POLARIS</p>
+          <p>POLARIS</p>
         </div>
         <div className="subtitle_container">
           Interactive and Scalable Interface for Polar Science
@@ -69,7 +68,6 @@ const Sidebar = ({
             setShowInfo={setShowInfo}
           />
         </div>
-      </div>
       <DataInfoDisplay showInfo={showInfo} setShowInfo={setShowInfo} />
     </>
   );
