@@ -6,10 +6,8 @@ import RadioButtonsCol from "../RadioCol";
 
 const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDate, formData, handleChange }) => (
   <div className="control_section">
-    <p className="section_title">Temporal Predicate</p>
-    <div className="row_wrapper">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className="half_column_wrapper">
+        <div className="row_wrapper">
           <DateTimePicker
             label="Start Date Time"
             ampm={false}
@@ -37,7 +35,6 @@ const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDat
         defaultValue="year"
       />
     </div>
-  </div>
 );
 
 export default TemporalPredicateControls;

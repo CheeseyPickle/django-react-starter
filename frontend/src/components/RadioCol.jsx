@@ -4,31 +4,27 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { Grid2 } from "@mui/material";
 
 const RadioButtonsCol = ({ label, options, val, setVal, subLabel, defaultValue }) => {
     return (
-        <FormControl sx={{ width: "48%" }}>
-            <FormLabel id={label} sx={{ fontFamily: "Georgia, serif" , fontSize: "20px"}}>{label}</FormLabel>
+        <FormControl>
+            <FormLabel id={label}>{label}</FormLabel>
             <RadioGroup
                 defaultValue={defaultValue}
+                row
                 aria-labelledby={label}
                 name={subLabel}
                 value={val}
                 onChange={setVal}
             >
-                <Grid2 container spacing={0.5}>
-                    {options.map((option, index) => (
-                        <Grid2 item xs={6} key={option} sx={{ padding: "0px" }}>
-                            <FormControlLabel 
-                                value={option} 
-                                control={<Radio size="x-small" />} 
-                                label={option} 
-                                sx={{ margin: 0, fontFamily: "Georgia, serif", fontSize: "18px" }}
-                            />
-                        </Grid2>
-                    ))}
-                </Grid2>
+            {options.map((option) => (
+                <FormControlLabel 
+                    key={option}
+                    value={option} 
+                    control={<Radio />} 
+                    label={option} 
+                />
+            ))}
             </RadioGroup>
         </FormControl>
     );
@@ -36,8 +32,7 @@ const RadioButtonsCol = ({ label, options, val, setVal, subLabel, defaultValue }
 
 RadioButtonsCol.propTypes = {
     label: PropTypes.string,
-    options: PropTypes.arrayOf(
-        PropTypes.string),
+    options: PropTypes.arrayOf(PropTypes.string),
     val: PropTypes.string,
     setVal: PropTypes.func,
     subLabel: PropTypes.string,

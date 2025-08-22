@@ -3,8 +3,7 @@ import RadioButtonsRow from "../RadioRow";
 
 const SpatialPredicateControls = ({ formData, handleChange }) => (
   <div className="control_section">
-    <p className="section_title">Spatial Predicate</p>
-    <div className="pred_value">
+  <div className="pred_value">
       {["north", "south", "east", "west"].map((dir) => (
         <TextField
           key={dir}
