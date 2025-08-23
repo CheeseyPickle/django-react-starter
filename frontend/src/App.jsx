@@ -567,7 +567,7 @@ function App() {
       </div>
 
       <div className="main-content">
-        <MyMap />
+        <MyMap sidebarCollapsed={sidebarCollapsed} bottomBarCollapsed={bottomBarCollapsed} />
       </div>
 
       <div className="bottom-bar">
