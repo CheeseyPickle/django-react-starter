@@ -6,6 +6,9 @@ import Tabs from './components/tabs'
 import dayjs from 'dayjs'
 import './App.css'
 
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
 
 function App() {
 
@@ -545,7 +548,7 @@ function App() {
     >
       <div className="sidebar">
         <button onClick={() => setSidebarCollapsed(s => !s)}>
-          {sidebarCollapsed ? "Sidebar" : "Collapse"}
+          {sidebarCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </button>
         <Sidebar
           sidebarCollapsed={sidebarCollapsed}

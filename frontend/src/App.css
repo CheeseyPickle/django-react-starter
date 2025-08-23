@@ -14,7 +14,7 @@ html, body, #root {
 
 /* Collapsed state */
 .app-layout.sidebar-collapsed {
-  grid-template-columns: 60px 1fr;   /* Shrink sidebar */
+  grid-template-columns: 40px 1fr;   /* Shrink sidebar */
 }
 
 .app-layout.bottombar-collapsed {
@@ -45,7 +45,22 @@ html, body, #root {
   transition: height 0.3s ease;
 }
 
+.sidebar button {
+  background: #397a96;
+  color: #F4F7F0;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.sidebar button:hover {
+  background: #2f6176;
+}
 
 /* #root {
   text-align: center;
