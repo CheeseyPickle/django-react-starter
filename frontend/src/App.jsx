@@ -548,6 +548,7 @@ function App() {
           {sidebarCollapsed ? "Sidebar" : "Collapse"}
         </button>
         <Sidebar
+          sidebarCollapsed={sidebarCollapsed}
           setComparisonVal={setComparisonVal}
           setPredicate={setPredicate}
           variable={formData.variable}

@@ -26,79 +26,88 @@ const Sidebar = ({
   handleChange,
   queryData,
   isLoading,
+
+  sidebarCollapsed,
 }) => {
   const [showInfo, setShowInfo] = useState(false);
 
+  if (sidebarCollapsed) {
+    return null;
+  }
+
   return (
     <>
-        <div className="title_container">
-          <p>POLARIS</p>
-        </div>
-        <div className="subtitle_container">
-          Interactive and Scalable Interface for Polar Science
-        </div>
+      <div className="title_container">
+        <p>POLARIS</p>
+      </div>
 
-        <Input
-          val={variable}
-          setVal={setVariable}
-          label="Variable"
-          options={VARIABLES}
-          size="small"
-          varLabel="variable"
-        />
+      <div className="subtitle_container">
+        Interactive and Scalable Interface for Polar Science
+      </div>
 
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className="accordion-title">Spatial Predicate</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <SpatialPredicateControls formData={formData} handleChange={handleChange} />
-          </AccordionDetails>
-        </Accordion>
+      <Input
+        val={variable}
+        setVal={setVariable}
+        label="Variable"
+        options={VARIABLES}
+        size="small"
+        varLabel="variable"
+      />
 
-         <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className="accordion-title">Temporal Predicate</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-        <TemporalPredicateControls
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          formData={formData}
-          handleChange={handleChange}
-        />
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className="accordion-title">Spatial Predicate</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <SpatialPredicateControls formData={formData} handleChange={handleChange} />
         </AccordionDetails>
-        </Accordion>
+      </Accordion>
 
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography className="accordion-title">Aggregation</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <AggregationControls formData={formData} handleChange={handleChange} />
-          </AccordionDetails>
-        </Accordion>
-
-        <Accordion defaultExpanded>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography className="accordion-title">Filters</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-                <FiltersControls
-                    formData={formData}
-                    setPredicate={setPredicate}
-                    setComparisonVal={setComparisonVal}
-            />
-            </AccordionDetails>
-        </Accordion>
-        <SidebarButtons
-            isLoading={isLoading}
-            queryData={queryData}
-            showInfo={showInfo}
-            setShowInfo={setShowInfo}
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className="accordion-title">Temporal Predicate</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <TemporalPredicateControls
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            formData={formData}
+            handleChange={handleChange}
           />
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className="accordion-title">Aggregation</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <AggregationControls formData={formData} handleChange={handleChange} />
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className="accordion-title">Filters</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FiltersControls
+            formData={formData}
+            setPredicate={setPredicate}
+            setComparisonVal={setComparisonVal}
+          />
+        </AccordionDetails>
+      </Accordion>
+
+      <SidebarButtons
+        isLoading={isLoading}
+        queryData={queryData}
+        showInfo={showInfo}
+        setShowInfo={setShowInfo}
+      />
+
       <DataInfoDisplay showInfo={showInfo} setShowInfo={setShowInfo} />
     </>
   );
