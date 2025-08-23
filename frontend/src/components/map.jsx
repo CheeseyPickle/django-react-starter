@@ -1,15 +1,8 @@
-import { useState, useContext, useEffect, useRef } from "react";
-import {
-  Map,
-  TileLayer,
-  FeatureGroup,
-  ScaleControl,
-  Polygon
-} from "react-leaflet";
+import { useRef, useEffect, useState, useContext } from "react";
+import { Map, TileLayer, FeatureGroup, ScaleControl, Polygon } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import "leaflet-draw"; 
 import "leaflet-draw/dist/leaflet.draw.css";
 import FullscreenControl from "react-leaflet-fullscreen";
 import "react-leaflet-fullscreen/dist/styles.css";
@@ -17,21 +10,26 @@ import "react-leaflet-fullscreen/dist/styles.css";
 import { BoundsContext } from "../util/context/BoundsContext";
 import "../styles/map.css";
 
-window.type = true; // leaflet-draw quirk
-
 const MyMap = ({ sidebarCollapsed, bottomBarCollapsed }) => {
-  const { drawnShapeBounds, setDrawnShapeBounds } = useContext(BoundsContext);
+  const { setDrawnShapeBounds } = useContext(BoundsContext);
   const [editableFG, setEditableFG] = useState(null);
   const mapRef = useRef(null);
 
-  // Re-invalidate map size when sidebar/bottombar change
+  // 🔹 Smooth resizing using ResizeObserver
   useEffect(() => {
-    if (mapRef.current && mapRef.current.leafletElement) {
-      setTimeout(() => {
-        mapRef.current.leafletElement.invalidateSize();
-      }, 300);
-    }
-  }, [sidebarCollapsed, bottomBarCollapsed]);
+    if (!mapRef.current || !mapRef.current.leafletElement) return;
+
+    const map = mapRef.current.leafletElement;
+    const container = map.getContainer();
+
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize({ animate: true });
+    });
+
+    resizeObserver.observe(container);
+
+    return () => resizeObserver.disconnect();
+  }, []);
 
   const onCreated = () => {
     const drawnItems = editableFG.leafletElement._layers;
@@ -44,14 +42,6 @@ const MyMap = ({ sidebarCollapsed, bottomBarCollapsed }) => {
     setEditableFG(reactFGref);
   };
 
-  const bounds = [[-90, -180], [90, 180]];
-  const initialRectangleBounds = [
-    [84, -74],
-    [84, -10],
-    [59, -10],
-    [59, -74],
-  ];
-
   return (
     <Map
       ref={mapRef}
@@ -61,26 +51,21 @@ const MyMap = ({ sidebarCollapsed, bottomBarCollapsed }) => {
       minZoom={1.5}
       maxZoom={12}
       className="map-container"
-      maxBounds={bounds}
+      maxBounds={[[-90, -180], [90, 180]]}
       maxBoundsViscosity={1.0}
     >
-      <TileLayer
-        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-      />
+      <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
       <ScaleControl position="bottomleft" imperial />
       <FullscreenControl position="topleft" title="Show full screen" />
 
       <FeatureGroup ref={onFeatureGroupReady}>
-        <Polygon positions={initialRectangleBounds} color="blue" weight={1} />
-
+        <Polygon positions={[[84, -74], [84, -10], [59, -10], [59, -74]]} color="blue" weight={1} />
         <EditControl
           position="topleft"
           onCreated={onCreated}
           edit={{ edit: false, remove: false }}
           draw={{
-            rectangle: {
-              shapeOptions: { color: "blue", weight: 1 },
-            },
+            rectangle: { shapeOptions: { color: "blue", weight: 1 } },
             polyline: false,
             circlemarker: false,
             circle: false,
