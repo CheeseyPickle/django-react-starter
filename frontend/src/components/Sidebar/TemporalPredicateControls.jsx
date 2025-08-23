@@ -9,7 +9,7 @@ const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDat
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className="row_wrapper">
           <DateTimePicker
-            label="Start Date Time"
+            label="Start Date"
             ampm={false}
             value={startDate ? dayjs(startDate) : null}
             minDateTime={dayjs("2015-01-01T00:00")}
@@ -17,7 +17,7 @@ const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDat
             onChange={(newValue) => setStartDate(newValue ? newValue.format("YYYY-MM-DD HH:mm") : null)}
           />
           <DateTimePicker
-            label="End Date Time"
+            label="End Date"
             ampm={false}
             value={endDate ? dayjs(endDate) : null}
             minDateTime={dayjs("2015-01-01T01:00")}
@@ -28,7 +28,7 @@ const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDat
       </LocalizationProvider>
       <RadioButtonsCol
         label="Resolution"
-        options={["hour", "day", "month", "year"]}
+        options={["Hour", "Day", "Month", "Year"]}
         var={formData.temporalResolution}
         setVal={handleChange}
         subLabel="temporalResolution"
