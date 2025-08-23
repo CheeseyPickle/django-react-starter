@@ -15,11 +15,6 @@ function CustomTabPanel({ children, value, index, ...other }) {
       hidden={value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
-      style={{
-        dislpay: value == index ? "flex" : "none",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
       {...other}
     >
       {value === index && <Box sx={{ width: "100%", height: "100%" }}>{children}</Box>}

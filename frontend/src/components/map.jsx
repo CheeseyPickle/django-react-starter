@@ -59,7 +59,7 @@ const MyMap = () => {
           ];
           const bounds = [southWest, northEast];
           const rectangle = L.rectangle(bounds, {
-            color: "blue",
+            color: "#BAD4DC",
             weight: 1,
             guidelineDistance: 10,
           }); // Create the rectangle

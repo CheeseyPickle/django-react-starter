@@ -12,13 +12,8 @@ html, body, #root {
   transition: grid-template-columns 0.3s ease, grid-template-rows 0.3s ease;
 }
 
-/* Collapsed state */
 .app-layout.sidebar-collapsed {
   grid-template-columns: 40px 1fr;   /* Shrink sidebar */
-}
-
-.app-layout.bottombar-collapsed {
-  grid-template-rows: 1fr 40px;      /* Shrink bottom bar */
 }
 
 .sidebar {
@@ -28,21 +23,6 @@ html, body, #root {
   color: #F4F7F0;
   transition: width 0.3s ease;
   overflow: scroll;
-}
-
-.main-content {
-  grid-column: 2;
-  grid-row: 1;
-  background: #F4F7F0;
-  overflow: auto;
-}
-
-.bottom-bar {
-  grid-column: 2;
-  grid-row: 2;
-  background: #BAD4DC;
-  color: #F4F7F0;
-  transition: height 0.3s ease;
 }
 
 .sidebar button {
@@ -59,6 +39,43 @@ html, body, #root {
 }
 
 .sidebar button:hover {
+  background: #2f6176;
+}
+
+.main-content {
+  grid-column: 2;
+  grid-row: 1;
+  background: #F4F7F0;
+  overflow: auto;
+}
+
+.app-layout.bottombar-collapsed {
+  grid-template-rows: 1fr 40px;      /* Shrink bottom bar */
+}
+
+.bottom-bar {
+  grid-column: 2;
+  grid-row: 2;
+  background: #BAD4DC;
+  color: #F4F7F0;
+  transition: height 0.3s ease;
+
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  gap: 4px; /* space between panels */
+  overflow: hidden;
+}
+
+.bottom-bar button {
+  background: #397a96;
+  color: #F4F7F0;
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.bottom-bar button:hover {
   background: #2f6176;
 }
 

@@ -567,15 +567,26 @@ function App() {
       </div>
 
       <div className="main-content">
-        <p>Main content area</p>
+        <MyMap />
       </div>
 
       <div className="bottom-bar">
         <button onClick={() => setBottomBarCollapsed(b => !b)}>
-          {bottomBarCollapsed ? "Plots" : "Collapse"}
+          {bottomBarCollapsed ? "↑" : "↓"}
         </button>
-        <p>Bottom bar content</p>
-      </div>
+        {!bottomBarCollapsed && (
+        <Tabs
+          activeTabs={activeTabs}
+          handleTabChange={handleTabChange}
+          formData={formData}
+          htmlString={htmlString}
+          timeSeriesImage={timeSeriesImage}
+          heatMapImage={heatMapImage}
+          findTimeImage={findTimeImage}
+          findAreaImage={findAreaImage}
+        />
+      )}
+          </div>
       {/* <div className="main_wrapper">
         <Sidebar
           setComparisonVal={setComparisonVal}
