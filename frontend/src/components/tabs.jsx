@@ -51,14 +51,12 @@ const Tabs = ({
   ];
 
   return (
-    <div className="tabs_wrapper">
-      <Box sx={{ display: "flex", }}>
-        {/* Render 3 Panels */}
+    <>
         {["panel1", "panel2", "panel3"].map((panelId) => (
           <div 
             key={panelId} className="panel-container" 
-            style={{ maxWidth: "33%", height: "100%", border: "0.5px solid ",}}
-            >
+            style={{ border: "0.5px solid "}}
+          >
             {/* Dropdown to select tab for each panel */}
             <FormControl variant="filled" fullWidth>
               <InputLabel id={`tab-select-label-${panelId}`}>Select Plot</InputLabel>
@@ -66,41 +64,46 @@ const Tabs = ({
                 labelId={`tab-select-label-${panelId}`}
                 value={activeTabs[panelId]}
                 onChange={(event) => handleTabChange(panelId, event)}
-                sx={{
-                  '& .MuiInputBase-root': { fontSize: '50px', fontFamily: "Georgia, serif" },
-                  '& .MuiInputLabel-root': { fontSize: '50px', fontFamily: "Georgia, serif" }
-                }}
               >
                 {tabOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value} sx={{ fontSize: '25px', fontFamily: "Georgia, serif", justifyContent: "center" }}>
-                    {option.label}
-                  </MenuItem>
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
                 ))}
               </Select>
             </FormControl>
 
             {/* Custom Panels */}
             <CustomTabPanel value={activeTabs[panelId]} index={0}>
-              <HeatMap heatMapImage={heatMapImage} />
+              <div style={{ width: "100%", height: "100%", display: "flex" }}>
+                <HeatMap heatMapImage={heatMapImage} />
+              </div>
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={1}>
-              <TimeSeries timeSeriesImage={timeSeriesImage} />
+              <div style={{ width: "100%", height: "100%", display: "flex" }}>
+                <TimeSeries timeSeriesImage={timeSeriesImage} />
+              </div>
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={2}>
-              <div className="raster_data">
-                {!htmlString ? <div className="no_content">No Content</div> : <pre className="raster_content">{htmlString}</pre>}
+              <div style={{ width: "100%", height: "100%", display: "flex" }}>
+                <div className="raster_data">
+                  {!htmlString ? <div className="no_content">No Content</div> : <pre className="raster_content">{htmlString}</pre>}
+                </div>
               </div>
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={3}>
-              <FindTime findTimeImage={findTimeImage} />
+              <div style={{ width: "100%", height: "100%", display: "flex" }}>
+                <FindTime findTimeImage={findTimeImage} />
+              </div>
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={4}>
-              <FindArea findAreaImage={findAreaImage} formData={formData} />
+              <div style={{ width: "100%", height: "100%", display: "flex" }}>
+                <FindArea findAreaImage={findAreaImage} formData={formData} />
+              </div>
             </CustomTabPanel>
           </div>
-        ))}
-      </Box>
-    </div>
+      ))}
+    </>
   );
 };
 

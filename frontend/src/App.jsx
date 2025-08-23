@@ -586,35 +586,8 @@ function App() {
           findAreaImage={findAreaImage}
         />
       )}
-          </div>
-      {/* <div className="main_wrapper">
-        <Sidebar
-          setComparisonVal={setComparisonVal}
-          setPredicate={setPredicate}
-          variable={formData.variable}
-          setVariable={setVariable}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          formData={formData}
-          handleChange={handleChange}
-          queryData={queryData}
-          isLoading={isLoading} />
-        <div className="main_content">
-          <MyMap />
-          <Tabs
-            activeTabs={activeTabs}
-            handleTabChange={handleTabChange}
-            formData={formData}
-            htmlString={htmlString}
-            timeSeriesImage={timeSeriesImage}
-            heatMapImage={heatMapImage}
-            findTimeImage={findTimeImage}
-            findAreaImage={findAreaImage} />
-        </div> */}
-      {/* </div> */}
     </div>
+  </div>
   )
 }
 
