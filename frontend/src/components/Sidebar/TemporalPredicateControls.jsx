@@ -28,7 +28,7 @@ const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDat
       </LocalizationProvider>
       <RadioButtonsCol
         label="Resolution"
-        options={["Hour", "Day", "Month", "Year"]}
+        options={["hour", "day", "month", "year"]}
         var={formData.temporalResolution}
         setVal={handleChange}
         subLabel="temporalResolution"
