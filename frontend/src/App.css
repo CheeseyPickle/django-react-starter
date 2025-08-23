@@ -78,32 +78,3 @@ html, body, #root {
 .bottom-bar button:hover {
   background: #2f6176;
 }
-
-/* #root {
-  text-align: center;
-}
-
-body {
-  height: 100%;
-  overflow: hidden;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.main_wrapper {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  justify-content: top;
-  align-items: center;
-}
-
-.main_content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: top;
-  align-items: center;
-  height: 100vh;
-  color: white;
-} */
