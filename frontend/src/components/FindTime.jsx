@@ -28,6 +28,7 @@ const FindTime = ({ findTimeImage }) => {
     responsive: false,
     scrollZoom: false,
     displaylogo: false,
+    toImageButtonOptions: { format: "png", filename: "polaris_findtime" },
     modeBarButtonsToRemove: ['select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d'],
   };
 

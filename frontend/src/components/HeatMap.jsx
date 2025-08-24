@@ -6,7 +6,7 @@ import "../styles/heatmap.css";
 const HeatMap = ({ heatMapImage }) => {
 
   const heatmapLayout = {
-    autosize: true,
+    // autosize: true,
     margin: { l: 10, r: 10, b: 40, t: 25 },
     plot_bgcolor: "#BAD4DC",
     paper_bgcolor: "#BAD4DC",
@@ -24,31 +24,31 @@ const HeatMap = ({ heatMapImage }) => {
       showgrid: false
     },
     hovermode: 'closest',
-    showlegend: true,
-    legend: {
-      font: { size: 12 },
-      x: 0.02,
-      y:0.02,
-      xanchor: "left",
-      yanchor: "bottom",
-    },
+    showlegend: false,
+    // showlegend: true,
+    // legend: {
+    //   font: { size: 12 },
+    //   x: 0.02,
+    //   y:0.02,
+    //   xanchor: "left",
+    //   yanchor: "bottom",
+    // },
   };
 
   const heatmapConfig = {
-    displayModeBar: true,
-    responsive: true,
+    // displayModeBar: true,
+    // responsive: true,
+    responsive: false,
     displaylogo: false,
     scrollZoom: false,
-    toImageButtonOptions: {
-      format: 'png',
-      filename: 'heatmap_image'
-    },
-    modeBarButtonsToRemove: ["resetScale"],
+    toImageButtonOptions: { format: 'png', filename: 'polaris_heatmap' },
+    modeBarButtonsToRemove: ["resetScale",],
   };
 
   return (
     <div className="heat_map">
       {heatMapImage && Object.keys(heatMapImage).length > 0 ? (
+        <div classname="hm_plotly">
           <Plot
             className="hm_plotly"
             data={heatMapImage.data}
@@ -58,8 +58,9 @@ const HeatMap = ({ heatMapImage }) => {
             useResizeHandler
             style={{ width: "100%", height: "100%" }}
             />
+        </div>
       ) : (
-        <div className="hm_plot">
+        <div className="hm_plotly">
           Values aggregated over time.
         </div>
       )}

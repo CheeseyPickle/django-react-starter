@@ -25,7 +25,7 @@ const TimeSeries = ({ timeSeriesImage }) => {
     displayModeBar: true,
     displaylogo: false,
     responsive: true,
-    toImageButtonOptions: { format: "png", filename: "plot_image" },
+    toImageButtonOptions: { format: "png", filename: "polaris_timeseries" },
     modeBarButtonsToRemove: ["resetScale", "lasso2d", "select2d"],
   };
 

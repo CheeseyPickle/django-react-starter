@@ -48,6 +48,7 @@ const FindArea = ({ findAreaImage, formData }) => {
     responsive: true,
     scrollZoom: true,
     displaylogo: false,
+    toImageButtonOptions: { format: "png", filename: "polaris_findarea" },
     modeBarButtonsToRemove: ['select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d'],
   };
 
