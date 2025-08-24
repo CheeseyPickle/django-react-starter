@@ -4,6 +4,7 @@ import TimeSeries from "./TimeSeries";
 import HeatMap from "./HeatMap";
 import FindTime from "./FindTime";
 import FindArea from "./FindArea";
+import XarrayViewer from "./Raster";
 import "../styles/tabs.css";
 import "../styles/loading.css";
 
@@ -86,9 +87,10 @@ const Tabs = ({
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={2}>
               <div style={{ width: "100%", height: "100%", display: "flex" }}>
-                <div className="raster_data">
+                {/* <div className="raster_data">
                   {!htmlString ? <div className="no_content">No Content</div> : <pre className="raster_content">{htmlString}</pre>}
-                </div>
+                </div> */}
+                <XarrayViewer raw={htmlString}/>
               </div>
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={3}>

@@ -78,7 +78,7 @@
 
 }
 
-.no_content {
+/* .no_content {
   text-align: center;
 
 }
@@ -86,4 +86,18 @@
 .raster_content {
   align-items: center;
 
+} */
+
+ .xarray_container {
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 10px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.no_content {
+  text-align: center;
+  padding: 20px;
+  color: #666;
 }
