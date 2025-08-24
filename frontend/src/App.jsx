@@ -32,8 +32,8 @@ function App() {
   // Manage the active tab for multiple panels
   const [activeTabs, setActiveTabs] = useState({
     panel1: 0,
-    panel2: 0,
-    panel3: 0,
+    panel2: 1,
+    panel3: 3,
   });
 
   // Handles changing the active tab for a specific panel
@@ -544,9 +544,9 @@ function App() {
     }
   }
 
-  useEffect(() => {
-  console.log("timeSeriesImage updated:", timeSeriesImage);
-  }, [timeSeriesImage]);
+  // useEffect(() => {
+  // console.log("timeSeriesImage updated:", timeSeriesImage);
+  // }, [timeSeriesImage]);
 
   return (
     <div
