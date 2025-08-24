@@ -3,14 +3,15 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0;
-  margin: 0;
 }
 
 .fa_plot {
-  text-align: center;
+  flex: 1;            /* take available height */
+  min-height: 0;      /* allow shrinking inside grid/flex */
+  display: flex;
 }
 
 .fa_plotly {
   width: 100%;
+  height: 100%;
 }

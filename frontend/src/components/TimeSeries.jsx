@@ -14,9 +14,9 @@ const TimeSeries = ({ timeSeriesImage }) => {
   const layout = {
     ...layoutFromServer,
     autosize: true,
-    margin: { l: 0, r: 0, b: 25, t: 25 },
-    plot_bgcolor: "#ffffff",
-    paper_bgcolor: "#ffffff",
+    margin: { l: 10, r: 10, b: 40, t: 25 },
+    plot_bgcolor: "#BAD4DC",
+    paper_bgcolor: "#BAD4DC",
     xaxis: { title: "Time", showgrid: true, ...(layoutFromServer.xaxis || {}) },
     yaxis: { title: "Value", showgrid: true, ...(layoutFromServer.yaxis || {}) },
   };
