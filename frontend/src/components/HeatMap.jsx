@@ -8,6 +8,8 @@ const HeatMap = ({ heatMapImage }) => {
   const heatmapLayout = {
     autosize: true,
     margin: { l: 10, r: 10, b: 40, t: 25 },
+    plot_bgcolor: "#BAD4DC",
+    paper_bgcolor: "#BAD4DC",
     xaxis: {
       title: { text: 'Longitude' },
       automargin: true,
