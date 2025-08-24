@@ -7,7 +7,7 @@ import RadioButtonsCol from "../RadioCol";
 const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDate, formData, handleChange }) => (
   <div className="control_section">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className="row_wrapper">
+        {/* <div className="row_wrapper"> */}
           <DateTimePicker
             label="Start Date"
             ampm={false}
@@ -24,7 +24,7 @@ const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDat
             maxDateTime={dayjs("2024-12-31T23:00")}
             onChange={(newValue) => setEndDate(newValue ? newValue.format("YYYY-MM-DD HH:mm") : null)}
           />
-        </div>
+        {/* </div> */}
       </LocalizationProvider>
       <RadioButtonsCol
         label="Resolution"

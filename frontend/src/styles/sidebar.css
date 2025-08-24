@@ -34,6 +34,7 @@
 .control_section {
   display: flex;
   flex-direction: column;
+  gap: 0.9rem;
 }
 
 .section_title {
@@ -45,7 +46,7 @@
 .pred_value {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.5rem;
+  gap: 0.9rem;
 }
 
 .row_wrapper {
