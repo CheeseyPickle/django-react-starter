@@ -45,16 +45,21 @@ const Sidebar = ({
         Interactive and Scalable Interface for Polar Science
       </div>
 
-      <Input
-        val={variable}
-        setVal={setVariable}
-        label="Variable"
-        options={VARIABLES}
-        size="small"
-        varLabel="variable"
-      />
-
       <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography className="accordion-title">Variable</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Input
+            val={variable}
+            setVal={setVariable}
+            options={VARIABLES}
+            varLabel="variable"
+          />
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className="accordion-title">Spatial Predicate</Typography>
         </AccordionSummary>
@@ -63,7 +68,7 @@ const Sidebar = ({
         </AccordionDetails>
       </Accordion>
 
-      <Accordion defaultExpanded>
+      <Accordion >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className="accordion-title">Temporal Predicate</Typography>
         </AccordionSummary>
@@ -79,7 +84,7 @@ const Sidebar = ({
         </AccordionDetails>
       </Accordion>
 
-      <Accordion defaultExpanded>
+      <Accordion >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className="accordion-title">Aggregation</Typography>
         </AccordionSummary>
@@ -88,7 +93,7 @@ const Sidebar = ({
         </AccordionDetails>
       </Accordion>
 
-      <Accordion defaultExpanded>
+      <Accordion >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className="accordion-title">Filters</Typography>
         </AccordionSummary>
