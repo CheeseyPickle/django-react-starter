@@ -3,8 +3,11 @@ import Plot from 'react-plotly.js';
 import "../styles/findtime.css";
 
 const FindTime = ({ findTimeImage }) => {
+  // const fig = findTimeImage?.figure ? findTimeImage.figure : findTimeImage || {};
+  // const layoutFromServer = fig?.layout || {};
 
   const findTimeLayout = {
+    // ...layoutFromServer,
     xaxis: {
       title: "Time",
       showgrid: true,
@@ -13,10 +16,12 @@ const FindTime = ({ findTimeImage }) => {
       title: "Filter",
       showgrid: true,
     },
+    // xaxis: { title: "Time", showgrid: true, ...(layoutFromServer.xaxis || {})},
+    // yaxis: { title: "Filter", showgrid: true, ...(layoutFromServer.yaxis || {})},
     showlegend: false,
-    margin: { t: 10, l: 50, r: 0, b: 50 },
-    plot_bgcolor: "#ffffff",
-    paper_bgcolor: "#ffffff",
+    margin: { t: 25, l: 10, r: 10, b: 40 },
+    plot_bgcolor: "#BAD4DC",
+    paper_bgcolor: "#BAD4DC",
   };
 
   const findTimeConfig = {
@@ -35,7 +40,10 @@ const FindTime = ({ findTimeImage }) => {
             data={findTimeImage.data}
             layout={findTimeLayout}
             frames={findTimeImage.frames}
-            config={findTimeConfig} />
+            config={findTimeConfig}
+            useResizeHandler
+            style={{ width: "100%", height: "100%" }} 
+            />
         </div>
       ) : (
         <div className="ft_plot">
