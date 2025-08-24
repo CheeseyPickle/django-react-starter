@@ -17,7 +17,7 @@ const theme = createTheme({
 const SidebarButtons = ({ isLoading, queryData, showInfo, setShowInfo }) => (
   <div className="half_column_wrapper">
     <Button
-      onClick={queryData}
+      onClick={() => queryData()}
       variant="contained"
       color="custom"
       disabled={isLoading}

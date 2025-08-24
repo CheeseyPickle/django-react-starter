@@ -81,7 +81,7 @@ const Tabs = ({
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={1}>
               <div style={{ width: "100%", height: "100%", display: "flex" }}>
-                <TimeSeries timeSeriesImage={timeSeriesImage} />
+                <TimeSeries timeSeriesImage={ timeSeriesImage } />
               </div>
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={2}>

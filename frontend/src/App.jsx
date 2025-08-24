@@ -37,12 +37,16 @@ function App() {
   });
 
   // Handles changing the active tab for a specific panel
-  const handleTabChange = (panelId, event) => {
-    setActiveTabs((prevTabs) => ({
-      ...prevTabs,
-      [panelId]: event.target.value, // Store the selected value for the panel
-    }));
-  };
+  // const handleTabChange = (panelId, event) => {
+  //   setActiveTabs((prevTabs) => ({
+  //     ...prevTabs,
+  //     [panelId]: event.target.value, // Store the selected value for the panel
+  //   }));
+  // };
+    const handleTabChange = (panelId, event) => {
+      const v = Number(event.target.value); // force number
+      setActiveTabs(prev => ({ ...prev, [panelId]: v }));
+    };
 
   const [formData, setFormData] = useState({
     requestType: "",
@@ -539,6 +543,10 @@ function App() {
       console.error("Error requesting Find Area:", error);
     }
   }
+
+  useEffect(() => {
+  console.log("timeSeriesImage updated:", timeSeriesImage);
+  }, [timeSeriesImage]);
 
   return (
     <div
