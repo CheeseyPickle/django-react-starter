@@ -31,14 +31,16 @@ const FindArea = ({ findAreaImage, formData }) => {
         }
       ],
     },
-    margin: { r: 0, t: 0, l: 0, b: 0 },
+    margin: { r: 1, t: 5, l: 1, b: 10 },
+    plot_bgcolor: "#BAD4DC",
+    paper_bgcolor: "#BAD4DC",
     showlegend: true,
     legend: {
-      font: { size: 11 },
-      x: 1,
-      y: 0.9,
-      xanchor: "right",
-      yanchor: "top",
+      font: { size: 12 },
+      x: 0.02,
+      y: 0.02,
+      xanchor: "left",
+      yanchor: "bottom",
     },
   };
 
@@ -59,7 +61,10 @@ const FindArea = ({ findAreaImage, formData }) => {
             data={findAreaImage.data}
             layout={findAreaLayout}
             frames={findAreaImage.frames}
-            config={findAreaConfig} />
+            config={findAreaConfig} 
+            useResizeHandler
+            style={{ width: "100%", height: "100%" }} 
+            />
         </div>
       ) : (
         <div className="fa_plot">
