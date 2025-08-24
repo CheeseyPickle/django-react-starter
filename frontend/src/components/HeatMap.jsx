@@ -7,7 +7,7 @@ const HeatMap = ({ heatMapImage }) => {
 
   const heatmapLayout = {
     autosize: true,
-    margin: { l: 0, r: 0, b: 25, t: 25 },
+    margin: { l: 10, r: 10, b: 40, t: 25 },
     xaxis: {
       title: { text: 'Longitude' },
       automargin: true,
@@ -18,11 +18,18 @@ const HeatMap = ({ heatMapImage }) => {
       title: { text: 'Latitude' },
       automargin: true,
       scaleanchor: "x",
-      scaleratio: 4,
+      scaleratio: 5,
       showgrid: false
     },
     hovermode: 'closest',
-    showlegend: false
+    showlegend: true,
+    legend: {
+      font: { size: 12 },
+      x: 0.02,
+      y:0.02,
+      xanchor: "left",
+      yanchor: "bottom",
+    },
   };
 
   const heatmapConfig = {
@@ -45,7 +52,10 @@ const HeatMap = ({ heatMapImage }) => {
             data={heatMapImage.data}
             layout={heatmapLayout}
             frames={heatMapImage.frames}
-            config={heatmapConfig} />
+            config={heatmapConfig} 
+            useResizeHandler
+            style={{ width: "100%", height: "100%" }}
+            />
       ) : (
         <div className="hm_plot">
           Values aggregated over time.
