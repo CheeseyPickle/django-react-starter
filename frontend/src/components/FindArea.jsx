@@ -32,8 +32,8 @@ const FindArea = ({ findAreaImage, formData }) => {
       ],
     },
     margin: { r: 1, t: 5, l: 1, b: 10 },
-    plot_bgcolor: "#BAD4DC",
-    paper_bgcolor: "#BAD4DC",
+    plot_bgcolor: "#ffffff",
+    paper_bgcolor: "#ffffff",
     showlegend: true,
     legend: {
       font: { size: 12 },

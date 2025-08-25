@@ -8,8 +8,8 @@ const HeatMap = ({ heatMapImage }) => {
   const heatmapLayout = {
     // autosize: true,
     margin: { l: 10, r: 10, b: 40, t: 25 },
-    plot_bgcolor: "#BAD4DC",
-    paper_bgcolor: "#BAD4DC",
+    plot_bgcolor: "#ffffff",
+    paper_bgcolor: "#ffffff",
     xaxis: {
       title: { text: 'Longitude' },
       automargin: true,
@@ -25,14 +25,6 @@ const HeatMap = ({ heatMapImage }) => {
     },
     hovermode: 'closest',
     showlegend: false,
-    // showlegend: true,
-    // legend: {
-    //   font: { size: 12 },
-    //   x: 0.02,
-    //   y:0.02,
-    //   xanchor: "left",
-    //   yanchor: "bottom",
-    // },
   };
 
   const heatmapConfig = {

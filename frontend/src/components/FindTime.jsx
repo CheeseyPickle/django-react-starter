@@ -20,8 +20,8 @@ const FindTime = ({ findTimeImage }) => {
     // yaxis: { title: "Filter", showgrid: true, ...(layoutFromServer.yaxis || {})},
     showlegend: false,
     margin: { t: 25, l: 10, r: 10, b: 40 },
-    plot_bgcolor: "#BAD4DC",
-    paper_bgcolor: "#BAD4DC",
+    plot_bgcolor: "#ffffff",
+    paper_bgcolor: "#ffffff",
   };
 
   const findTimeConfig = {

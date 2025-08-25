@@ -1,19 +1,5 @@
 import { Button } from "@mui/material";
 
-import { createTheme } from '@mui/material/styles';
-
-const theme = createTheme({
-  palette: {
-    ochre: {
-      main: '#BAD4DC',
-      light: '#F4F7F0',
-      dark: '#4999BB',
-      contrastText: '#242105',
-    },
-  },
-});
-
-
 const SidebarButtons = ({ isLoading, queryData, showInfo, setShowInfo }) => (
   <div className="half_column_wrapper">
     <Button
