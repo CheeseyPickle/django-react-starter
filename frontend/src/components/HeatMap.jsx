@@ -37,6 +37,15 @@ const HeatMap = ({ heatMapImage }) => {
     modeBarButtonsToRemove: ["resetScale",],
   };
 
+//   const styledData = heatMapImage.data.map(trace => ({
+//   ...trace,
+//   zmin: 180, 
+//   zmax: 330,
+// }));
+  // 95C = 368.15K
+  // 56.7C = 329.85K  <-- highest temperature ever recorded
+  // -90C = 183.15K   <-- lowest temperature ever recorded
+
   return (
     <div className="heat_map">
       {heatMapImage && Object.keys(heatMapImage).length > 0 ? (

@@ -20,14 +20,14 @@ const TimeSeries = ({ timeSeriesImage }) => {
     xaxis: { 
       title: "Time", 
       showgrid: true,
-      gridcolor: "#303641",   // light gray grid
+      gridcolor: "#e6e6e6",   // light gray grid
       gridwidth: 1,
       zeroline: false, 
       ...(layoutFromServer.xaxis || {}) },
     yaxis: { 
       title: "Value", 
       showgrid: true,
-      gridcolor: "#303641",
+      gridcolor: "#e6e6e6",
       gridwidth: 1,
       zeroline: false,
       ...(layoutFromServer.yaxis || {}) },
@@ -41,13 +41,21 @@ const TimeSeries = ({ timeSeriesImage }) => {
     modeBarButtonsToRemove: ["resetScale", "lasso2d", "select2d"],
   };
 
+  const styledData = data.map((trace, i) => ({
+    ...trace,
+    line: {
+      color: ["#6C88B8", "#1E4E54", "#b29a79"][i % 3], // cycle through colors
+      width: 2,
+    },
+}));
+
   return (
     <div className="time_series">
       {hasData ? (
         <div className="ts_plot">
           <Plot
             className="ts_plotly"
-            data={data}
+            data={styledData}
             layout={layout}
             frames={frames}
             config={config}
