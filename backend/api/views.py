@@ -334,7 +334,7 @@ def find_time_query(request):
         ft = qe.execute()
 
         var_short_name = get_variable_short_name(variable)
-        color_map = {True: "blue", False: "red"}
+        color_map = {True: "#005AB5", False: "#DC3220"}
         fig = go.Figure(
             [
                 go.Scatter(
@@ -410,7 +410,7 @@ def find_area_query(request):
             ],
         )
         var_short_name = get_variable_short_name(variable)
-        color_mapping = {True: "blue", False: "red"}
+        color_mapping = {True: "#005AB5", False: "#DC3220"}
         fig = px.choropleth_mapbox(
             gdf,
             geojson=gdf.geometry,
@@ -418,7 +418,7 @@ def find_area_query(request):
             hover_data={var_short_name: ":.2f", "latitude": ":.3f", "longitude": ":.3f"},
             color=var_short_name,
             center={"lat": gdf["latitude"].mean(), "lon": gdf["longitude"].mean()},
-            opacity=0.3,
+            opacity=0.5,
             zoom=1,
             color_discrete_map=color_mapping,
         )
@@ -435,10 +435,10 @@ def find_area_query(request):
         fig.update_traces(marker_line_width=0)
         fig.update_layout(
             mapbox_style="white-bg",
-            mapbox_bounds_east=180,
-            mapbox_bounds_north=90,
-            mapbox_bounds_west=-180,
-            mapbox_bounds_south=-90,
+            mapbox_bounds_east=east,
+            mapbox_bounds_north=north,
+            mapbox_bounds_west=west,
+            mapbox_bounds_south=south,
             mapbox_layers=[
                 {
                     "below": "traces",

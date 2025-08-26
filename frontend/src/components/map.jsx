@@ -49,8 +49,8 @@ const MyMap = ({ sidebarCollapsed, bottomBarCollapsed }) => {
     ];
 
     const rectangle = L.rectangle([southWest, northEast], {
-      color: "blue",
-      weight: 1,
+      color: "#6C88B8",
+      weight: 3,
     });
     rectangle.addTo(fg);
   }, [drawnShapeBounds, editableFG]);

@@ -16,7 +16,7 @@ function App() {
   const [bottomBarCollapsed, setBottomBarCollapsed] = useState(false);
 
   const [variable, setVariable] = useState("2m_temperature");
-  const [startDate, setStartDate] = useState(dayjs("2020-01-01T00:00Z"));
+  const [startDate, setStartDate] = useState(dayjs("2020-06-01T00:00Z"));
   const [endDate, setEndDate] = useState(dayjs("2023-12-31T23:00Z"));
   const [comparisonVal, setComparisonVal] = useState(285);
   const [predicate, setPredicate] = useState("<");

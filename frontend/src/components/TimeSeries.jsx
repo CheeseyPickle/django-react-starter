@@ -25,7 +25,6 @@ const TimeSeries = ({ timeSeriesImage }) => {
       zeroline: false, 
       ...(layoutFromServer.xaxis || {}) },
     yaxis: { 
-      title: "Value", 
       showgrid: true,
       gridcolor: "#e6e6e6",
       gridwidth: 1,

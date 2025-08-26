@@ -6,7 +6,7 @@ import "../styles/heatmap.css";
 const HeatMap = ({ heatMapImage }) => {
 
   const heatmapLayout = {
-    // autosize: true,
+    autosize: true,
     margin: { l: 10, r: 10, b: 40, t: 25 },
     plot_bgcolor: "#ffffff",
     paper_bgcolor: "#ffffff",

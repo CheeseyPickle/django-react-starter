@@ -15,7 +15,7 @@ const FindArea = ({ findAreaImage, formData }) => {
       // TODO: Mess with these bounds a bit, right now it will update on any change on the main map.
       // Change this so that they only get updated on find area query. 
       center: { lat: bounds[0], lon: bounds[1] },
-      zoom: 1,
+      zoom: 5,
       bounds: {
         east: 180,
         north: 90,
