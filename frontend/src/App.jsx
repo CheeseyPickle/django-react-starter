@@ -158,7 +158,11 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          startDateTime: dayjs(formData.startDateTime).toISOString(),
+          endDateTime: dayjs(formData.endDateTime).toISOString(),
+        }),
       });
 
       if (response.ok) {

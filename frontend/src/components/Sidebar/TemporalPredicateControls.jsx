@@ -10,18 +10,18 @@ const TemporalPredicateControls = ({ startDate, endDate, setStartDate, setEndDat
           <DateTimePicker
             label="Start Date Time"
             ampm={false}
-            value={startDate ? dayjs(startDate) : null}
+            value={startDate}
             minDateTime={dayjs("2015-01-01T00:00")}
             maxDateTime={dayjs("2024-12-31T23:00")}
-            onChange={(newValue) => setStartDate(newValue ? newValue.format("YYYY-MM-DD HH:mm") : null)}
+            onChange={(newValue) => setStartDate(newValue)}
           />
           <DateTimePicker
             label="End Date Time"
             ampm={false}
-            value={endDate ? dayjs(endDate) : null}
+            value={endDate}
             minDateTime={dayjs("2015-01-01T01:00")}
             maxDateTime={dayjs("2024-12-31T23:00")}
-            onChange={(newValue) => setEndDate(newValue ? newValue.format("YYYY-MM-DD HH:mm") : null)}
+            onChange={(newValue) => setEndDate(newValue)}
           />
       </LocalizationProvider>
       <RadioButtonsCol

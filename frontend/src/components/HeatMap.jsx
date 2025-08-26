@@ -30,7 +30,7 @@ const HeatMap = ({ heatMapImage }) => {
   const heatmapConfig = {
     // displayModeBar: true,
     // responsive: true,
-    responsive: false,
+    // responsive: false,
     displaylogo: false,
     scrollZoom: false,
     toImageButtonOptions: { format: 'png', filename: 'polaris_heatmap' },

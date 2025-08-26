@@ -3,10 +3,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/material';
-import utc from "dayjs/plugin/utc";
+// import utc from "dayjs/plugin/utc";
 import dayjs from 'dayjs';
 
-dayjs.extend(utc);
+// dayjs.extend(utc);
 
 const DateInput = ({ date, setDate, label, sx }) => {
   const maxDate = dayjs("2024-12-31T23:00Z");
@@ -18,15 +18,16 @@ const DateInput = ({ date, setDate, label, sx }) => {
         <DateTimePicker
           label={label}
           value={date}
-          onChange={setDate}
+          onChange={(newValue) => setDate(newValue)}
           disableFuture
           ampm={false}
           minutesStep={60}
           minDateTime={minDate}
           maxDateTime={maxDate}
-          timezone="UTC"
-          views={['year', 'month', 'day', 'hours', 'minutes']}
-          format="DD/MM/YYYY HH"
+          // timezone="UTC"
+          // views={['year', 'month', 'day', 'hours', 'minutes']}
+          // format="DD/MM/YYYY HH"
+          views={['year', 'month', 'day', 'hours']}
         />
       </LocalizationProvider>
     </Box>
@@ -34,7 +35,8 @@ const DateInput = ({ date, setDate, label, sx }) => {
 };
 
 DateInput.propTypes = {
-  date: PropTypes.any,
+  // date: PropTypes.any,
+  date: PropTypes.object, 
   setDate: PropTypes.func,
   label: PropTypes.string,
   sx: PropTypes.object,
