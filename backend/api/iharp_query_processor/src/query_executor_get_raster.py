@@ -162,7 +162,7 @@ class GetRasterExecutor(QueryExecutor):
             ds_list.append(ds)
 
         # 3.2 read local files
-        ds_list = []
+        # ds_list = []
         for file in file_list:
             ds = xr.open_dataset(file, engine="netcdf4").sel(
                 time=slice(self.start_datetime, self.end_datetime),
