@@ -80,6 +80,7 @@ function App() {
     }))
   }, [comparisonVal, predicate])
 
+  // Handles changing the parameters in the sidebar
   const handleChange = (e) => {
     // console.log(e);
     console.log(formData);
@@ -150,6 +151,7 @@ function App() {
     // settemporalResolutionSelected(value !== "");
   };
 
+  // Checks data can be queried and awaits all queries
   const queryData = async () => {
     setIsLoading(true);
     try {
