@@ -172,13 +172,13 @@ class GetRasterExecutor(QueryExecutor):
             ds_list.append(ds)
 
         # 3.3 assemble result
-        # ds = xr.concat([i.chunk() for i in ds_list], dim="time")
+        # ds = xr.concat([i.chunk() for i in ds_list], dim="time", join='outer')
         # compat="override" is a temporal walkaround as pre-aggregation value conflicts with downloaded data
         # future solution: use new encoding when write pre-aggregated data
         try:
-            ds = xr.merge([i.chunk() for i in ds_list], compat="no_conflicts")
+            ds = xr.merge([i.chunk() for i in ds_list], compat="no_conflicts", join="outer")
         except ValueError:
             print("WARNING: conflict in merging data, use override")
-            ds = xr.merge([i.chunk() for i in ds_list], compat="override")
+            ds = xr.merge([i.chunk() for i in ds_list], compat="override", join="outer")
 
         return ds.compute()

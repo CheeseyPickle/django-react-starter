@@ -13,12 +13,16 @@ const FindTime = ({ findTimeImage }) => {
       showgrid: true,
     },
     yaxis: {
-      title: "Filter",
-      showgrid: true,
+      visible: false
     },
-    // xaxis: { title: "Time", showgrid: true, ...(layoutFromServer.xaxis || {})},
-    // yaxis: { title: "Filter", showgrid: true, ...(layoutFromServer.yaxis || {})},
-    showlegend: false,
+    showlegend: true,
+    legend: {
+      font: { size: 12 },
+      x: 0.02,
+      y: 0.02,
+      xanchor: "left",
+      yanchor: "bottom",
+    },
     margin: { t: 25, l: 10, r: 10, b: 40 },
     plot_bgcolor: "#ffffff",
     paper_bgcolor: "#ffffff",

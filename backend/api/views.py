@@ -334,18 +334,40 @@ def find_time_query(request):
         ft = qe.execute()
 
         var_short_name = get_variable_short_name(variable)
+        # color_map = {True: "#005AB5", False: "#DC3220"}
+        # fig = go.Figure(
+        #     [
+        #         go.Scatter(
+        #             x=ft["time"],
+        #             y=ft[var_short_name],
+        #             mode="lines+markers",
+        #             marker=dict(size=12, color=[color_map[i] for i in ft[var_short_name].values]),
+        #             line=dict(color="lightgray"),
+        #         )
+        #     ]
+        # )
         color_map = {True: "#005AB5", False: "#DC3220"}
-        fig = go.Figure(
-            [
-                go.Scatter(
-                    x=ft["time"],
-                    y=ft[var_short_name],
-                    mode="lines+markers",
-                    marker=dict(size=12, color=[color_map[i] for i in ft[var_short_name].values]),
-                    line=dict(color="lightgray"),
-                )
-            ]
-        )
+
+        true_mask = ft[var_short_name] == True
+        false_mask = ft[var_short_name] == False
+
+        fig = go.Figure([
+            go.Scatter(
+                x=ft["time"][true_mask],
+                y=ft[var_short_name][true_mask],
+                mode="markers",
+                marker=dict(size=12, color=color_map[True]),
+                name="True"   # <-- legend label
+            ),
+            go.Scatter(
+                x=ft["time"][false_mask],
+                y=ft[var_short_name][false_mask],
+                mode="markers",
+                marker=dict(size=12, color=color_map[False]),
+                name="False"  # <-- legend label
+            )
+        ])
+        fig.update_layout(showlegend=True)
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
 
