@@ -238,6 +238,12 @@ def timeseries_query(request):
         fig = go.Figure([go.Scatter(x=ts["time"], y=ts[short_variable])])
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
+
+        # log_info = qe.get_log()
+        # response_data = {
+        #     "figure": json_data,
+        #     "log": log_info
+        # }
         return JsonResponse(json_data, status=201)
 
     logger.error("Invalid data: %s", serializer.errors)

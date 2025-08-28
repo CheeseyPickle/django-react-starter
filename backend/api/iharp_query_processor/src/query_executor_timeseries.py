@@ -16,6 +16,7 @@ class TimeseriesExecutor(QueryExecutor):
         aggregation,  # e.g., "mean", "max", "min"
         time_series_aggregation_method: str,  # e.g., "mean", "max", "min"
         metadata=None,  # metadata file path
+        log_info={},
     ):
         super().__init__(
             variable=variable,
@@ -32,6 +33,9 @@ class TimeseriesExecutor(QueryExecutor):
         )
         self.time_series_aggregation_method = time_series_aggregation_method
 
+    def get_log(self):
+        return self.log_info
+
     def execute(self):
         get_raster_executor = GetRasterExecutor(
             variable=self.variable,
@@ -47,6 +51,7 @@ class TimeseriesExecutor(QueryExecutor):
             metadata=self.metadata.f_path,
         )
         raster = get_raster_executor.execute()
+        # log = get_raster_executor.get_log()
         if self.time_series_aggregation_method == "mean":
             return raster.mean(dim=["latitude", "longitude"]).compute()
         elif self.time_series_aggregation_method == "max":

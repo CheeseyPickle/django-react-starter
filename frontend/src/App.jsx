@@ -21,10 +21,17 @@ function App() {
   const [comparisonVal, setComparisonVal] = useState(285);
   const [predicate, setPredicate] = useState("<");
   const [htmlString, setHtml] = useState("");
+
   const [timeSeriesImage, setImageRecieved] = useState({});
   const [heatMapImage, setHeatMap] = useState({});
   const [findTimeImage, setFindTime] = useState({});
   const [findAreaImage, setFindArea] = useState({});
+
+  const [queryLog, setQueryLog] = useState([]);
+
+  const [heatmapTextOut, setHeatmapTextOut] = useState({});   // list of local files, api calls, heatmap YMDH ranges
+  const [timeseriesTextOut, setTimeseriesTextOut] = useState({});   // list of local files, api calls
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { drawnShapeBounds, setDrawnShapeBounds } = useContext(BoundsContext);
@@ -283,7 +290,9 @@ function App() {
         // Parse the response as JSON
         const responseData = await response.json();
         console.log("Successfully requested time series data:", responseData);
-        setImageRecieved(responseData);
+        setImageRecieved(responseData)
+        // setImageRecieved(responseData.figure);
+        // setTimeseriesTextOut(responseData.log);
       } else {
         const errorResponse = await response.json();
         // setProgress(5);
@@ -598,6 +607,8 @@ function App() {
           heatMapImage={heatMapImage}
           findTimeImage={findTimeImage}
           findAreaImage={findAreaImage}
+          timeseriesTextOut={timeseriesTextOut}
+          heatmapTextOut={heatmapTextOut}
         />
       )}
     </div>
