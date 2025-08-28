@@ -4,7 +4,7 @@ import TimeSeries from "./TimeSeries";
 import HeatMap from "./HeatMap";
 import FindTime from "./FindTime";
 import FindArea from "./FindArea";
-// ADD: import QueryPlanText from "./QueryPlanText"
+import QueryPlanText from "./QueryPlanText"
 import XarrayViewer from "./Raster";
 import "../styles/tabs.css";
 import "../styles/loading.css";
@@ -52,7 +52,7 @@ const Tabs = ({
     { value: 2, label: "Raster Info" },
     { value: 3, label: "Find Time" },
     { value: 4, label: "Find Area" },
-    // { value: 5, label: "Query Plan"},
+    { value: 5, label: "Query Plan"},
   ];
 
   return (
@@ -107,11 +107,11 @@ const Tabs = ({
                 <FindArea findAreaImage={findAreaImage} formData={formData} />
               </div>
             </CustomTabPanel>
-            {/* <CustomTabPanel value={activeTabs[panelId]} index={5}>
+            <CustomTabPanel value={activeTabs[panelId]} index={5}>
               <div style={{ width: "100%", height: "100%", display: "flex" }}>
                 <QueryPlanText  timeseriesTextOut={timeseriesTextOut} heatmapTextOut={heatmapTextOut} />
               </div>
-            </CustomTabPanel> */}
+            </CustomTabPanel>
           </div>
       ))}
     </>
