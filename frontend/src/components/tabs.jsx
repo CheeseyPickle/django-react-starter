@@ -41,8 +41,8 @@ const Tabs = ({
   heatMapImage,
   findTimeImage,
   findAreaImage,
-  // timeseriesTextOut,
-  // heatmapTextOut,
+  timeseriesTextOut,
+  heatmapTextOut,
 }) => {
 
   // Available tab options
