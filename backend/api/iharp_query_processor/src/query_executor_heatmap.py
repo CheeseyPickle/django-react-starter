@@ -28,6 +28,7 @@ class HeatmapExecutor(QueryExecutor):
         aggregation,  # e.g., "mean", "max", "min"
         heatmap_aggregation_method: str,  # e.g., "mean", "max", "min"
         metadata=None,  # metadata file path
+        log_info=None
     ):
         super().__init__(
             variable,
@@ -43,6 +44,21 @@ class HeatmapExecutor(QueryExecutor):
             metadata=metadata,
         )
         self.heatmap_aggregation_method = heatmap_aggregation_method
+        self.log_info = log_info if log_info is not None else []
+
+    def merge_log_infos(self):
+        combined = {"local_files": [], "api_calls": []}
+        for info in self.log_info:
+            combined["local_files"].extend(info.get("local_files", []))
+            combined["api_calls"].extend(info.get("api_calls", []))
+        # remove duplicates
+        # combined["local_files"] = list(dict.fromkeys(combined["local_files"]))
+        # combined["api_calls"] = list(dict.fromkeys(combined["api_calls"]))
+        return combined
+
+    def get_log(self):
+        # print(f"[TimeseriesExecutor.get_log] log_info: {self.log_info}")
+        return self.log_info
 
     def execute(self):
         if self.heatmap_aggregation_method == "mean":
@@ -81,6 +97,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_year.append(get_raster_year.execute())
+            self.log_info.append(get_raster_year.get_log())
             year_hours += [get_total_hours_in_year(y) for y in range(start_year.year, end_year.year + 1)]
         for start_month, end_month in month_range:
             get_raster_month = GetRasterExecutor(
@@ -97,6 +114,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_month.append(get_raster_month.execute())
+            self.log_info.append(get_raster_month.get_log())
             month_hours += [get_total_hours_in_month(m) for m in iterate_months(start_month, end_month)]
         for start_day, end_day in day_range:
             get_raster_day = GetRasterExecutor(
@@ -113,6 +131,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_day.append(get_raster_day.execute())
+            self.log_info.append(get_raster_day.get_log())
             day_hours += [24 for _ in range(number_of_days_inclusive(start_day, end_day))]
         for start_hour, end_hour in hour_range:
             get_raster_hour = GetRasterExecutor(
@@ -129,6 +148,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_hour.append(get_raster_hour.execute())
+            self.log_info.append(get_raster_hour.get_log())
             hour_hours += [1 for _ in range(number_of_hours_inclusive(start_hour, end_hour))]
 
         xrds_concat = xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="time", join="outer")
@@ -166,6 +186,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_year.append(get_raster_year.execute())
+            self.log_info.append(get_raster_year.get_log())
         for start_month, end_month in month_range:
             get_raster_month = GetRasterExecutor(
                 self.variable,
@@ -181,6 +202,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_month.append(get_raster_month.execute())
+            self.log_info.append(get_raster_month.get_log())
         for start_day, end_day in day_range:
             get_raster_day = GetRasterExecutor(
                 self.variable,
@@ -196,6 +218,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_day.append(get_raster_day.execute())
+            self.log_info.append(get_raster_day.get_log())
         for start_hour, end_hour in hour_range:
             get_raster_hour = GetRasterExecutor(
                 self.variable,
@@ -211,7 +234,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_hour.append(get_raster_hour.execute())
-
+            self.log_info.append(get_raster_hour.get_log())
         return xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="time", join="outer").max(dim="time")
 
     def _get_min_heatmap(self):
@@ -237,6 +260,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_year.append(get_raster_year.execute())
+            self.log_info.append(get_raster_year.get_log())
         for start_month, end_month in month_range:
             get_raster_month = GetRasterExecutor(
                 self.variable,
@@ -252,6 +276,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_month.append(get_raster_month.execute())
+            self.log_info.append(get_raster_month.get_log())
         for start_day, end_day in day_range:
             get_raster_day = GetRasterExecutor(
                 self.variable,
@@ -267,6 +292,7 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_day.append(get_raster_day.execute())
+            self.log_info.append(get_raster_day.get_log())
         for start_hour, end_hour in hour_range:
             get_raster_hour = GetRasterExecutor(
                 self.variable,
@@ -282,6 +308,6 @@ class HeatmapExecutor(QueryExecutor):
                 metadata=self.metadata.f_path,
             )
             ds_hour.append(get_raster_hour.execute())
-
+            self.log_info.append(get_raster_hour.get_log())
         # get min heatmap from ds_year, ds_month, ds_day, ds_hour
         return xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="time", join="outer").min(dim="time")

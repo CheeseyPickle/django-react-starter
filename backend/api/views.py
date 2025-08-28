@@ -287,6 +287,7 @@ def heatmap_query(request):
             spatial_resolution=spatial_resolution,
             aggregation=aggregation,
             heatmap_aggregation_method=aggregation,
+            log_info=None
         )
         hm = qe.execute()
 
@@ -296,7 +297,15 @@ def heatmap_query(request):
         fig.update_layout(yaxis=dict(scaleanchor="x", scaleratio=1), xaxis=dict(constrain="domain"))
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
-        return JsonResponse(json_data, status=201)
+
+        log_info = qe.log_info[0]
+        # print(f"[View] log_info = qe.log_info being sent to frontend: {log_info}")
+
+        response_data = {
+            "figure": json_data,
+            "log": log_info
+        }
+        return JsonResponse(response_data, status=201)
 
     logger.error("Invalid data: %s", serializer.errors)
     return JsonResponse({"error": "Invalid data"}, status=400)

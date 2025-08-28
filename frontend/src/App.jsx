@@ -376,7 +376,8 @@ function App() {
         // Parse the response as JSON
         const responseData = await response.json();
         console.log("Successfully requested heat map data:", responseData);
-        setHeatMap(responseData);
+        setHeatMap(responseData.figure);
+        setHeatmapTextOut(responseData.log);
       } else {
         const errorResponse = await response.json();
         // setProgress(5);

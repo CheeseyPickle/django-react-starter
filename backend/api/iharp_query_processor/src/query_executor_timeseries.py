@@ -34,20 +34,6 @@ class TimeseriesExecutor(QueryExecutor):
         self.time_series_aggregation_method = time_series_aggregation_method
         self.log_info = log_info if log_info is not None else []
 
-    def merge_log_infos(self):
-        combined = {"local_files": [], "api_calls": []}
-        for info in self.log_info:
-            combined["local_files"].extend(info.get("local_files", []))
-            combined["api_calls"].extend(info.get("api_calls", []))
-        # remove duplicates
-        # combined["local_files"] = list(dict.fromkeys(combined["local_files"]))
-        # combined["api_calls"] = list(dict.fromkeys(combined["api_calls"]))
-        return combined
-
-    def get_log(self):
-        # print(f"[TimeseriesExecutor.get_log] log_info: {self.log_info}")
-        return self.log_info
-
     def execute(self):
         # print(f"[TimeseriesExecutor] Starting execution")
         get_raster_executor = GetRasterExecutor(

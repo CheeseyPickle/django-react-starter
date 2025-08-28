@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 
 const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut }) => {
+
+  console.log("timeseriesTextOut, heatmapTextOut:", timeseriesTextOut, heatmapTextOut)
   // Combine local lists
   const localFilesList = [
     ...(timeseriesTextOut.local || []),
