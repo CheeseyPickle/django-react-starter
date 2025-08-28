@@ -290,9 +290,9 @@ function App() {
         // Parse the response as JSON
         const responseData = await response.json();
         console.log("Successfully requested time series data:", responseData);
-        setImageRecieved(responseData)
-        // setImageRecieved(responseData.figure);
-        // setTimeseriesTextOut(responseData.log);
+        // setImageRecieved(responseData)
+        setImageRecieved(responseData.figure);
+        setTimeseriesTextOut(responseData.log);
       } else {
         const errorResponse = await response.json();
         // setProgress(5);

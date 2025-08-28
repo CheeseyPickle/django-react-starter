@@ -18,6 +18,7 @@ class GetRasterSeriazlier(serializers.ModelSerializer):
             "west",
             "spatialResolution",
             "aggregation",
+            "log_info",
         ]
 
 
@@ -54,6 +55,7 @@ class TimeSeriesSerializer(serializers.ModelSerializer):
             "east",
             "west",
             "aggregation",
+            "log_info",
         ]
 
 

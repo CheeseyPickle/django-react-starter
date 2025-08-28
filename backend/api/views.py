@@ -77,6 +77,7 @@ def get_raster_query(request):
             temporal_resolution=time_resolution,
             spatial_resolution=spatial_resolution,
             aggregation=aggregation,
+            log_info=None,
         )
         ds = qe.execute()
         response = ds.__str__()
@@ -231,6 +232,7 @@ def timeseries_query(request):
             max_lon=east,
             aggregation=aggregation,
             time_series_aggregation_method=aggregation,
+            log_info=None,
         )
         ts = qe.execute()
 
@@ -239,12 +241,13 @@ def timeseries_query(request):
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
 
-        # log_info = qe.get_log()
-        # response_data = {
-        #     "figure": json_data,
-        #     "log": log_info
-        # }
-        return JsonResponse(json_data, status=201)
+        log_info = qe.log_info
+        print(f"[View] Log info being sent to frontend: {log_info}")
+        response_data = {
+            "figure": json_data,
+            "log": log_info
+        }
+        return JsonResponse(response_data, status=201)
 
     logger.error("Invalid data: %s", serializer.errors)
     return JsonResponse({"error": "Invalid data"}, status=400)

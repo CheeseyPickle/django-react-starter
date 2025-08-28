@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { parseISO, differenceInYears, differenceInMonths, differenceInDays, differenceInHours } from "date-fns";
 
 const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut }) => {
   // Combine local lists
@@ -18,16 +17,23 @@ const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut }) => {
   // Helper to calculate range count (return 0 if empty)
   const calcRange = (range, unit) => {
     if (!range || range.length < 2) return 0;
-    const [start, end] = range.map((t) => parseISO(t));
+    const [start, end] = range.map((t) => new Date(t));
+
+    const diffMs = end - start; // difference in milliseconds
+    const oneHour = 1000 * 60 * 60;
+    const oneDay = oneHour * 24;
+    const oneMonth = oneDay * 30.4167; // average month length
+    const oneYear = oneDay * 365.25;   // average year length
+
     switch (unit) {
       case "years":
-        return differenceInYears(end, start) || 0;
+        return Math.floor(diffMs / oneYear);
       case "months":
-        return differenceInMonths(end, start) || 0;
+        return Math.floor(diffMs / oneMonth);
       case "days":
-        return differenceInDays(end, start) || 0;
+        return Math.floor(diffMs / oneDay);
       case "hours":
-        return differenceInHours(end, start) || 0;
+        return Math.floor(diffMs / oneHour);
       default:
         return 0;
     }

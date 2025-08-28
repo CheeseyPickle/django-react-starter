@@ -16,7 +16,7 @@ class TimeseriesExecutor(QueryExecutor):
         aggregation,  # e.g., "mean", "max", "min"
         time_series_aggregation_method: str,  # e.g., "mean", "max", "min"
         metadata=None,  # metadata file path
-        log_info={},
+        log_info=None,
     ):
         super().__init__(
             variable=variable,
@@ -32,11 +32,24 @@ class TimeseriesExecutor(QueryExecutor):
             metadata=metadata,
         )
         self.time_series_aggregation_method = time_series_aggregation_method
+        self.log_info = log_info if log_info is not None else []
 
-    def get_log(self):
-        return self.log_info
+    def merge_log_infos(self):
+        combined = {"local_files": [], "api_calls": []}
+        for info in self.log_info:
+            combined["local_files"].extend(info.get("local_files", []))
+            combined["api_calls"].extend(info.get("api_calls", []))
+        # remove duplicates
+        # combined["local_files"] = list(dict.fromkeys(combined["local_files"]))
+        # combined["api_calls"] = list(dict.fromkeys(combined["api_calls"]))
+        return combined
+
+    # def get_log(self):
+    #     combined_logs = self.merge_log_infos()
+    #     return combined_logs
 
     def execute(self):
+        print(f"[TimeseriesExecutor] Starting execution")
         get_raster_executor = GetRasterExecutor(
             variable=self.variable,
             start_datetime=self.start_datetime,
@@ -51,7 +64,12 @@ class TimeseriesExecutor(QueryExecutor):
             metadata=self.metadata.f_path,
         )
         raster = get_raster_executor.execute()
-        # log = get_raster_executor.get_log()
+
+        print(f"[TimeseriesExecutor] Raster executor log before merge: {self.log_info}")
+        self.log_info.append(get_raster_executor.get_log())
+        # self.log_info = self.merge_log_infos()
+        # print(f"[TimeseriesExecutor] Merged log_info: {self.log_info}")
+
         if self.time_series_aggregation_method == "mean":
             return raster.mean(dim=["latitude", "longitude"]).compute()
         elif self.time_series_aggregation_method == "max":

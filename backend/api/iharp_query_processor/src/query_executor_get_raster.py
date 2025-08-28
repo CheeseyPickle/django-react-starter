@@ -22,7 +22,7 @@ class GetRasterExecutor(QueryExecutor):
         spatial_resolution: float,  # e.g., 0.25, 0.5, 1.0
         aggregation,  # e.g., "mean", "max", "min"
         metadata=None,  # metadata file path
-        # log_info={},
+        log_info=None,
     ):
         super().__init__(
             variable,
@@ -37,9 +37,11 @@ class GetRasterExecutor(QueryExecutor):
             aggregation,
             metadata=metadata,
         )
+        self.log_info = log_info if log_info is not None else []
 
-    # def get_log(self):
-    #     return self.log_info
+    def get_log(self):
+        print(f"[GetRasterExecutor.get_log] log_info: {self.log_info}")
+        return self.log_info
 
     def _check_metadata(self):
         """
@@ -115,10 +117,13 @@ class GetRasterExecutor(QueryExecutor):
     def execute(self):
         # 1. check metadata
         file_list, api = self._check_metadata()
-        # self.log_info = {
-        #     "local_files": file_list,
-        #     "api_calls": [str(api_call) for api_call in api]
-        # }
+        print(f"[GetRasterExecutor] local files: {file_list}, api calls: {api}")
+
+        self.log_info = {
+            "local": file_list,
+            "api": [str(api_call) for api_call in api]
+        }
+        # self.log_info.append(cur_log_info)
 
         # 2. call apis
         download_file_list = []
