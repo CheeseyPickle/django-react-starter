@@ -125,6 +125,8 @@ Tabs.propTypes = {
   heatMapImage: PropTypes.object,
   findTimeImage: PropTypes.object,
   findAreaImage: PropTypes.object,
+  timeseriesTextOut: PropTypes.object,
+  heatmapTextOut: PropTypes.object,
 };
 
 export default Tabs;
