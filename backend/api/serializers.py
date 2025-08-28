@@ -37,6 +37,7 @@ class HeatmapSerializer(serializers.ModelSerializer):
             "west",
             "spatialResolution",
             "aggregation",
+            "log_info",
         ]
 
 

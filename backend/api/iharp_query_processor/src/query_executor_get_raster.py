@@ -40,7 +40,7 @@ class GetRasterExecutor(QueryExecutor):
         self.log_info = log_info if log_info is not None else []
 
     def get_log(self):
-        print(f"[GetRasterExecutor.get_log] log_info: {self.log_info}")
+        # print(f"[GetRasterExecutor.get_log] log_info: {self.log_info}")
         return self.log_info
 
     def _check_metadata(self):
@@ -117,7 +117,7 @@ class GetRasterExecutor(QueryExecutor):
     def execute(self):
         # 1. check metadata
         file_list, api = self._check_metadata()
-        print(f"[GetRasterExecutor] local files: {file_list}, api calls: {api}")
+        # print(f"[GetRasterExecutor] local files: {file_list}, api calls: {api}")
 
         self.log_info = {
             "local": file_list,

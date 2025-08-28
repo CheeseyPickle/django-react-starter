@@ -241,8 +241,9 @@ def timeseries_query(request):
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
 
-        log_info = qe.log_info
-        print(f"[View] Log info being sent to frontend: {log_info}")
+        log_info = qe.log_info[0]
+        # print(f"[View] log_info = qe.log_info being sent to frontend: {log_info}")
+
         response_data = {
             "figure": json_data,
             "log": log_info

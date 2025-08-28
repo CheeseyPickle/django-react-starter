@@ -75,7 +75,7 @@ class HeatmapQueryModel(models.Model):
     west = models.DecimalField(max_digits=25, decimal_places=20)
     spatialResolution = models.DecimalField(max_digits=3, decimal_places=2)
     aggregation = models.CharField(max_length=10, choices=AGG_CHOICES)
-    # log_info = models.JSONField(default=list, blank=True)
+    log_info = models.JSONField(default=[], blank=True)
 
 
 class TimeseriesQueryModel(models.Model):
@@ -90,7 +90,7 @@ class TimeseriesQueryModel(models.Model):
     south = models.DecimalField(max_digits=25, decimal_places=20)
     west = models.DecimalField(max_digits=25, decimal_places=20)
     aggregation = models.CharField(max_length=10, choices=AGG_CHOICES)
-    log_info = models.JSONField(default=list, blank=True)
+    log_info = models.JSONField(default=[], blank=True)
 
 
 class FindAreaModel(models.Model):

@@ -44,12 +44,12 @@ class TimeseriesExecutor(QueryExecutor):
         # combined["api_calls"] = list(dict.fromkeys(combined["api_calls"]))
         return combined
 
-    # def get_log(self):
-    #     combined_logs = self.merge_log_infos()
-    #     return combined_logs
+    def get_log(self):
+        # print(f"[TimeseriesExecutor.get_log] log_info: {self.log_info}")
+        return self.log_info
 
     def execute(self):
-        print(f"[TimeseriesExecutor] Starting execution")
+        # print(f"[TimeseriesExecutor] Starting execution")
         get_raster_executor = GetRasterExecutor(
             variable=self.variable,
             start_datetime=self.start_datetime,
@@ -65,10 +65,10 @@ class TimeseriesExecutor(QueryExecutor):
         )
         raster = get_raster_executor.execute()
 
-        print(f"[TimeseriesExecutor] Raster executor log before merge: {self.log_info}")
+        # print(f"[TimeseriesExecutor] Raster executor log before append: {self.log_info}")
         self.log_info.append(get_raster_executor.get_log())
         # self.log_info = self.merge_log_infos()
-        # print(f"[TimeseriesExecutor] Merged log_info: {self.log_info}")
+        # print(f"[TimeseriesExecutor] Raster executor log after append: {self.log_info}")
 
         if self.time_series_aggregation_method == "mean":
             return raster.mean(dim=["latitude", "longitude"]).compute()
