@@ -82,9 +82,9 @@ class HeatmapExecutor(QueryExecutor):
 
     def _get_mean_heatmap(self):
         num_yrs = 0
-        nm_mos = 0
-        nm_days = 0
-        nm_hrs = 0
+        num_mos = 0
+        num_days = 0
+        num_hrs = 0
         year_range, month_range, day_range, hour_range = get_whole_ranges_between(
             self.start_datetime, self.end_datetime
         )
@@ -135,7 +135,7 @@ class HeatmapExecutor(QueryExecutor):
             mo_range = iterate_months(start_month, end_month)
             num_mos=(len(list(mo_range)))
             print(f"num months: {num_mos}\tstart: {start_month}, \tend: {end_month}")
-            month_hours += [get_total_hours_in_month(m) for m in mo_range]
+            month_hours += [get_total_hours_in_month(m) for m in iterate_months(start_month, end_month)]
         for start_day, end_day in day_range:
             get_raster_day = GetRasterExecutor(
                 self.variable,
@@ -191,6 +191,10 @@ class HeatmapExecutor(QueryExecutor):
         return res
 
     def _get_max_heatmap(self):
+        num_yrs = 0
+        num_mos = 0
+        num_days = 0
+        num_hrs = 0
         year_range, month_range, day_range, hour_range = get_whole_ranges_between(
             self.start_datetime, self.end_datetime
         )
@@ -235,7 +239,7 @@ class HeatmapExecutor(QueryExecutor):
             self.log_info.append(get_raster_month.get_log())
             mo_range = iterate_months(start_month, end_month)
             num_mos=(len(list(mo_range)))
-            print(f"num months: {num_mos}\tstart: {start_month}, \tend: {end_month}")
+            print(f"\n\n*********\n\nNUM months: {num_mos}\tstart: {start_month}, \tend: {end_month}")
         for start_day, end_day in day_range:
             get_raster_day = GetRasterExecutor(
                 self.variable,
@@ -278,6 +282,10 @@ class HeatmapExecutor(QueryExecutor):
         return xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="time", join="outer").max(dim="time")
 
     def _get_min_heatmap(self):
+        num_yrs = 0
+        num_mos = 0
+        num_days = 0
+        num_hrs = 0
         year_range, month_range, day_range, hour_range = get_whole_ranges_between(
             self.start_datetime, self.end_datetime
         )
