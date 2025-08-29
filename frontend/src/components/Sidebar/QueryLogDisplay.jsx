@@ -39,10 +39,10 @@ const QueryLogDisplay = ({ showLog, setShowLog, queryLog }) => {
                 <TableRow key={index}>
                   <TableCell>{entry.timestamp}</TableCell>
                   <TableCell>{entry.variable}</TableCell>
-                  <TableCell>{formatPredicateArray(entry.spatialPredicates)}</TableCell>
-                  <TableCell>{formatPredicateArray(entry.temporalPredicates)}</TableCell>
+                  <TableCell>{entry.spatialPredicates.join(", ")}</TableCell>
+                  <TableCell>{entry.temporalPredicates.join(", ")}</TableCell>
                   <TableCell>{entry.aggregation || "-"}</TableCell>
-                  <TableCell>{formatPredicateArray(entry.filters)}</TableCell>
+                  <TableCell>{entry.filters.join(", ")}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

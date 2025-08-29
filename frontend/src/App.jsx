@@ -164,24 +164,26 @@ function App() {
   const queryData = async () => {
     setIsLoading(true);
 
+    const round2 = (val) => (val != null ? Number(val.toFixed(2)) : "-");
+
     const spatialPredicates = [
-      formData.north,
-      formData.south,
-      formData.east,
-      formData.west,
-      formData.spatialResolution
-    ].map(v => v ?? "-");
+      formData.north != null ? `N: ${round2(formData.north)}` : "N: -",
+      formData.south != null ? `S: ${round2(formData.south)}` : "S: -",
+      formData.east  != null ? `E: ${round2(formData.east)}` : "E: -",
+      formData.west  != null ? `W: ${round2(formData.west)}` : "W: -",
+      formData.spatialResolution ? `Resolution: ${formData.spatialResolution}` : "Resolution: -"
+    ];
 
     const temporalPredicates = [
-      startDate.format("YYYY-MM-DD HH:mm:ss"),
-      endDate.format("YYYY-MM-DD HH:mm:ss"),
-      formData.temporalResolution
-    ].map(v => v ?? "-");
+      startDate ? `Start Date: ${startDate.format("YYYY-MM-DD HH")}` : "Start Date: -",
+      endDate   ? `End Date: ${endDate.format("YYYY-MM-DD HH")}` : "End Date: -",
+      formData.temporalResolution ? `Resolution: ${formData.temporalResolution}` : "Resolution: -"
+    ];
 
     const filters = [
-      formData.filterPredicate,
-      formData.filterValue
-    ].map(v => v ?? "-");
+      formData.filterPredicate ? `Predicate: ${formData.filterPredicate}` : "Predicate: -",
+      formData.filterValue     ? `Value: ${formData.filterValue}` : "Value: -"
+    ];
 
     const newQuery = {
       timestamp: dayjs().format("YYYY-MM-DD HH:mm"),
