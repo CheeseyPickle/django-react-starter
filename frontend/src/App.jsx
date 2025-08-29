@@ -29,7 +29,8 @@ function App() {
 
   const [queryLog, setQueryLog] = useState([]);
 
-  const [heatmapTextOut, setHeatmapTextOut] = useState({});   // list of local files, api calls, heatmap YMDH ranges
+  const [heatmapTextOut, setHeatmapTextOut] = useState({});   // list of local files, api calls
+  const [heatmapRangeOut, setHeatmapRangeOut] = useState({})  // heatmap YMDH ranges
   const [timeseriesTextOut, setTimeseriesTextOut] = useState({});   // list of local files, api calls
 
   const [isLoading, setIsLoading] = useState(false);
@@ -378,6 +379,7 @@ function App() {
         console.log("Successfully requested heat map data:", responseData);
         setHeatMap(responseData.figure);
         setHeatmapTextOut(responseData.log);
+        setHeatmapRangeOut(responseData.range);
       } else {
         const errorResponse = await response.json();
         // setProgress(5);
@@ -610,6 +612,7 @@ function App() {
           findAreaImage={findAreaImage}
           timeseriesTextOut={timeseriesTextOut}
           heatmapTextOut={heatmapTextOut}
+          heatmapRangeOut={heatmapRangeOut}
         />
       )}
     </div>

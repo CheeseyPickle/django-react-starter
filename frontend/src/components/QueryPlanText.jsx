@@ -1,51 +1,22 @@
 import PropTypes from "prop-types";
 
-const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut }) => {
+const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut, heatmapRangeOut }) => {
 
-  console.log("timeseriesTextOut, heatmapTextOut:", timeseriesTextOut, heatmapTextOut)
-  // Combine local lists
   const localFilesList = [
     ...(timeseriesTextOut.local || []),
     ...(heatmapTextOut.local || []),
   ];
   const numUniqueFiles = new Set(localFilesList).size;
 
-  // Combine api lists
   const apiList = [
     ...(timeseriesTextOut.api || []),
     ...(heatmapTextOut.api || []),
   ];
 
-  // Helper to calculate range count (return 0 if empty)
-  const calcRange = (range, unit) => {
-    if (!range || range.length < 2) return 0;
-    const [start, end] = range.map((t) => new Date(t));
-
-    const diffMs = end - start; // difference in milliseconds
-    const oneHour = 1000 * 60 * 60;
-    const oneDay = oneHour * 24;
-    const oneMonth = oneDay * 30.4167; // average month length
-    const oneYear = oneDay * 365.25;   // average year length
-
-    switch (unit) {
-      case "years":
-        return Math.floor(diffMs / oneYear);
-      case "months":
-        return Math.floor(diffMs / oneMonth);
-      case "days":
-        return Math.floor(diffMs / oneDay);
-      case "hours":
-        return Math.floor(diffMs / oneHour);
-      default:
-        return 0;
-    }
-  };
-
-  // Calculate ranges from heatmapTextOut
-  const numYears = calcRange(heatmapTextOut.year, "years");
-  const numMonths = calcRange(heatmapTextOut.month, "months");
-  const numDays = calcRange(heatmapTextOut.day, "days");
-  const numHours = calcRange(heatmapTextOut.hour, "hours");
+  const numYears = heatmapRangeOut.year;
+  const numMonths = heatmapRangeOut.month;
+  const numDays = heatmapRangeOut.day;
+  const numHours = heatmapRangeOut.hour;
 
   // Total hours (rounded)
   const totalHours = Math.round(
@@ -93,6 +64,8 @@ QueryPlanText.propTypes = {
   heatmapTextOut: PropTypes.shape({
     local: PropTypes.arrayOf(PropTypes.string),
     api: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
+  heatmapRangeOut: PropTypes.shape({
     year: PropTypes.arrayOf(PropTypes.string),
     month: PropTypes.arrayOf(PropTypes.string),
     day: PropTypes.arrayOf(PropTypes.string),

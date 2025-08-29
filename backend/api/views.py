@@ -287,7 +287,8 @@ def heatmap_query(request):
             spatial_resolution=spatial_resolution,
             aggregation=aggregation,
             heatmap_aggregation_method=aggregation,
-            log_info=None
+            log_info=None,
+            range_info=None,
         )
         hm = qe.execute()
 
@@ -301,9 +302,12 @@ def heatmap_query(request):
         log_info = qe.log_info[0]
         # print(f"[View] log_info = qe.log_info being sent to frontend: {log_info}")
 
+        range_info = qe.range_info[0]
+
         response_data = {
             "figure": json_data,
-            "log": log_info
+            "log": log_info,
+            "range": range_info,
         }
         return JsonResponse(response_data, status=201)
 

@@ -43,6 +43,7 @@ const Tabs = ({
   findAreaImage,
   timeseriesTextOut,
   heatmapTextOut,
+  heatmapRangeOut,
 }) => {
 
   // Available tab options
@@ -109,7 +110,7 @@ const Tabs = ({
             </CustomTabPanel>
             <CustomTabPanel value={activeTabs[panelId]} index={5}>
               <div style={{ width: "100%", height: "100%", display: "flex" }}>
-                <QueryPlanText  timeseriesTextOut={timeseriesTextOut} heatmapTextOut={heatmapTextOut} />
+                <QueryPlanText  timeseriesTextOut={timeseriesTextOut} heatmapTextOut={heatmapTextOut} heatmapRangeOut={heatmapRangeOut} />
               </div>
             </CustomTabPanel>
           </div>
@@ -127,6 +128,7 @@ Tabs.propTypes = {
   findAreaImage: PropTypes.object,
   timeseriesTextOut: PropTypes.object,
   heatmapTextOut: PropTypes.object,
+  heatmapRangeOut: PropTypes.object,
 };
 
 export default Tabs;
