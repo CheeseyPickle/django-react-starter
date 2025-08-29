@@ -164,13 +164,32 @@ function App() {
   const queryData = async () => {
     setIsLoading(true);
 
+    const spatialPredicates = [
+      formData.north,
+      formData.south,
+      formData.east,
+      formData.west,
+      formData.spatialResolution
+    ].map(v => v ?? "-");
+
+    const temporalPredicates = [
+      startDate.format("YYYY-MM-DD HH:mm:ss"),
+      endDate.format("YYYY-MM-DD HH:mm:ss"),
+      formData.temporalResolution
+    ].map(v => v ?? "-");
+
+    const filters = [
+      formData.filterPredicate,
+      formData.filterValue
+    ].map(v => v ?? "-");
+
     const newQuery = {
-      timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      timestamp: dayjs().format("YYYY-MM-DD HH:mm"),
       variable,
-      spatialPredicates: formData.spatialPredicates || [],
-      temporalPredicates: formData.temporalPredicates || [],
-      aggregation: formData.aggregation || null,
-      filters: formData.filters || [],
+      spatialPredicates,
+      temporalPredicates,
+      aggregation: formData.aggregation || "-",
+      filters
     };
 
     // Append to queryLog
