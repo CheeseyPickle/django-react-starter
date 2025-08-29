@@ -6,6 +6,7 @@ import TemporalPredicateControls from "./TemporalPredicateControls";
 import AggregationControls from "./AggregationControls";
 import FiltersControls from "./FilterControls";
 import SidebarButtons from "./SidebarButtons";
+import QueryLogDisplay from "./QueryLogDisplay";
 import { VARIABLES } from "../../constants/data";
 import "../../styles/sidebar.css";
 import "../../styles/loading.css";
@@ -26,6 +27,9 @@ const Sidebar = ({
   handleChange,
   queryData,
   isLoading,
+  queryLog,
+  showQueryLog,
+  setShowQueryLog,
 
   sidebarCollapsed,
 }) => {
@@ -111,6 +115,15 @@ const Sidebar = ({
         queryData={queryData}
         showInfo={showInfo}
         setShowInfo={setShowInfo}
+        showQueryLog={showQueryLog}
+        setShowQueryLog={setShowQueryLog}
+      />
+
+      {/* Render Query Log overlay inside Sidebar */}
+      <QueryLogDisplay
+        showLog={showQueryLog}
+        setShowLog={setShowQueryLog}
+        queryLog={queryLog}
       />
 
       <DataInfoDisplay showInfo={showInfo} setShowInfo={setShowInfo} />

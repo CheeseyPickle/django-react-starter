@@ -28,6 +28,7 @@ function App() {
   const [findAreaImage, setFindArea] = useState({});
 
   const [queryLog, setQueryLog] = useState([]);
+  const [showQueryLog, setShowQueryLog] = useState(false);
 
   const [heatmapTextOut, setHeatmapTextOut] = useState({});   // list of local files, api calls
   const [heatmapRangeOut, setHeatmapRangeOut] = useState({})  // heatmap YMDH ranges
@@ -162,6 +163,19 @@ function App() {
   // Checks data can be queried and awaits all queries
   const queryData = async () => {
     setIsLoading(true);
+
+    const newQuery = {
+      timestamp: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      variable,
+      spatialPredicates: formData.spatialPredicates || [],
+      temporalPredicates: formData.temporalPredicates || [],
+      aggregation: formData.aggregation || null,
+      filters: formData.filters || [],
+    };
+
+    // Append to queryLog
+    setQueryLog(prevLog => [...prevLog, newQuery]);
+
     try {
       const response = await fetch("/api/query/", {
         method: "POST",
@@ -589,7 +603,10 @@ function App() {
           formData={formData}
           handleChange={handleChange}
           queryData={queryData}
-          isLoading={isLoading} />
+          isLoading={isLoading}
+          queryLog={queryLog} 
+          showQueryLog={showQueryLog}
+          setShowQueryLog={setShowQueryLog}/>
       </div>
 
       <div className="main-content">

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 
-const SidebarButtons = ({ isLoading, queryData, showInfo, setShowInfo }) => (
+const SidebarButtons = ({ isLoading, queryData, showInfo, setShowInfo, showQueryLog, setShowQueryLog }) => (
   <div className="half_column_wrapper">
     <Button
       onClick={() => queryData()}
@@ -20,6 +20,13 @@ const SidebarButtons = ({ isLoading, queryData, showInfo, setShowInfo }) => (
       onClick={() => setShowInfo(!showInfo)}
     >
       Available Data
+    </Button>
+    <Button
+      variant="outlined"
+      color="custom"
+      onClick={() => setShowQueryLog(!showQueryLog)}
+    >
+      Query Log
     </Button>
   </div>
 );
