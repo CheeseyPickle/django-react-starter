@@ -25,54 +25,52 @@ const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut, heatmapRangeOut }) =
 
   return (
     <div className="p-4 text-sm leading-snug whitespace-normal break-words">
-      {/* 1. Data retrieval */}
-      <p className="mb-1">
-        <strong>Get data</strong>
-      </p>
-      <div className="ml-6">
-        <p>from {numUniqueFiles} local files read for each sp.region</p>
-        <ul className="list-disc ml-6">
+     <p className="mb-1"> <strong>Get data</strong> </p>
+      <div className="ml-4 space-y-0.5">
+        <p className="mb-0">from {numUniqueFiles} local files read for each sp.region</p>
+        <ul className="list-disc ml-5 space-y-0.5 mb-0">
           <li>{numYears} yearly values</li>
           <li>{numMonths} monthly values</li>
           <li>{numDays} daily values</li>
           <li>{numHours} hourly values</li>
         </ul>
-        <p className="mt-2">
-          download data not in storage
-        </p>
-        <div className="ml-6">
+
+        <div className="ml-4 space-y-0.5">
           {apiList.length === 0 ? (
-              <p>all data in local storage, no API calls</p>
-            ) : (
-              <>
-                <p>
-                  API requests:
-                </p>
-                <div className="ml-4 max-h-24 overflow-y-auto border rounded p-2 bg-gray-50">
-                  {apiList.join(", ")}
-                </div>
-                <p className="mt-2">aggregate to desired resolutions</p>
-              </>
-            )}
+            <p className="mb-0">all data in storage, no API calls.</p>
+          ) : (
+            <>
+              <p className="mb-0">additional data needed, API calls:</p>
+              <div className="ml-3 max-h-24 overflow-y-auto border rounded p-1 bg-gray-50 text-xs leading-tight">
+                <ul className="list-disc pl-4 space-y-0.5 mb-0">
+                  {apiList.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
         </div>
-        <p className="mt-2">
-          <strong>With Polaris:</strong> {numYears + numMonths + numDays + numHours} values/sp.region read from
-          storage
-        </p>
-        <p className="mt-2">
-          <strong>Without Polaris:</strong> {totalHours} values/sp.region to download and process
+
+        <p className="mt-1 mb-0">
+          [
+          <span className="ml-1">
+            <i>With Polaris:</i> {numYears + numMonths + numDays + numHours} values/sp.region read from storage. 
+          </span>
+          <span className="ml-1">
+            <i> Without Polaris: </i>{totalHours} values/sp.region to download and process
+          </span>
+          ]
         </p>
       </div>
 
-      <p className=" mt-4">
-        <strong>Perform queries:</strong>
-      </p>
-      <div className="ml-6">
-        <ul className="list-disc ml-6">
-          <li><strong>Heatmap:</strong> aggregate all data in each region</li>
-          <li><strong>Timeseries:</strong> aggregate all data in a time interval </li>
-          <li><strong>Find Area:</strong> filter heatmap</li>
-          <li><strong>Find Time:</strong> filter timeseries</li>
+      <p className=" mt-4"> <strong>Perform queries:</strong> </p>
+      <div className="ml-4 space-y-0.5">
+        <ul className="list-disc ml-5 space-y-0.5 mb-0">
+          <li><i>Heatmap:</i> aggregate all data in each region</li>
+          <li><i>Timeseries:</i> aggregate all data in a time interval</li>
+          <li><i>Find Area:</i> filter heatmap</li>
+          <li><i>Find Time:</i> filter timeseries</li>
         </ul>
       </div>
     </div>
