@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import React from "react";
 
 const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut, heatmapRangeOut }) => {
-
   const localFilesList = [
     ...(timeseriesTextOut.local || []),
     ...(heatmapTextOut.local || []),
@@ -24,37 +23,60 @@ const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut, heatmapRangeOut }) =
     8766 * numYears + 730.001 * numMonths + 24 * numDays + numHours
   );
 
-  // Build output text
-  const textLines = [];
-  textLines.push(
-    `1. from local data read ${numYears} yearly ${numMonths} monthly ${numDays} daily ${numHours} hourly values for each spatial resolution.`
-  );
-  textLines.push(
-    `   ${numYears + numMonths + numDays + numHours} aggregate values read instead of ${totalHours} unprocessed values`
-  );
-  textLines.push(`   ${numUniqueFiles} files queried`);
+  return (
+    <div className="p-4 text-sm leading-snug whitespace-normal break-words">
+      {/* 1. Data retrieval */}
+      <p className="mb-1">
+        <strong>Get data</strong>
+      </p>
+      <div className="ml-6">
+        <p>from {numUniqueFiles} local files read for each sp.region</p>
+        <ul className="list-disc ml-6">
+          <li>{numYears} yearly values</li>
+          <li>{numMonths} monthly values</li>
+          <li>{numDays} daily values</li>
+          <li>{numHours} hourly values</li>
+        </ul>
+        <p className="mt-2">
+          download data not in storage
+        </p>
+        <div className="ml-6">
+          {apiList.length === 0 ? (
+              <p>all data in local storage, no API calls</p>
+            ) : (
+              <>
+                <p>
+                  API requests:
+                </p>
+                <div className="ml-4 max-h-24 overflow-y-auto border rounded p-2 bg-gray-50">
+                  {apiList.join(", ")}
+                </div>
+                <p className="mt-2">aggregate to desired resolutions</p>
+              </>
+            )}
+        </div>
+        <p className="mt-2">
+          <strong>With Polaris:</strong> {numYears + numMonths + numDays + numHours} values/sp.region read from
+          storage
+        </p>
+        <p className="mt-2">
+          <strong>Without Polaris:</strong> {totalHours} values/sp.region to download and process
+        </p>
+      </div>
 
-  if (apiList.length === 0) {
-    textLines.push(`\n2. all data in local storage, no API calls`);
-  } else {
-    textLines.push(
-      `\n2. from remote repository request remaining data: ${apiList.join(", ")}`
-    );
-    textLines.push(`   aggregate to desired resolutions`);
-  }
-
-  textLines.push("\n3. **Heatmap Query:** for each region aggregate all data over time");
-  textLines.push(
-    "4. **Timeseries Query:** for each time interval, aggregate all data over region"
+      <p className=" mt-4">
+        <strong>Perform queries:</strong>
+      </p>
+      <div className="ml-6">
+        <ul className="list-disc ml-6">
+          <li><strong>Heatmap:</strong> aggregate all data in each region</li>
+          <li><strong>Timeseries:</strong> aggregate all data in a time interval </li>
+          <li><strong>Find Area:</strong> filter heatmap</li>
+          <li><strong>Find Time:</strong> filter timeseries</li>
+        </ul>
+      </div>
+    </div>
   );
-  textLines.push(
-    "\n5. **Find Area Query:** filter heatmap query result by filter predicate and value"
-  );
-  textLines.push(
-    "6. **Find Time Query:** filter timeseries query result by filter predicate and value"
-  );
-
-  return <pre>{textLines.join("\n")}</pre>;
 };
 
 QueryPlanText.propTypes = {
@@ -67,65 +89,11 @@ QueryPlanText.propTypes = {
     api: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   heatmapRangeOut: PropTypes.shape({
-    year: PropTypes.arrayOf(PropTypes.string),
-    month: PropTypes.arrayOf(PropTypes.string),
-    day: PropTypes.arrayOf(PropTypes.string),
-    hour: PropTypes.arrayOf(PropTypes.string),
+    year: PropTypes.number,
+    month: PropTypes.number,
+    day: PropTypes.number,
+    hour: PropTypes.number,
   }).isRequired,
 };
 
 export default QueryPlanText;
-
-
-// import PropTypes from "prop-types";
-
-
-// const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut }) => {
-
-//     // Combine two lists stored in "local" value of dicts
-//     // local_files_list = timeseriesTextOut.local + heatmapTextOut.local
-
-//     // Get number of unique strings in local_files_list
-//     // num_unique_files = 
-
-//     // Combine two lists stored in "api" value of dicts
-//     // api_list = timeseriesTextOut.api + heatmapTextOut.api
-
-//     // Get number of years, months, days, hours in respective ranges. If range = [], return 0
-//     // year range in heatmapTextOut.year in [Timestamp('YYYY-MM-DD 00:00:00'), Timestamp('YYYY-MM-DD 23:00:00')] form
-//     // num_years = end year - start year
-//     // month range in heatmapTextOut.month in [Timestamp('YYYY-MM-DD 00:00:00'), Timestamp('YYYY-MM-DD 23:00:00')] form
-//     // num_months = end month - start month
-//     // day range in heatmapTextOut.day in [Timestamp('YYYY-MM-DD 00:00:00'), Timestamp('YYYY-MM-DD 23:00:00')] form
-//     // num_days = end day - start day
-//     // hour range in heatmapTextOut.hour in [Timestamp('YYYY-MM-DD 00:00:00'), Timestamp('YYYY-MM-DD 23:00:00')] form
-//     // num_hours = end hour - start hour
-
-//     // Get total number of hours in years, months, days, and hours (round to the nearest hour)
-//     // total_hours = 8766*num_years + 730.001*num_months + 24*num_days + num_hours
-
-//     // Create and format text to the following:
-//     /*
-//     1. from local data read {num_years} yearly {num_months} monthy {num_days} daily {num_hours} hourly values for each spatial resolution.
-//             {num_years + num_months + num_days + num_hours} aggregate values read instead of {total_hours} unprocessed values
-//             {num_unique_files} files queried
-
-//     (if api_list = []:
-//     2. all data in local storage, no API calls
-//     )
-//     (if api_list != []:
-//     2. from remote repository request remaining data: {api_list}
-//             aggregate to desired resolutions
-//     )
-
-//     3. **Heatmap Query:** for each region aggregate all data over time
-//     4. **Timeseries Query:** for each time interval, aggregate all data over region
-
-//     5. **Find Area Query:** filter heatmap query result by filter predicate and value
-//     6. **Find Time Query:** filter timeseries query result by filter predicate and value
-//     */
-
-
-// }
-
-// export default QueryPlanText
