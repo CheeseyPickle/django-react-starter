@@ -48,24 +48,11 @@ class HeatmapExecutor(QueryExecutor):
         self.log_info = log_info if log_info is not None else []
         self.range_info = range_info if range_info is not None else []
 
-    def merge_log_infos(self):
-        combined = {"local_files": [], "api_calls": []}
-        for info in self.log_info:
-            combined["local_files"].extend(info.get("local_files", []))
-            combined["api_calls"].extend(info.get("api_calls", []))
-        # remove duplicates
-        # combined["local_files"] = list(dict.fromkeys(combined["local_files"]))
-        # combined["api_calls"] = list(dict.fromkeys(combined["api_calls"]))
-        return combined
-
     def get_log(self):
-        # print(f"[TimeseriesExecutor.get_log] log_info: {self.log_info}")
         return self.log_info
 
     def get_range(self):
         return self.range_info
-
-    def get_log_and_range(self):
         both_dict = {"log": self.log_info,
                      "ranges": self.range_info}
         return both_dict

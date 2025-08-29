@@ -51,10 +51,9 @@ class TimeseriesExecutor(QueryExecutor):
         )
         raster = get_raster_executor.execute()
 
-        # print(f"[TimeseriesExecutor] Raster executor log before append: {self.log_info}")
+        print(f"[DEBUG] self.log_info type: {type(self.log_info)}")
+        print(f"[DEBUG] self.log_info content: {self.log_info}")
         self.log_info.append(get_raster_executor.get_log())
-        # self.log_info = self.merge_log_infos()
-        # print(f"[TimeseriesExecutor] Raster executor log after append: {self.log_info}")
 
         if self.time_series_aggregation_method == "mean":
             return raster.mean(dim=["latitude", "longitude"]).compute()
