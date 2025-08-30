@@ -67,10 +67,9 @@ const QueryPlanText = ({ timeseriesTextOut, heatmapTextOut, heatmapRangeOut }) =
       <p className=" mt-4"> <strong>Perform queries:</strong> </p>
       <div className="ml-4 space-y-0.5">
         <ul className="list-disc ml-5 space-y-0.5 mb-0">
-          <li><i>Heatmap:</i> aggregate all data in each region</li>
-          <li><i>Timeseries:</i> aggregate all data in a time interval</li>
-          <li><i>Find Area:</i> filter heatmap</li>
-          <li><i>Find Time:</i> filter timeseries</li>
+          <li><i>Heatmap:</i> aggregate values/sp.region</li>
+          <li><i>Timeseries:</i> aggregate data/time interval</li>
+          <li><i>Find Area/Time:</i> use min and max values of coarser resolutions to filter out finer resolution regions/times.</li>
         </ul>
       </div>
     </div>
