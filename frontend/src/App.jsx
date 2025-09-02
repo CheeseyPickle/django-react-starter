@@ -177,8 +177,8 @@ function App() {
     ];
 
     const filters = [
-      formData.filterPredicate ? `Predicate: ${formData.filterPredicate}` : "Predicate: -",
-      formData.filterValue     ? `Value: ${formData.filterValue}` : "Value: -"
+      formData.filterPredicate ? `Predicate: ${formData.filterPredicate}` : "-",
+      formData.filterValue     ? `Value: ${formData.filterValue}` : "-"
     ];
 
     const newQuery = {
