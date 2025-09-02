@@ -164,7 +164,7 @@ class HeatmapExecutor(QueryExecutor):
             print(f"num hours: {num_hrs}\tstart: {start_hour}, \tend: {end_hour}")
             hour_hours += [1 for _ in hr_range]
 
-        xrds_concat = xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="time", join="outer")
+        xrds_concat = xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="valid_time", join="outer")
         nd_array = xrds_concat[self.variable_short_name].to_numpy()
         weights = np.array(year_hours + month_hours + day_hours + hour_hours)
         total_hours = get_total_hours_between(self.start_datetime, self.end_datetime)
@@ -266,7 +266,7 @@ class HeatmapExecutor(QueryExecutor):
             num_hrs=(len(hr_range))
             print(f"num hours: {num_hrs}\tstart: {start_hour}, \tend: {end_hour}")
             self.range_info.append({"year": num_yrs, "month": num_mos, "day": num_days, "hour": num_hrs})
-        return xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="time", join="outer").max(dim="time")
+        return xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="valid_time", join="outer").max(dim="valid_time")
 
     def _get_min_heatmap(self):
         num_yrs = 0
@@ -358,4 +358,4 @@ class HeatmapExecutor(QueryExecutor):
             print(f"num hours: {num_hrs}\tstart: {start_hour}, \tend: {end_hour}")
             self.range_info.append({"year": num_yrs, "month": num_mos, "day": num_days, "hour": num_hrs})
         # get min heatmap from ds_year, ds_month, ds_day, ds_hour
-        return xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="time", join="outer").min(dim="time")
+        return xr.concat(ds_year + ds_month + ds_day + ds_hour, dim="valid_time", join="outer").min(dim="valid_time")

@@ -22,7 +22,7 @@ MSG_FORMAT = "[%(asctime)s %(name)s-%(levelname)s]: %(message)s"
 LOG_DATE_FORMAT = "%d/%b/%Y %H:%M:%S"
 logging.basicConfig(level=logging.INFO, format=MSG_FORMAT, datefmt=LOG_DATE_FORMAT)
 
-metadata_fpath = "/data/metadata_post.csv"  ### TODO: change to correct metadata file path
+metadata_fpath = "/data/metadata.csv" # "/data/metadata_post.csv"  ### TODO: change to correct metadata file path
 
 
 def format_datetime_string(dt_input):
