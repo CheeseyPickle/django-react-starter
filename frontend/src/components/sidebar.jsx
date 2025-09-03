@@ -2,6 +2,7 @@ import Input from './input';
 import DateInput from './DateInput';
 import CardinalDirections from './CardinalDirections';
 import RadioButtons from './Radio';
+import TemporalResolutionInfo from './TemporalResolutionInfo';
 import PropTypes from 'prop-types';
 import { Button } from '@mui/material'
 import '../styles/sidebar.css'
@@ -59,6 +60,7 @@ const Sidebar = ({
                     setVal={handleChange}
                     subLabel="temporalResolution"
                     defaultValue={"year"} />
+                <TemporalResolutionInfo temporalResolution={formData.temporalResolution} />
                 <RadioButtons
                     label="Temporal Aggregation"
                     options={["min", "max", "mean"]}
