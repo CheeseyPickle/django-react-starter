@@ -5,8 +5,7 @@ import geopandas as gpd
 import plotly.express as px
 import plotly.graph_objs as go
 from django.http import JsonResponse, FileResponse
-from django.utils.dateparse import parse_datetime
-from django.utils.timezone import make_naive
+from .utils import format_datetime_string as format_datetime_string_new
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from shapely.geometry import Polygon
@@ -31,17 +30,12 @@ logging.basicConfig(level=logging.INFO, format=MSG_FORMAT, datefmt=LOG_DATE_FORM
 metadata_fpath = "/data/metadata.csv"
 
 
-def format_datetime_string(dt_input):
+def format_datetime_string(dt_input, temporal_resolution=None, is_start_date=True):
     """
-    Convert input datetime
-    from 2023-01-01T00:00:00.000Z
-    to 2023-01-01 00:00:00
+    DEPRECATED: Use format_datetime_string_new from utils.py instead.
+    This is kept for backward compatibility.
     """
-    dt = parse_datetime(dt_input)
-    if dt and dt.tzinfo is not None:
-        dt = make_naive(dt)
-    dt_formatted = dt.strftime("%Y-%m-%d %H:%M:%S") if dt else None
-    return dt_formatted
+    return format_datetime_string_new(dt_input, temporal_resolution, is_start_date)
 
 
 def get_variable_short_name(variable):
@@ -68,8 +62,8 @@ def query(request):
         spatial_resolution = float(request.data.get("spatialResolution"))
         spatial_aggregation = request.data.get("spatialAggregation")
 
-        formatted_start = format_datetime_string(start_datetime)
-        formatted_end = format_datetime_string(end_datetime)
+        formatted_start = format_datetime_string(start_datetime, time_resolution, is_start_date=True)
+        formatted_end = format_datetime_string(end_datetime, time_resolution, is_start_date=False)
 
         qe = GetRasterExecutor(
             metadata=metadata_fpath,
@@ -119,8 +113,8 @@ def download_query(request):
         spatial_aggregation = request.data.get("spatialAggregation")
         rid = serializer.data["id"]
 
-        formatted_start = format_datetime_string(start_datetime)
-        formatted_end = format_datetime_string(end_datetime)
+        formatted_start = format_datetime_string(start_datetime, time_resolution, is_start_date=True)
+        formatted_end = format_datetime_string(end_datetime, time_resolution, is_start_date=False)
 
         qe = GetRasterExecutor(
             metadata=metadata_fpath,
@@ -195,8 +189,8 @@ def timeseries(request):
         spatial_aggregation = request.data.get("spatialAggregation")
         ts_agg_method = request.data.get("secondAgg")
 
-        formatted_start = format_datetime_string(start_datetime)
-        formatted_end = format_datetime_string(end_datetime)
+        formatted_start = format_datetime_string(start_datetime, time_resolution, is_start_date=True)
+        formatted_end = format_datetime_string(end_datetime, time_resolution, is_start_date=False)
 
         qe = TimeseriesExecutor(
             metadata=metadata_fpath,
@@ -257,8 +251,8 @@ def heatmap(request):
         spatial_aggregation = request.data.get("spatialAggregation")
 
         var_short_name = get_variable_short_name(variable)
-        formatted_start = format_datetime_string(start_datetime)
-        formatted_end = format_datetime_string(end_datetime)
+        formatted_start = format_datetime_string(start_datetime, temporalResolution, is_start_date=True)
+        formatted_end = format_datetime_string(end_datetime, temporalResolution, is_start_date=False)
 
         qe = HeatmapExecutor(
             metadata=metadata_fpath,
@@ -317,8 +311,8 @@ def findTime(request):
         spatial_aggregation = request.data.get("spatialAggregation")
 
         var_short_name = get_variable_short_name(variable)
-        formatted_start = format_datetime_string(start_datetime)
-        formatted_end = format_datetime_string(end_datetime)
+        formatted_start = format_datetime_string(start_datetime, temporalResolution, is_start_date=True)
+        formatted_end = format_datetime_string(end_datetime, temporalResolution, is_start_date=False)
 
         # TODO: Replace temporary static variable for ts_agg_method below:
         ### Add check if temporal agg level is larger than the difference between start/end throw some error:
@@ -391,8 +385,8 @@ def findArea(request):
         filter_value = request.data.get("filterValue")
 
         var_short_name = get_variable_short_name(variable)
-        formatted_start = format_datetime_string(start_datetime)
-        formatted_end = format_datetime_string(end_datetime)
+        formatted_start = format_datetime_string(start_datetime, temporalResolution, is_start_date=True)
+        formatted_end = format_datetime_string(end_datetime, temporalResolution, is_start_date=False)
 
         # TODO: Replace temporary static variables below
 
