@@ -1,98 +1,73 @@
-import { Button } from '@mui/material';
-import Input from './input';
 import PropTypes from "prop-types";
-import Plot from 'react-plotly.js';
-import "../styles/timeseries.css"
-import { useState } from 'react';
+import Plot from "react-plotly.js";
+import "../styles/timeseries.css";
 
-const TimeSeries = ({ handleTimeSeries, timeSeriesImage, formData, handleChange }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const TimeSeries = ({ timeSeriesImage }) => {
+  // accept several possible shapes: {data, layout, frames} OR {figure:{...}} OR {}
+  const fig = timeSeriesImage?.figure ? timeSeriesImage.figure : timeSeriesImage || {};
+  const data = Array.isArray(fig?.data) ? fig.data : [];
+  const layoutFromServer = fig?.layout || {};
+  const frames = Array.isArray(fig?.frames) ? fig.frames : [];
 
-  const defaultLayout = {
-    ...timeSeriesImage.layout,
+  const hasData = data.length > 0;
+
+  const layout = {
+    ...layoutFromServer,
     autosize: true,
-    margin: {
-      l: 50,
-      r: 20,
-      b: 40,
-      t: 20
-    },
-    xaxis: {
-      title: 'Time',
-      automargin: true,
-    },
-    yaxis: {
-      title: 'Value',
-      automargin: true,
-    }
+    margin: { l: 10, r: 10, b: 40, t: 25 },
+    plot_bgcolor: "#ffffff",
+    paper_bgcolor: "#ffffff",
+    xaxis: { 
+      title: "Time", 
+      showgrid: true,
+      gridcolor: "#e6e6e6",   // light gray grid
+      gridwidth: 1,
+      zeroline: false, 
+      ...(layoutFromServer.xaxis || {}) },
+    yaxis: { 
+      showgrid: true,
+      gridcolor: "#e6e6e6",
+      gridwidth: 1,
+      zeroline: false,
+      ...(layoutFromServer.yaxis || {}) },
   };
 
-  const defaultConfig = {
+  const config = {
     displayModeBar: true,
-    responsive: true,
     displaylogo: false,
-    toImageButtonOptions: {
-      format: 'png',
-      filename: 'plot_image'
-    }
+    responsive: true,
+    toImageButtonOptions: { format: "png", filename: "polaris_timeseries" },
+    modeBarButtonsToRemove: ["resetScale", "lasso2d", "select2d"],
   };
 
-  const handleClick = async () => {
-    setIsLoading(true);
-    try {
-      await handleTimeSeries();
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const styledData = data.map((trace, i) => ({
+    ...trace,
+    line: {
+      color: ["#6C88B8", "#1E4E54", "#b29a79"][i % 3], // cycle through colors
+      width: 2,
+    },
+}));
 
-  // TODO: Add warning if temporal res is less than date start/end differences
   return (
     <div className="time_series">
-      <div className="ts_inputs">
-        <Input
-          val={formData.secondAgg}
-          setVal={handleChange}
-          name="ts_agg_method"
-          label={"Select Aggregation Method"}
-          options={["min", "max", "mean"]}
-          sx={{ width: "80%" }}
-          size={"small"} />
-        <Button
-          onClick={handleClick}
-          variant="outlined"
-          disabled={isLoading}
-          sx={{ marginBottom: "48px", marginTop: "auto" }}
-        >
-          <div className="button-content">
-            {isLoading && <div className="loading-spinner" />}
-            Query
-          </div>
-        </Button>
-      </div>
-      <div className="hline"></div>
-      {timeSeriesImage && Object.keys(timeSeriesImage).length > 0 ? (
-        <div className='ts_plot'>
+      {hasData ? (
+        <div className="ts_plot">
           <Plot
-            className='ts_plotly'
-            data={timeSeriesImage.data}
-            layout={defaultLayout}
-            frames={timeSeriesImage.frames}
-            config={defaultConfig} />
+            className="ts_plotly"
+            data={styledData}
+            layout={layout}
+            frames={frames}
+            config={config}
+            useResizeHandler
+            style={{ width: "100%", height: "100%" }}   // <- key for sizing
+          />
         </div>
       ) : (
-        <div className='ts_plot'>No Time Series Data</div>
+        <div className="ts_plot">Values aggregated over region.</div>
       )}
     </div>
-  )
-}
+  );
+};
 
-TimeSeries.propTypes = {
-  handleTimeSeries: PropTypes.func,
-  timeSeriesImage: PropTypes.object,
-  formData: PropTypes.object,
-  handleChange: PropTypes.func,
-  aggMethod: PropTypes.string,
-}
-
-export default TimeSeries
+TimeSeries.propTypes = { timeSeriesImage: PropTypes.object };
+export default TimeSeries;

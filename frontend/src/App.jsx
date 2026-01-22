@@ -1,31 +1,67 @@
 import { useState, useEffect, useContext } from 'react'
 import { BoundsContext } from './util/context/BoundsContext'
-import Header from './components/header'
-import Sidebar from './components/sidebar'
+import Sidebar from './components/Sidebar/Sidebar'
+// import AdminSidebar from './components/AdminSidebar/AdminSidebar'
 import MyMap from "./components/map"
 import Tabs from './components/tabs'
+// import AdminTabs from './components/AdminTabs/AdminTabs'
 import dayjs from 'dayjs'
 import './App.css'
+
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 
 function App() {
 
+  // Always visible
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [bottomBarCollapsed, setBottomBarCollapsed] = useState(false);
+  const { drawnShapeBounds, setDrawnShapeBounds } = useContext(BoundsContext);
+
+  // Sidebar
   const [variable, setVariable] = useState("2m_temperature");
-  const [startDate, setStartDate] = useState(dayjs("2023-01-01T00:00Z"));
+  const [startDate, setStartDate] = useState(dayjs("2020-06-01T00:00Z"));
   const [endDate, setEndDate] = useState(dayjs("2023-12-31T23:00Z"));
-  const [secondAgg, setSecondAggMethod] = useState("mean");
   const [comparisonVal, setComparisonVal] = useState(285);
   const [predicate, setPredicate] = useState("<");
   const [htmlString, setHtml] = useState("");
+  const [queryLog, setQueryLog] = useState([]);
+  const [showQueryLog, setShowQueryLog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Bottom bar
   const [timeSeriesImage, setImageRecieved] = useState({});
   const [heatMapImage, setHeatMap] = useState({});
   const [findTimeImage, setFindTime] = useState({});
   const [findAreaImage, setFindArea] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [heatmapTextOut, setHeatmapTextOut] = useState({});   // list of local files, api calls
+  const [heatmapRangeOut, setHeatmapRangeOut] = useState({})  // heatmap YMDH ranges
+  const [timeseriesTextOut, setTimeseriesTextOut] = useState({});   // list of local files, api calls
+  // const [adminUser, setAdminUser] = useState(false);
+  // const [uiTable, setUiTable] = useState([]);
 
-  const { drawnShapeBounds, setDrawnShapeBounds } = useContext(BoundsContext);
 
+  // Bottom bar
+  const [activeTabs, setActiveTabs] = useState({
+    panel1: 0,
+    panel2: 1,
+    panel3: 3,
+  });
 
+  const handleTabChange = (panelId, event) => {
+    const v = Number(event.target.value); // force number
+    setActiveTabs(prev => ({ ...prev, [panelId]: v }));
+  };
+
+  // const [activeAdminTab, setActiveAdminTab] = useState(0)
+
+  // const handleAdminTabChange = (event) => {
+  //   const v = Number(event.target.value);
+  //   setActiveAdminTab(v);
+  // }
+
+  // // Sidebar
   const [formData, setFormData] = useState({
     requestType: "",
     variable: variable,
@@ -38,11 +74,7 @@ function App() {
     east: -10,
     west: -74,
     spatialResolution: 1,
-    spatialAggregation: "mean",
-    // downloadOption: "",
-    // secondAgg: secondAgg,
-    // filterValue: comparisonVal,
-    // filterPredicate: predicate,
+    aggregation: "mean",
   });
 
   useEffect(() => {
@@ -59,12 +91,10 @@ function App() {
       ...prev,
       filterValue: comparisonVal,
       filterPredicate: predicate,
-      secondAgg: secondAgg,
     }))
-  }, [secondAgg, comparisonVal, predicate])
+  }, [comparisonVal, predicate])
 
   const handleChange = (e) => {
-    // console.log(e);
     console.log(formData);
     let myValue;
     const { name, value } = e.target;
@@ -77,7 +107,6 @@ function App() {
     ) {
       let numericValue = parseFloat(value);
 
-      // Define the range boundaries based on the input name
       let min, max;
       if (name === "north" || name === "south") {
         min = -90;
@@ -86,11 +115,8 @@ function App() {
         min = -180;
         max = 180;
       }
-
-      // Clamp the value to the range
       numericValue = Math.min(Math.max(numericValue, min), max);
       myValue = numericValue;
-      // Update the form data with the clamped value
 
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -102,7 +128,6 @@ function App() {
         ...prevFormData,
         [name]: value,
       }));
-      // settemporalResolutionSelected(value !== "");
     }
     if (drawnShapeBounds) {
       setDrawnShapeBounds((prevBounds) => ({
@@ -130,23 +155,66 @@ function App() {
         }));
       }
     }
-    // settemporalResolutionSelected(value !== "");
   };
 
   const queryData = async () => {
     setIsLoading(true);
+
+    const round2 = (val) => (val != null ? Number(val.toFixed(2)) : "-");
+
+    const spatialPredicates = [
+      formData.north != null ? `N: ${round2(formData.north)}` : "N: -",
+      formData.south != null ? `S: ${round2(formData.south)}` : "S: -",
+      formData.east  != null ? `E: ${round2(formData.east)}` : "E: -",
+      formData.west  != null ? `W: ${round2(formData.west)}` : "W: -",
+      formData.spatialResolution ? `Resolution: ${formData.spatialResolution}` : "Resolution: -"
+    ];
+
+    const temporalPredicates = [
+      startDate ? `Start Date: ${startDate.format("YYYY-MM-DD HH")}` : "Start Date: -",
+      endDate   ? `End Date: ${endDate.format("YYYY-MM-DD HH")}` : "End Date: -",
+      formData.temporalResolution ? `Resolution: ${formData.temporalResolution}` : "Resolution: -"
+    ];
+
+    const filters = [
+      formData.filterPredicate ? `Predicate: ${formData.filterPredicate}` : "-",
+      formData.filterValue     ? `Value: ${formData.filterValue}` : "-"
+    ];
+
+    const newQuery = {
+      timestamp: dayjs().format("YYYY-MM-DD HH:mm"),
+      variable,
+      spatialPredicates,
+      temporalPredicates,
+      aggregation: formData.aggregation || "-",
+      filters
+    };
+
+    // Append to queryLog
+    setQueryLog(prevLog => [...prevLog, newQuery]);
+
     try {
       const response = await fetch("/api/query/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          startDateTime: dayjs(formData.startDateTime).toISOString(),
+          endDateTime: dayjs(formData.endDateTime).toISOString(),
+        }),
       });
 
       if (response.ok) {
         const jsonData = await response.json();
         setHtml(jsonData);
+
+        await handleHeatMap();
+        await handleTimeSeries();
+        await handleFindArea();
+        await handleFindTime();
+
       }
       else {
         const errorResponse = await response.json();
@@ -164,6 +232,7 @@ function App() {
     }
   }
 
+  // Main
   useEffect(() => {
     if (drawnShapeBounds) {
       const north_val = drawnShapeBounds._northEast.lat;
@@ -179,14 +248,9 @@ function App() {
         west: west_val,
       }));
     }
-    // if (variable){
-    //   setFormData((prevFormData) => ({
-    //     ...prevFormData,
-    //     variable: variable, // Update formData.variable with the selected variable
-    //   }));
-    // }
   }, [drawnShapeBounds]);
 
+  // Bottom bar
   const handleTimeSeries = async (e) => {
     if (e) e.preventDefault();
 
@@ -233,15 +297,11 @@ function App() {
       );
       return; // Exit the function early
     }
-
+    // setActiveTab("TimeSeries")
     formData.requestType = "Time Series";
     formData.startDateTime = startDate;
     formData.endDateTime = endDate;
-    formData.secondAgg = secondAgg;
     try {
-
-      // console.log(formData);
-      // Send request to the backend to fetch both time series data and image data
       const response = await fetch("/api/timeseries/", {
         method: "POST",
         headers: {
@@ -249,17 +309,13 @@ function App() {
         },
         body: JSON.stringify(formData),
       });
-
-      // Check if the response is successful
       if (response.ok) {
-        // Parse the response as JSON
         const responseData = await response.json();
         console.log("Successfully requested time series data:", responseData);
-        setImageRecieved(responseData);
+        setImageRecieved(responseData.figure);
+        setTimeseriesTextOut(responseData.log);
       } else {
         const errorResponse = await response.json();
-        // setProgress(5);
-        // setProgressDesc(errorResponse.error, response.status);
         console.error(
           "Failed to fetch time series data. HTTP status:",
           response.status,
@@ -318,15 +374,11 @@ function App() {
       );
       return; // Exit the function early
     }
-
+    // setActiveTab("HeatMap")
     formData.requestType = "Heap Map";
     formData.startDateTime = startDate;
     formData.endDateTime = endDate;
-    formData.secondAgg = secondAgg;
     try {
-
-      // console.log(formData);
-      // Send request to the backend to fetch both time series data and image data
       const response = await fetch("/api/heatmap/", {
         method: "POST",
         headers: {
@@ -334,17 +386,14 @@ function App() {
         },
         body: JSON.stringify(formData),
       });
-
-      // Check if the response is successful
       if (response.ok) {
-        // Parse the response as JSON
         const responseData = await response.json();
         console.log("Successfully requested heat map data:", responseData);
-        setHeatMap(responseData);
+        setHeatMap(responseData.figure);
+        setHeatmapTextOut(responseData.log);
+        setHeatmapRangeOut(responseData.range);
       } else {
         const errorResponse = await response.json();
-        // setProgress(5);
-        // setProgressDesc(errorResponse.error, response.status);
         console.error(
           "Failed to fetch heat map. HTTP status:",
           response.status,
@@ -403,14 +452,11 @@ function App() {
       );
       return; // Exit the function early
     }
-
+    // setActiveTab("FindTime")
     formData.requestType = "Find Time";
     formData.startDateTime = startDate;
     formData.endDateTime = endDate;
-    formData.secondAgg = secondAgg;
     try {
-      // console.log(formData);
-      // Send request to the backend to fetch both time series data and image data
       const response = await fetch("/api/findtime/", {
         method: "POST",
         headers: {
@@ -418,17 +464,12 @@ function App() {
         },
         body: JSON.stringify(formData),
       });
-
-      // Check if the response is successful
       if (response.ok) {
-        // Parse the response as JSON
         const responseData = await response.json();
         console.log("Successfully requested find time data:", responseData);
         setFindTime(responseData);
       } else {
         const errorResponse = await response.json();
-        // setProgress(5);
-        // setProgressDesc(errorResponse.error, response.status);
         console.error(
           "Failed to fetch find time. HTTP status:",
           response.status,
@@ -487,14 +528,11 @@ function App() {
       );
       return; // Exit the function early
     }
-
+    // setActiveTab("FindArea")
     formData.requestType = "Find Area";
     formData.startDateTime = startDate;
     formData.endDateTime = endDate;
-    formData.secondAgg = secondAgg;
     try {
-      // console.log(formData);
-      // Send request to the backend to fetch both time series data and image data
       const response = await fetch("/api/findarea/", {
         method: "POST",
         headers: {
@@ -502,17 +540,12 @@ function App() {
         },
         body: JSON.stringify(formData),
       });
-
-      // Check if the response is successful
       if (response.ok) {
-        // Parse the response as JSON
         const responseData = await response.json();
         console.log("Successfully requested find area data:", responseData);
         setFindArea(responseData);
       } else {
         const errorResponse = await response.json();
-        // setProgress(5);
-        // setProgressDesc(errorResponse.error, response.status);
         console.error(
           "Failed to fetch find area. HTTP status:",
           response.status,
@@ -525,15 +558,20 @@ function App() {
     }
   }
 
-  // useEffect(() => {
-  //   alert('[2025/03/05]: Click OK to close this alert and open the website. No data in the backend right now for querying. Data will be added by 03/07. \n\nThank you. ')
-  // }, [])
-
   return (
-    <>
-      <Header />
-      <div className="main_wrapper">
+    <div
+      className={`app-layout 
+        ${sidebarCollapsed ? "sidebar-collapsed" : ""} 
+        ${bottomBarCollapsed ? "bottombar-collapsed" : ""}`}
+    >
+      <div className="sidebar">
+        <button onClick={() => setSidebarCollapsed(s => !s)}>
+          {sidebarCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        </button>
         <Sidebar
+          sidebarCollapsed={sidebarCollapsed}
+          setComparisonVal={setComparisonVal}
+          setPredicate={setPredicate}
           variable={formData.variable}
           setVariable={setVariable}
           startDate={startDate}
@@ -543,26 +581,37 @@ function App() {
           formData={formData}
           handleChange={handleChange}
           queryData={queryData}
-          isLoading={isLoading} />
-        <div className="main_content">
-          <MyMap />
-          <Tabs
-            formData={formData}
-            setSecondAggMethod={setSecondAggMethod}
-            htmlString={htmlString}
-            handleTimeSeries={handleTimeSeries}
-            timeSeriesImage={timeSeriesImage}
-            handleHeatMap={handleHeatMap}
-            heatMapImage={heatMapImage}
-            handleFindTime={handleFindTime}
-            findTimeImage={findTimeImage}
-            handleFindArea={handleFindArea}
-            findAreaImage={findAreaImage}
-            setComparisonVal={setComparisonVal}
-            setPredicate={setPredicate} />
-        </div>
+          isLoading={isLoading}
+          queryLog={queryLog} 
+          showQueryLog={showQueryLog}
+          setShowQueryLog={setShowQueryLog}/>
       </div>
-    </>
+
+      <div className="main-content">
+        <MyMap sidebarCollapsed={sidebarCollapsed} bottomBarCollapsed={bottomBarCollapsed} />
+      </div>
+
+      <div className="bottom-bar">
+        <button onClick={() => setBottomBarCollapsed(b => !b)}>
+          {bottomBarCollapsed ? "↑" : "↓"}
+        </button>
+        {!bottomBarCollapsed && (
+        <Tabs
+          activeTabs={activeTabs}
+          handleTabChange={handleTabChange}
+          formData={formData}
+          htmlString={htmlString}
+          timeSeriesImage={timeSeriesImage}
+          heatMapImage={heatMapImage}
+          findTimeImage={findTimeImage}
+          findAreaImage={findAreaImage}
+          timeseriesTextOut={timeseriesTextOut}
+          heatmapTextOut={heatmapTextOut}
+          heatmapRangeOut={heatmapRangeOut}
+        />
+      )}
+    </div>
+  </div>
   )
 }
 

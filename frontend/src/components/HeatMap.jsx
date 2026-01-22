@@ -1,99 +1,68 @@
 import PropTypes from "prop-types";
-import { Button } from '@mui/material';
 import Plot from 'react-plotly.js';
-import Input from './input';
 import "../styles/heatmap.css";
-import { useState } from 'react';
 
 // TODO,bug with areas where the height is a bit larger than the width.
-const HeatMap = ({ handleHeatMap, heatMapImage, formData, handleChange }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClick = async () => {
-    setIsLoading(true);
-    try {
-      await handleHeatMap();
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const HeatMap = ({ heatMapImage }) => {
 
   const heatmapLayout = {
     autosize: true,
-    margin: { l: 50, r: 20, b: 40, t: 20 },
+    margin: { l: 10, r: 10, b: 40, t: 25 },
+    plot_bgcolor: "#ffffff",
+    paper_bgcolor: "#ffffff",
     xaxis: {
-        title: { text: 'Longitude' },
-        automargin: true,
-        constrain: 'domain',
-        showgrid: false
+      title: { text: 'Longitude' },
+      automargin: true,
+      constrain: 'domain',
+      showgrid: false
     },
     yaxis: {
-        title: { text: 'Latitude' },
-        automargin: true,
-        scaleanchor: "x", 
-        scaleratio: 1,
-        showgrid: false
-    },
-    coloraxis: {
-        colorscale: 'RdBu', 
-        colorbar: {
-            title: 'Temperature (°K)',
-            ticksuffix: '°K',
-            outlinewidth: 1
-        }
+      title: { text: 'Latitude' },
+      automargin: true,
+      scaleanchor: "x",
+      scaleratio: 5,
+      showgrid: false
     },
     hovermode: 'closest',
-    showlegend: false 
+    showlegend: false,
   };
 
   const heatmapConfig = {
-    displayModeBar: true,
-    responsive: true,
+    // displayModeBar: true,
+    // responsive: true,
+    // responsive: false,
     displaylogo: false,
-    scrollZoom: true,
-    toImageButtonOptions: {
-        format: 'png',
-        filename: 'heatmap_image'
-    },
-    modeBarButtonsToRemove: ['zoomOut2d', 'zoomIn2d'],
+    scrollZoom: false,
+    toImageButtonOptions: { format: 'png', filename: 'polaris_heatmap' },
+    modeBarButtonsToRemove: ["resetScale",],
   };
+
+//   const styledData = heatMapImage.data.map(trace => ({
+//   ...trace,
+//   zmin: 180, 
+//   zmax: 330,
+// }));
+  // 95C = 368.15K
+  // 56.7C = 329.85K  <-- highest temperature ever recorded
+  // -90C = 183.15K   <-- lowest temperature ever recorded
 
   return (
     <div className="heat_map">
-      <div className="hm_inputs">
-        <Input
-          val={formData.secondAgg}
-          setVal={handleChange}
-          name="hm_agg_method"
-          label={"Select Aggregation Method"}
-          options={["min", "max", "mean"]}
-          sx={{ width: "80%" }}
-          size={"small"}/>
-        <Button 
-          onClick={handleClick} 
-          variant="outlined" 
-          disabled={isLoading}
-          sx={{marginBottom: "48px", marginTop: "auto"}}
-        >
-          <div className="button-content">
-            {isLoading && <div className="loading-spinner" />}
-            Query
-          </div>
-        </Button>
-      </div>
-      <div className="hline"></div>
-      { heatMapImage && Object.keys(heatMapImage).length > 0 ? (
-      <div className="hm_plot">
-        <Plot
+      {heatMapImage && Object.keys(heatMapImage).length > 0 ? (
+        <div classname="hm_plotly">
+          <Plot
             className="hm_plotly"
             data={heatMapImage.data}
             layout={heatmapLayout}
             frames={heatMapImage.frames}
-            config={heatmapConfig}/>
-      </div>
+            config={heatmapConfig} 
+            useResizeHandler
+            style={{ width: "100%", height: "100%" }}
+            />
+        </div>
       ) : (
-        <div className="hm_plot">
-          No Heat Map Data
+        <div className="hm_plotly">
+          Values aggregated over time.
         </div>
       )}
     </div>
@@ -101,8 +70,7 @@ const HeatMap = ({ handleHeatMap, heatMapImage, formData, handleChange }) => {
 }
 
 HeatMap.propTypes = {
-  handleHeatMap: PropTypes.func,
   heatMapImage: PropTypes.object,
-}  
+}
 
 export default HeatMap;

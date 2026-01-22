@@ -1,29 +1,47 @@
 # django-react-starter
 
-bash init_venv.sh
+## Initialize
 
-# backend
+Starting in the django-react-starter directory:
+
+If virtual environment does not exist:
+```bash 
+bash init_venv.sh  
+```
+
+To activate virtual environment:
+``` bash
+source venv/bin/activate
+```
+To initiate a development server:
+``` bash
+cd backend
 python manage.py makemigrations
-
 python manage.py migrate
 
-# frontend
-
+cd ../frontend
 npm install --legacy-peer-deps
 
-# backend
-
+cd ../backend
 python manage.py runserver
+```
+In a new terminal window, run:
 
-# frontend
+``` bash
+source venv/bin/activate
 
+cd frontend
 npm run dev
+```
+This will give you a local host link to view the current frontend.
 
+**Quit the server with CONTROL-C**
 
-# Build
+## Build
+``` bash
 npm run build
 
-    # then copy /home/huan1531/django-react-starter/frontend/dist to /home/huan1531/django-react-starter/backend/frontend/dist
+cp /home/huan1531/django-react-starter/frontend/dist /home/huan1531/django-react-starter/backend/frontend/dist
 
 rm -rf /home/huan1531/django-react-starter/backend/frontend/dist
 
@@ -40,6 +58,7 @@ pgrep -a python
 62932 python manage.py runserver 0.0.0.0:8000
 
 kill 62932
+```
 
-# TODO
+## TODO
 Deny request with large API calls

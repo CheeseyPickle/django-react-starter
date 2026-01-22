@@ -1,32 +1,88 @@
-#root {
-  text-align: center;
-}
-
-body {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.main_wrapper {
-  display: flex;
-  flex-direction: row;
-  height: 90vh; 
-  justify-content: center;
-  align-items: center;
-}
-
-.main_content {
-  flex-grow: 1; 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; 
+html, body, #root {
   height: 100%;
-  color: white;
+  margin: 0;
+  padding: 0;
 }
 
-.hline {  
-  height: 90%;
-  border-left: 1px solid gray;
-  border-radius: 8px;
+.app-layout {
+  display: grid;
+  grid-template-columns: 25% 1fr;  /* Sidebar width, main content */
+  grid-template-rows: 1fr 80%;      /* Main content + bottom bar height */
+  height: 100vh;
+  transition: grid-template-columns 0.3s ease, grid-template-rows 0.3s ease;
+}
+
+.app-layout.sidebar-collapsed {
+  grid-template-columns: 40px 1fr;   /* Shrink sidebar */
+}
+
+.sidebar {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  background: #ffffff;
+  color: #ffffff;
+  transition: width 0.3s ease;
+  overflow: scroll;
+}
+
+.sidebar button {
+  background: #5a8d8f;
+  color: #fbfafb;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar button:hover {
+  background: #1E4E54;
+}
+
+.main-content {
+  grid-column: 2;
+  grid-row: 1;
+  background: #ffffff;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+
+.app-layout.bottombar-collapsed {
+  grid-template-rows: 1fr 40px;      /* Shrink bottom bar */
+}
+
+.bottom-bar {
+  grid-column: 2;
+  grid-row: 2;
+  background: #ffffff;
+  color: #303641;
+  transition: height 0.3s ease;
+
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  gap: 4px; /* space between panels */
+  overflow: hidden;
+}
+
+.bottom-bar button {
+  background: #5a8d8f;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.bottom-bar button:hover {
+  background: #1E4E54;
 }

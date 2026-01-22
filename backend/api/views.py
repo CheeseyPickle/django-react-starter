@@ -1,6 +1,7 @@
 import json
 import os
 import logging
+import pickle
 import geopandas as gpd
 import plotly.express as px
 import plotly.graph_objs as go
@@ -10,25 +11,18 @@ from django.utils.timezone import make_naive
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from shapely.geometry import Polygon
-import xarray as xr
-from io import BytesIO
 
-from .serializers import QuerySeriazlier, TimeSeriesSerializer, FindTimeSerializer
-from .iharp_query_executor import (
-    GetRasterExecutor,
-    TimeseriesExecutor,
-    HeatmapExecutor,
-    FindTimeExecutor,
-    FindAreaExecutor,
-    long_short_name_dict,
-)
+
+from .serializers import *
+from .iharp_query_processor import *
+
 
 logger = logging.getLogger(__name__)
 MSG_FORMAT = "[%(asctime)s %(name)s-%(levelname)s]: %(message)s"
 LOG_DATE_FORMAT = "%d/%b/%Y %H:%M:%S"
 logging.basicConfig(level=logging.INFO, format=MSG_FORMAT, datefmt=LOG_DATE_FORMAT)
 
-metadata_fpath = "/data/metadata.csv"
+metadata_fpath = "/data/metadata.csv" # "/data/metadata_post.csv"  ### TODO: change to correct metadata file path
 
 
 def format_datetime_string(dt_input):
@@ -41,6 +35,7 @@ def format_datetime_string(dt_input):
     if dt and dt.tzinfo is not None:
         dt = make_naive(dt)
     dt_formatted = dt.strftime("%Y-%m-%d %H:%M:%S") if dt else None
+    assert dt_formatted is not None, "Invalid datetime format"
     return dt_formatted
 
 
@@ -49,24 +44,23 @@ def get_variable_short_name(variable):
 
 
 @api_view(["POST"])
-def query(request):
-    logger.info("Request for raster")
-    serializer = QuerySeriazlier(data=request.data)
+def get_raster_query(request):
+    logger.info("Get Raster Query")
+    serializer = GetRasterSeriazlier(data=request.data)
     if serializer.is_valid():
         serializer.save()
         logger.info(request.data)
+
         variable = request.data.get("variable")
-        variable = variable.lower().replace(" ", "_")
         start_datetime = request.data.get("startDateTime")
         end_datetime = request.data.get("endDateTime")
         time_resolution = request.data.get("temporalResolution")
-        time_agg_method = request.data.get("temporalAggregation")
         north = round(float(request.data.get("north")), 3)
         south = round(float(request.data.get("south")), 3)
         east = round(float(request.data.get("east")), 3)
         west = round(float(request.data.get("west")), 3)
         spatial_resolution = float(request.data.get("spatialResolution"))
-        spatial_aggregation = request.data.get("spatialAggregation")
+        aggregation = request.data.get("aggregation")
 
         formatted_start = format_datetime_string(start_datetime)
         formatted_end = format_datetime_string(end_datetime)
@@ -80,14 +74,10 @@ def query(request):
             max_lat=north,
             min_lon=west,
             max_lon=east,
-            # min_lat=min_lat,
-            # max_lat=max_lat,
-            # min_lon=min_lon,
-            # max_lon=max_lon,
             temporal_resolution=time_resolution,
-            temporal_aggregation=time_agg_method,
             spatial_resolution=spatial_resolution,
-            spatial_aggregation=spatial_aggregation,
+            aggregation=aggregation,
+            log_info=None,
         )
         ds = qe.execute()
         response = ds.__str__()
@@ -99,25 +89,23 @@ def query(request):
 
 
 @api_view(["POST"])
-def download_query(request):
-    logger.info("Request for raster download")
-    serializer = QuerySeriazlier(data=request.data)
+def get_raster_query_pickle(request):
+    logger.info("Get Raster Query, Return Xarray")
+    serializer = GetRasterSeriazlier(data=request.data)
     if serializer.is_valid():
         serializer.save()
         logger.info(request.data)
+
         variable = request.data.get("variable")
-        variable = variable.lower().replace(" ", "_")
         start_datetime = request.data.get("startDateTime")
         end_datetime = request.data.get("endDateTime")
         time_resolution = request.data.get("temporalResolution")
-        time_agg_method = request.data.get("temporalAggregation")
         north = round(float(request.data.get("north")), 3)
         south = round(float(request.data.get("south")), 3)
         east = round(float(request.data.get("east")), 3)
         west = round(float(request.data.get("west")), 3)
         spatial_resolution = float(request.data.get("spatialResolution"))
-        spatial_aggregation = request.data.get("spatialAggregation")
-        rid = serializer.data["id"]
+        aggregation = request.data.get("aggregation")
 
         formatted_start = format_datetime_string(start_datetime)
         formatted_end = format_datetime_string(end_datetime)
@@ -131,14 +119,52 @@ def download_query(request):
             max_lat=north,
             min_lon=west,
             max_lon=east,
-            # min_lat=min_lat,
-            # max_lat=max_lat,
-            # min_lon=min_lon,
-            # max_lon=max_lon,
             temporal_resolution=time_resolution,
-            temporal_aggregation=time_agg_method,
             spatial_resolution=spatial_resolution,
-            spatial_aggregation=spatial_aggregation,
+            aggregation=aggregation,
+        )
+        ds = qe.execute()
+
+        return Response(pickle.dumps(ds), status=201)
+
+    print("Serializer errors:", serializer.errors)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(["POST"])
+def download_query(request):
+    logger.info("Get Raster Query")
+    serializer = GetRasterSeriazlier(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        logger.info(request.data)
+
+        variable = request.data.get("variable")
+        start_datetime = request.data.get("startDateTime")
+        end_datetime = request.data.get("endDateTime")
+        time_resolution = request.data.get("temporalResolution")
+        north = round(float(request.data.get("north")), 3)
+        south = round(float(request.data.get("south")), 3)
+        east = round(float(request.data.get("east")), 3)
+        west = round(float(request.data.get("west")), 3)
+        spatial_resolution = float(request.data.get("spatialResolution"))
+        aggregation = request.data.get("aggregation")
+
+        formatted_start = format_datetime_string(start_datetime)
+        formatted_end = format_datetime_string(end_datetime)
+
+        qe = GetRasterExecutor(
+            metadata=metadata_fpath,
+            variable=variable,
+            start_datetime=formatted_start,
+            end_datetime=formatted_end,
+            min_lat=south,
+            max_lat=north,
+            min_lon=west,
+            max_lon=east,
+            temporal_resolution=time_resolution,
+            spatial_resolution=spatial_resolution,
+            aggregation=aggregation,
         )
         ds = qe.execute()
 
@@ -146,7 +172,8 @@ def download_query(request):
         if not os.path.exists(tmp_dir):
             os.makedirs(tmp_dir)
 
-        file_name = f"iHARPV_{rid}.nc"
+        rid = serializer.data["id"]
+        file_name = f"for_download_{rid}.nc"
         file_path = f"{tmp_dir}/{file_name}"
         ds.to_netcdf(file_path)
 
@@ -173,27 +200,22 @@ def download_query(request):
 
 
 @api_view(["POST"])
-def timeseries(request):
-    logger.info("Request for time series")
+def timeseries_query(request):
+    logger.info("Time Series Query")
     serializer = TimeSeriesSerializer(data=request.data)
-
     if serializer.is_valid():
-        logger.info(request.data)
         serializer.save()
+        logger.info(request.data)
 
         variable = request.data.get("variable")
-        variable = variable.lower().replace(" ", "_")
         start_datetime = request.data.get("startDateTime")
         end_datetime = request.data.get("endDateTime")
         time_resolution = request.data.get("temporalResolution")
-        time_agg_method = request.data.get("temporalAggregation")
         north = round(float(request.data.get("north")), 3)
         south = round(float(request.data.get("south")), 3)
         east = round(float(request.data.get("east")), 3)
         west = round(float(request.data.get("west")), 3)
-        spatial_resolution = float(request.data.get("spatialResolution"))
-        spatial_aggregation = request.data.get("spatialAggregation")
-        ts_agg_method = request.data.get("secondAgg")
+        aggregation = request.data.get("aggregation")
 
         formatted_start = format_datetime_string(start_datetime)
         formatted_end = format_datetime_string(end_datetime)
@@ -203,60 +225,53 @@ def timeseries(request):
             variable=variable,
             start_datetime=formatted_start,
             end_datetime=formatted_end,
+            temporal_resolution=time_resolution,
             min_lat=south,
             max_lat=north,
             min_lon=west,
             max_lon=east,
-            # min_lat=min_lat,
-            # max_lat=max_lat,
-            # min_lon=min_lon,
-            # max_lon=max_lon,
-            temporal_resolution=time_resolution,
-            temporal_aggregation=time_agg_method,
-            time_series_aggregation_method=ts_agg_method,
-            spatial_resolution=spatial_resolution,
-            spatial_aggregation=spatial_aggregation,
+            aggregation=aggregation,
+            time_series_aggregation_method=aggregation,
+            log_info=None,
         )
         ts = qe.execute()
 
         short_variable = get_variable_short_name(variable)
-        fig = go.Figure([go.Scatter(x=ts["valid_time"], y=ts[short_variable])])
-
+        fig = go.Figure([go.Scatter(x=ts["time"], y=ts[short_variable])])
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
 
-        return JsonResponse(json_data, status=201)
+        log_info = qe.log_info[0]
+        # print(f"[View] log_info = qe.log_info being sent to frontend: {log_info}")
+
+        response_data = {
+            "figure": json_data,
+            "log": log_info
+        }
+        return JsonResponse(response_data, status=201)
 
     logger.error("Invalid data: %s", serializer.errors)
     return JsonResponse({"error": "Invalid data"}, status=400)
 
 
 @api_view(["POST"])
-def heatmap(request):
-    logger.info("Request for heat map")
-    # Can just ues the time series serializer since it's
-    # dealing with the same data
-    serializer = TimeSeriesSerializer(data=request.data)
-
+def heatmap_query(request):
+    logger.info("Heatmap Query")
+    serializer = HeatmapSerializer(data=request.data)
     if serializer.is_valid():
-        logger.info(request.data)
         serializer.save()
+        logger.info(request.data)
 
         variable = request.data.get("variable")
-        variable = variable.lower().replace(" ", "_")
+        start_datetime = request.data.get("startDateTime")
+        end_datetime = request.data.get("endDateTime")
         north = round(float(request.data.get("north")), 3)
         south = round(float(request.data.get("south")), 3)
         east = round(float(request.data.get("east")), 3)
         west = round(float(request.data.get("west")), 3)
-        start_datetime = request.data.get("startDateTime")
-        end_datetime = request.data.get("endDateTime")
-        temporalResolution = request.data.get("temporalResolution")
-        time_agg_method = request.data.get("temporalAggregation")
-        hm_agg_method = request.data.get("secondAgg")
         spatial_resolution = float(request.data.get("spatialResolution"))
-        spatial_aggregation = request.data.get("spatialAggregation")
+        aggregation = request.data.get("aggregation")
 
-        var_short_name = get_variable_short_name(variable)
         formatted_start = format_datetime_string(start_datetime)
         formatted_end = format_datetime_string(end_datetime)
 
@@ -269,60 +284,60 @@ def heatmap(request):
             max_lat=north,
             min_lon=west,
             max_lon=east,
-            # min_lat=min_lat,
-            # max_lat=max_lat,
-            # min_lon=min_lon,
-            # max_lon=max_lon,
             spatial_resolution=spatial_resolution,
-            spatial_aggregation=spatial_aggregation,
-            heatmap_aggregation_method=hm_agg_method,
+            aggregation=aggregation,
+            heatmap_aggregation_method=aggregation,
+            log_info=None,
+            range_info=None,
         )
         hm = qe.execute()
 
+        var_short_name = get_variable_short_name(variable)
         fig = go.Figure(data=go.Heatmap(x=hm["longitude"], y=hm["latitude"], z=hm[var_short_name], colorscale="RdBu_r"))
         fig.update_traces(hovertemplate=f"lon: %{{x}}<br>lat: %{{y}}<br>{var_short_name}: %{{z}}<extra></extra>")
         fig.update_layout(yaxis=dict(scaleanchor="x", scaleratio=1), xaxis=dict(constrain="domain"))
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
 
-        return JsonResponse(json_data, status=201)
+        log_info = qe.log_info[0]
+        # print(f"[View] log_info = qe.log_info being sent to frontend: {log_info}")
+
+        range_info = qe.range_info[0]
+
+        response_data = {
+            "figure": json_data,
+            "log": log_info,
+            "range": range_info,
+        }
+        return JsonResponse(response_data, status=201)
 
     logger.error("Invalid data: %s", serializer.errors)
     return JsonResponse({"error": "Invalid data"}, status=400)
 
 
 @api_view(["POST"])
-def findTime(request):
-    logger.info("Request for find time")
+def find_time_query(request):
+    logger.info("Find Time Query")
     serializer = FindTimeSerializer(data=request.data)
-
     if serializer.is_valid():
-        logger.info(request.data)
         serializer.save()
+        logger.info(request.data)
 
         variable = request.data.get("variable")
-        variable = variable.lower().replace(" ", "_")
+        start_datetime = request.data.get("startDateTime")
+        end_datetime = request.data.get("endDateTime")
+        time_resolution = request.data.get("temporalResolution")
         north = round(float(request.data.get("north")), 3)
         south = round(float(request.data.get("south")), 3)
         east = round(float(request.data.get("east")), 3)
         west = round(float(request.data.get("west")), 3)
-        start_datetime = request.data.get("startDateTime")
-        end_datetime = request.data.get("endDateTime")
-        temporalResolution = request.data.get("temporalResolution")
-        time_agg_method = request.data.get("temporalAggregation")
-        ts_agg_method = request.data.get("secondAgg")
+        aggregation = request.data.get("aggregation")
+
         filter_predicate = request.data.get("filterPredicate")
         filter_value = request.data.get("filterValue")
-        spatial_resolution = float(request.data.get("spatialResolution"))
-        spatial_aggregation = request.data.get("spatialAggregation")
 
-        var_short_name = get_variable_short_name(variable)
         formatted_start = format_datetime_string(start_datetime)
         formatted_end = format_datetime_string(end_datetime)
-
-        # TODO: Replace temporary static variable for ts_agg_method below:
-        ### Add check if temporal agg level is larger than the difference between start/end throw some error:
-        # ie if tempAgg is 'year' but start - end = 2 months. That doesn't make sense.
 
         qe = FindTimeExecutor(
             metadata=metadata_fpath,
@@ -333,28 +348,49 @@ def findTime(request):
             max_lat=north,
             min_lon=west,
             max_lon=east,
-            temporal_resolution=temporalResolution,
-            temporal_aggregation=time_agg_method,
-            time_series_aggregation_method=ts_agg_method,
+            temporal_resolution=time_resolution,
+            aggregation=aggregation,
+            time_series_aggregation_method=aggregation,
             filter_predicate=filter_predicate,
             filter_value=float(filter_value),
-            spatial_resolution=spatial_resolution,
-            spatial_aggregation=spatial_aggregation,
         )
         ft = qe.execute()
 
-        color_map = {True: "blue", False: "red"}
-        fig = go.Figure(
-            [
-                go.Scatter(
-                    x=ft["valid_time"],
-                    y=ft[var_short_name],
-                    mode="lines+markers",
-                    marker=dict(size=12, color=[color_map[i] for i in ft[var_short_name].values]),
-                    line=dict(color="lightgray"),
-                )
-            ]
-        )
+        var_short_name = get_variable_short_name(variable)
+        # color_map = {True: "#005AB5", False: "#DC3220"}
+        # fig = go.Figure(
+        #     [
+        #         go.Scatter(
+        #             x=ft["time"],
+        #             y=ft[var_short_name],
+        #             mode="lines+markers",
+        #             marker=dict(size=12, color=[color_map[i] for i in ft[var_short_name].values]),
+        #             line=dict(color="lightgray"),
+        #         )
+        #     ]
+        # )
+        color_map = {True: "#005AB5", False: "#DC3220"}
+
+        true_mask = ft[var_short_name] == True
+        false_mask = ft[var_short_name] == False
+
+        fig = go.Figure([
+            go.Scatter(
+                x=ft["time"][true_mask],
+                y=ft[var_short_name][true_mask],
+                mode="markers",
+                marker=dict(size=12, color=color_map[True]),
+                name="True"   # <-- legend label
+            ),
+            go.Scatter(
+                x=ft["time"][false_mask],
+                y=ft[var_short_name][false_mask],
+                mode="markers",
+                marker=dict(size=12, color=color_map[False]),
+                name="False"  # <-- legend label
+            )
+        ])
+        fig.update_layout(showlegend=True)
         json_fig = fig.to_json()
         json_data = json.loads(json_fig)
 
@@ -365,38 +401,30 @@ def findTime(request):
 
 
 @api_view(["POST"])
-def findArea(request):
-    logger.info("Request for find area")
-    # Can copy this serializer
-    serializer = FindTimeSerializer(data=request.data)
-
+def find_area_query(request):
+    logger.info("Find Area Query")
+    serializer = FindAreaSerializer(data=request.data)
     if serializer.is_valid():
-        logger.info(request.data)
         serializer.save()
+        logger.info(request.data)
 
         variable = request.data.get("variable")
-        variable = variable.lower().replace(" ", "_")
+        start_datetime = request.data.get("startDateTime")
+        end_datetime = request.data.get("endDateTime")
         north = round(float(request.data.get("north")), 3)
         south = round(float(request.data.get("south")), 3)
         east = round(float(request.data.get("east")), 3)
         west = round(float(request.data.get("west")), 3)
-        start_datetime = request.data.get("startDateTime")
-        end_datetime = request.data.get("endDateTime")
-        temporalResolution = request.data.get("temporalResolution")
-        time_agg_method = request.data.get("temporalAggregation")
         spatial_resolution = float(request.data.get("spatialResolution"))
-        spatial_aggregation = request.data.get("spatialAggregation")
-        fa_agg_method = request.data.get("secondAgg")
+        aggregation = request.data.get("aggregation")
         filter_predicate = request.data.get("filterPredicate")
         filter_value = request.data.get("filterValue")
 
-        var_short_name = get_variable_short_name(variable)
         formatted_start = format_datetime_string(start_datetime)
         formatted_end = format_datetime_string(end_datetime)
 
-        # TODO: Replace temporary static variables below
-
         qe = FindAreaExecutor(
+            metadata=metadata_fpath,
             variable=variable,
             start_datetime=formatted_start,
             end_datetime=formatted_end,
@@ -404,12 +432,11 @@ def findArea(request):
             max_lat=north,
             min_lon=west,
             max_lon=east,
-            heatmap_aggregation_method=fa_agg_method,
+            spatial_resolution=spatial_resolution,
+            aggregation=aggregation,
+            heatmap_aggregation_method=aggregation,
             filter_predicate=filter_predicate,
             filter_value=float(filter_value),
-            spatial_resolution=spatial_resolution,
-            spatial_aggregation=spatial_aggregation,
-            metadata=metadata_fpath,
         )
         fa = qe.execute()
 
@@ -427,7 +454,8 @@ def findArea(request):
                 for x, y, x2, y2 in zip(df["longitude"], df["latitude"], df["longitude2"], df["latitude2"])
             ],
         )
-        color_mapping = {True: "blue", False: "red"}
+        var_short_name = get_variable_short_name(variable)
+        color_mapping = {True: "#005AB5", False: "#DC3220"}
         fig = px.choropleth_mapbox(
             gdf,
             geojson=gdf.geometry,
@@ -435,7 +463,7 @@ def findArea(request):
             hover_data={var_short_name: ":.2f", "latitude": ":.3f", "longitude": ":.3f"},
             color=var_short_name,
             center={"lat": gdf["latitude"].mean(), "lon": gdf["longitude"].mean()},
-            opacity=0.3,
+            opacity=0.5,
             zoom=1,
             color_discrete_map=color_mapping,
         )
@@ -452,10 +480,10 @@ def findArea(request):
         fig.update_traces(marker_line_width=0)
         fig.update_layout(
             mapbox_style="white-bg",
-            mapbox_bounds_east=180,
-            mapbox_bounds_north=90,
-            mapbox_bounds_west=-180,
-            mapbox_bounds_south=-90,
+            mapbox_bounds_east=east,
+            mapbox_bounds_north=north,
+            mapbox_bounds_west=west,
+            mapbox_bounds_south=south,
             mapbox_layers=[
                 {
                     "below": "traces",

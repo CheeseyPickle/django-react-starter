@@ -1,52 +1,53 @@
 .tabs_wrapper {
+  display: inline-block;
+  gap: 4px;
   width: 100%;
-  height: 50%;
+  height: 100%;
   background-color: white;
   color: black;
-  position: relative; 
 }
 
-.page_wrapper {
-  height: 85%;
-  width: 100%;
-  overflow: auto;
-  position: absolute;
-  left: 0;
-  right: 0;
+/* Ensure grid children can shrink; prevents overflow/zero width weirdness */
+.bottom-bar { align-items: stretch; }
+.panel-container {
+  min-width: 0;            /* <-- IMPORTANT for grid/flex children */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: left;
+  height: 100%;
 }
 
-.tabpanel {
-  width: 100%;
-  height: 100%;    
+.panel-container .MuiFormControl-root {
+  flex: 0 0 auto; /* dropdown doesn't grow */
+  margin-bottom: 4px;
+}
+
+/* Make the tabpanel and its child fill the column */
+.tabpanel { height: 100%; }
+.tabpanel > * { height: 100%; }
+
+/* keep text readable */
+.tabpanel text,
+.tabpanel .legend,
+.tabpanel .axis {
+  font-size: clamp(12px, 1.2vw, 16px); /* never too small or too huge */
 }
 
 .raster_data {
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
   justify-content: center;
 }
 
+ .xarray_container {
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 10px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .no_content {
-  margin-top: 3vh;
   text-align: center;
-  font-size: larger;
-}
-
-.raster_content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.raster_info {
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-evenly;
+  padding: 20px;
+  color: #303641;
 }
