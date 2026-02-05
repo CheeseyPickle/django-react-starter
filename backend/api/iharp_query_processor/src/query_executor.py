@@ -4,6 +4,7 @@ import xarray as xr
 from .metadata import Metadata
 from .utils.const import long_short_name_dict, NO_AGG_LIT
 
+from .query_monitor.query_monitor import log_query
 
 class QueryExecutor(ABC):
     def __init__(
@@ -33,6 +34,8 @@ class QueryExecutor(ABC):
         self.temporal_resolution = temporal_resolution
         self.spatial_resolution = spatial_resolution
         self.aggregation = aggregation
+
+        log_query(variable=variable,start_datetime=start_datetime, end_datetime=end_datetime, min_lat=min_lat, max_lat=max_lat, min_lon=min_lon, max_lon=max_lon,temporal_resolution=temporal_resolution, spatial_resolution=spatial_resolution)
 
         # query internal variables
         self.variable_short_name = long_short_name_dict[self.variable]

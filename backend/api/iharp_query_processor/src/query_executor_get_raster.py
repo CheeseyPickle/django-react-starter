@@ -5,7 +5,7 @@ import pandas as pd
 import xarray as xr
 
 from .query_executor import QueryExecutor
-from .utils.const import time_resolution_to_freq
+import data_aggregator
 
 
 class GetRasterExecutor(QueryExecutor):
@@ -138,40 +138,7 @@ class GetRasterExecutor(QueryExecutor):
         ds_list = []
         # 3.1 read downloaded files
         for file in download_file_list:
-            ds = xr.open_dataset(file, engine="netcdf4")
-            # drop unused variables
-            # if "number" in ds.coords:
-            #     ds = ds.drop_vars("number")
-            # if "expver" in ds.coords:
-            #     ds = ds.drop_vars("expver")
-            ds = ds.sel(
-                valid_time=slice(self.start_datetime, self.end_datetime),
-                latitude=slice(self.max_lat, self.min_lat),
-                longitude=slice(self.min_lon, self.max_lon),
-            )
-            # temporal resample
-            if self.temporal_resolution != "hour":
-                resampled = ds.resample(valid_time=time_resolution_to_freq(self.temporal_resolution))
-                if self.aggregation == "mean":
-                    ds = resampled.mean()
-                elif self.aggregation == "max":
-                    ds = resampled.max()
-                elif self.aggregation == "min":
-                    ds = resampled.min()
-                else:
-                    raise ValueError("Invalid temporal_aggregation")
-            # spatial resample
-            if self.spatial_resolution > 0.25:
-                c_f = int(self.spatial_resolution / 0.25)
-                coarsened = ds.coarsen(latitude=c_f, longitude=c_f, boundary="trim")
-                if self.aggregation == "mean":
-                    ds = coarsened.mean()
-                elif self.aggregation == "max":
-                    ds = coarsened.max()
-                elif self.aggregation == "min":
-                    ds = coarsened.min()
-                else:
-                    raise ValueError("Invalid spatial_aggregation")
+            ds = data_aggregator.aggregate_downloaded_file(file, self.temporal_resolution, self.spatial_resolution, self.aggregation)
             ds_list.append(ds)
 
         # 3.2 read local files
