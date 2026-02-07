@@ -5,36 +5,18 @@ import pandas as pd
 import xarray as xr
 
 from .query_executor import QueryExecutor
-from .utils.const import time_resolution_to_freq
+from .utils.const import DataRange, time_resolution_to_freq
 
 
 class GetRasterExecutor(QueryExecutor):
     def __init__(
         self,
-        variable: str,
-        start_datetime: str,
-        end_datetime: str,
-        min_lat: float,
-        max_lat: float,
-        min_lon: float,
-        max_lon: float,
-        temporal_resolution: str,  # e.g., "hour", "day", "month", "year"
-        spatial_resolution: float,  # e.g., 0.25, 0.5, 1.0
-        aggregation,  # e.g., "mean", "max", "min"
+        dr: DataRange,
         metadata=None,  # metadata file path
         log_info=None,
     ):
         super().__init__(
-            variable,
-            start_datetime,
-            end_datetime,
-            min_lat,
-            max_lat,
-            min_lon,
-            max_lon,
-            temporal_resolution,
-            spatial_resolution,
-            aggregation,
+            dr,
             metadata=metadata,
         )
         self.log_info = log_info if log_info is not None else []
@@ -47,18 +29,7 @@ class GetRasterExecutor(QueryExecutor):
         """
         Return: [local_files], [api_calls]
         """
-        df_overlap, leftover = self.metadata.query_get_overlap_and_leftover(
-            self.variable,
-            self.start_datetime,
-            self.end_datetime,
-            self.min_lat,
-            self.max_lat,
-            self.min_lon,
-            self.max_lon,
-            self.temporal_resolution,
-            self.spatial_resolution,
-            self.aggregation,
-        )
+        df_overlap, leftover = self.metadata.query_get_overlap_and_leftover(self.dr)
 
         local_files = df_overlap["file_path"].tolist()
         api_calls = []
