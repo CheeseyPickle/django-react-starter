@@ -54,10 +54,10 @@ class GetRasterExecutor(QueryExecutor):
             years = [str(i) for i in range(leftover_start_year, leftover_end_year + 1)]
             months = [str(i).zfill(2) for i in range(1, 13)]
             days = [str(i).zfill(2) for i in range(1, 32)]
-            if self.temporal_resolution == "month":
+            if self.dr.temporal_resolution == "month":
                 if leftover_start_year == leftover_end_year:
                     months = [str(i).zfill(2) for i in range(leftover_start_month, leftover_end_month + 1)]
-            if self.temporal_resolution == "day" or self.temporal_resolution == "hour":
+            if self.dr.temporal_resolution == "day" or self.dr.temporal_resolution == "hour":
                 if leftover_start_year == leftover_end_year:
                     months = [str(i).zfill(2) for i in range(leftover_start_month, leftover_end_month + 1)]
                     if leftover_start_month == leftover_end_month:
@@ -116,30 +116,30 @@ class GetRasterExecutor(QueryExecutor):
             # if "expver" in ds.coords:
             #     ds = ds.drop_vars("expver")
             ds = ds.sel(
-                valid_time=slice(self.start_datetime, self.end_datetime),
-                latitude=slice(self.max_lat, self.min_lat),
-                longitude=slice(self.min_lon, self.max_lon),
+                valid_time=slice(self.dr.start_datetime, self.dr.end_datetime),
+                latitude=slice(self.dr.max_lat, self.dr.min_lat),
+                longitude=slice(self.dr.min_lon, self.dr.max_lon),
             )
             # temporal resample
-            if self.temporal_resolution != "hour":
-                resampled = ds.resample(valid_time=time_resolution_to_freq(self.temporal_resolution))
-                if self.aggregation == "mean":
+            if self.dr.temporal_resolution != "hour":
+                resampled = ds.resample(valid_time=time_resolution_to_freq(self.dr.temporal_resolution))
+                if self.dr.aggregation == "mean":
                     ds = resampled.mean()
-                elif self.aggregation == "max":
+                elif self.dr.aggregation == "max":
                     ds = resampled.max()
-                elif self.aggregation == "min":
+                elif self.dr.aggregation == "min":
                     ds = resampled.min()
                 else:
                     raise ValueError("Invalid temporal_aggregation")
             # spatial resample
-            if self.spatial_resolution > 0.25:
-                c_f = int(self.spatial_resolution / 0.25)
+            if self.dr.spatial_resolution > 0.25:
+                c_f = int(self.dr.spatial_resolution / 0.25)
                 coarsened = ds.coarsen(latitude=c_f, longitude=c_f, boundary="trim")
-                if self.aggregation == "mean":
+                if self.dr.aggregation == "mean":
                     ds = coarsened.mean()
-                elif self.aggregation == "max":
+                elif self.dr.aggregation == "max":
                     ds = coarsened.max()
-                elif self.aggregation == "min":
+                elif self.dr.aggregation == "min":
                     ds = coarsened.min()
                 else:
                     raise ValueError("Invalid spatial_aggregation")
@@ -149,9 +149,9 @@ class GetRasterExecutor(QueryExecutor):
         # ds_list = []
         for file in file_list:
             ds = xr.open_dataset(file, engine="netcdf4").sel(
-                valid_time=slice(self.start_datetime, self.end_datetime),
-                latitude=slice(self.max_lat, self.min_lat),
-                longitude=slice(self.min_lon, self.max_lon),
+                valid_time=slice(self.dr.start_datetime, self.dr.end_datetime),
+                latitude=slice(self.dr.max_lat, self.dr.min_lat),
+                longitude=slice(self.dr.min_lon, self.dr.max_lon),
             )
             ds_list.append(ds)
 
