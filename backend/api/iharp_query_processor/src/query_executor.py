@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import xarray as xr
 
-from .metadata import Metadata
+from .metadata import init_metadata
 from .utils.const import long_short_name_dict, DataRange
 
 class QueryExecutor(ABC):
@@ -18,9 +18,9 @@ class QueryExecutor(ABC):
         # query internal variables
         self.variable_short_name = long_short_name_dict[dr.variable]
         if metadata:
-            self.metadata = Metadata(metadata)
+            init_metadata(metadata) # Move this to database initialization, once we do that
         else:
-            self.metadata = Metadata("/data/metadata.csv")
+            init_metadata("/data/metadata.csv")
 
     @abstractmethod
     def execute(self) -> xr.Dataset:

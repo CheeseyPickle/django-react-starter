@@ -4,6 +4,7 @@ import cdsapi
 import pandas as pd
 import xarray as xr
 
+from .metadata import query_get_overlap_and_leftover
 from .query_executor import QueryExecutor
 from .utils.const import DataRange, time_resolution_to_freq
 
@@ -29,7 +30,7 @@ class GetRasterExecutor(QueryExecutor):
         """
         Return: [local_files], [api_calls]
         """
-        df_overlap, leftover = self.metadata.query_get_overlap_and_leftover(self.dr)
+        df_overlap, leftover = query_get_overlap_and_leftover(self.dr)
 
         local_files = df_overlap["file_path"].tolist()
         api_calls = []
