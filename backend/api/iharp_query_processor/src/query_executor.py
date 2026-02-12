@@ -11,7 +11,7 @@ class QueryExecutor(ABC):
         metadata=None,  # metadata file path
     ):
         if dr.temporal_resolution == "hour" and dr.spatial_resolution == 0.25:
-            dr.aggregation = None
+            dr.aggregation = "none"
         # user query parameters
         self.dr = dr
 

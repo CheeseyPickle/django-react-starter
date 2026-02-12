@@ -30,7 +30,7 @@ class DataRange:
     max_lon: float
     temporal_resolution: str  # e.g., "hour", "day", "month", "year"
     spatial_resolution: float # e.g., 0.25, 0.5, 1.0
-    aggregation: str | None # e.g., "mean", "max", "min"
+    aggregation: str # e.g., "mean", "max", "min"
 
     @override
     def __copy__(self):

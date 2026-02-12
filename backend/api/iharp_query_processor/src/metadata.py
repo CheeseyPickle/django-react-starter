@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from .utils.const import get_lat_lon_range, time_resolution_to_freq
+from .utils.const import DataRange, get_lat_lon_range, time_resolution_to_freq
 
 
 def gen_empty_xarray(
@@ -65,39 +65,30 @@ class Metadata:
 
     def query_get_overlap_and_leftover(
         self,
-        variable,
-        start_datetime,
-        end_datetime,
-        min_lat,
-        max_lat,
-        min_lon,
-        max_lon,
-        temporal_resolution,
-        spatial_resolution,
-        aggregation,
+        dr: DataRange,
     ):
         df_overlap = self.df_meta[
-            (self.df_meta["variable"] == variable)
-            & (self.df_meta["min_lat"] <= max_lat)
-            & (self.df_meta["max_lat"] >= min_lat)
-            & (self.df_meta["min_lon"] <= max_lon)
-            & (self.df_meta["max_lon"] >= min_lon)
-            & (pd.to_datetime(self.df_meta["start_datetime"]) <= pd.to_datetime(end_datetime))
-            & (pd.to_datetime(self.df_meta["end_datetime"]) >= pd.to_datetime(start_datetime))
-            & (self.df_meta["temporal_resolution"] == temporal_resolution)
-            & (self.df_meta["spatial_resolution"] == spatial_resolution)
-            & (self.df_meta["aggregation"] == aggregation)
+            (self.df_meta["variable"] == dr.variable)
+            & (self.df_meta["min_lat"] <= dr.max_lat)
+            & (self.df_meta["max_lat"] >= dr.min_lat)
+            & (self.df_meta["min_lon"] <= dr.max_lon)
+            & (self.df_meta["max_lon"] >= dr.min_lon)
+            & (pd.to_datetime(self.df_meta["start_datetime"]) <= pd.to_datetime(dr.end_datetime))
+            & (pd.to_datetime(self.df_meta["end_datetime"]) >= pd.to_datetime(dr.start_datetime))
+            & (self.df_meta["temporal_resolution"] == dr.temporal_resolution)
+            & (self.df_meta["spatial_resolution"] == dr.spatial_resolution)
+            & (self.df_meta["aggregation"] == dr.aggregation)
         ]
 
         ds_query = gen_empty_xarray(
-            min_lat,
-            max_lat,
-            min_lon,
-            max_lon,
-            start_datetime,
-            end_datetime,
-            temporal_resolution,
-            spatial_resolution,
+            dr.min_lat,
+            dr.max_lat,
+            dr.min_lon,
+            dr.max_lon,
+            dr.start_datetime,
+            dr.end_datetime,
+            dr.temporal_resolution,
+            dr.spatial_resolution,
         )
 
         false_mask = xr.DataArray(
