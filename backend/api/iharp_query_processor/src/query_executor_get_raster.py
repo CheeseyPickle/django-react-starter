@@ -67,7 +67,7 @@ class GetRasterExecutor(QueryExecutor):
             dataset = "reanalysis-era5-single-levels"
             request = {
                 "product_type": ["reanalysis"],
-                "variable": [self.variable],
+                "variable": [self.dr.variable],
                 "year": years,
                 "month": months,
                 "day": days,
