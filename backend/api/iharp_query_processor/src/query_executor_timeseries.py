@@ -7,13 +7,11 @@ class TimeseriesExecutor(QueryExecutor):
         self,
         dr: DataRange,
         time_series_aggregation_method: str,  # e.g., "mean", "max", "min"
-        metadata=None,  # metadata file path
         log_info=None,
     ):
         dr.spatial_resolution = 0.25
         super().__init__(
             dr=dr,
-            metadata=metadata,
         )
         self.time_series_aggregation_method = time_series_aggregation_method
         self.log_info = log_info if log_info is not None else []
@@ -24,7 +22,6 @@ class TimeseriesExecutor(QueryExecutor):
         temp_dr.aggregation = self.time_series_aggregation_method
         get_raster_executor = GetRasterExecutor(
             dr=temp_dr,
-            metadata=self.metadata.f_path,
         )
         raster = get_raster_executor.execute()
 

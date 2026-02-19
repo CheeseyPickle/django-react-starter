@@ -13,12 +13,10 @@ class GetRasterExecutor(QueryExecutor):
     def __init__(
         self,
         dr: DataRange,
-        metadata=None,  # metadata file path
         log_info=None,
     ):
         super().__init__(
             dr,
-            metadata=metadata,
         )
         self.log_info = log_info if log_info is not None else []
 

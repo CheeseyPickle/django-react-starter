@@ -20,14 +20,12 @@ class HeatmapExecutor(QueryExecutor):
         self,
         dr: DataRange,
         heatmap_aggregation_method: str,  # e.g., "mean", "max", "min"
-        metadata=None,  # metadata file path
         log_info=None,
         range_info=None,
     ):
         dr.temporal_resolution = "hour"
         super().__init__(
             dr=dr,
-            metadata=metadata,
         )
         self.heatmap_aggregation_method = heatmap_aggregation_method
         self.log_info = log_info if log_info is not None else []
@@ -76,7 +74,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_year = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_year.append(get_raster_year.execute())
@@ -94,7 +91,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_month = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_month.append(get_raster_month.execute())
@@ -112,7 +108,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_day = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_day.append(get_raster_day.execute())
@@ -129,7 +124,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.temporal_resolution = "hour"
             get_raster_hour = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_hour.append(get_raster_hour.execute())
@@ -172,7 +166,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_year = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_year.append(get_raster_year.execute())
@@ -189,7 +182,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_month = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_month.append(get_raster_month.execute())
@@ -206,7 +198,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_day = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_day.append(get_raster_day.execute())
@@ -222,7 +213,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.temporal_resolution = "hour"
             get_raster_hour = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_hour.append(get_raster_hour.execute())
@@ -253,7 +243,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_year = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_year.append(get_raster_year.execute())
@@ -270,7 +259,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_month = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_month.append(get_raster_month.execute())
@@ -287,7 +275,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.aggregation = self.heatmap_aggregation_method
             get_raster_day = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_day.append(get_raster_day.execute())
@@ -303,7 +290,6 @@ class HeatmapExecutor(QueryExecutor):
             temp_dr.temporal_resolution = "hour"
             get_raster_hour = GetRasterExecutor(
                 dr=temp_dr,
-                metadata=self.metadata.f_path,
             )
 
             ds_hour.append(get_raster_hour.execute())

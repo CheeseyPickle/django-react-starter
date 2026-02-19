@@ -11,12 +11,10 @@ class FindAreaExecutor(QueryExecutor):
         heatmap_aggregation_method: str,  # e.g., "mean", "max", "min"
         filter_predicate: str,  # e.g., ">", "<", "==", "!=", ">=", "<="
         filter_value: float,
-        metadata=None,  # metadata file path
     ):
         dr.temporal_resolution = "hour"
         super().__init__(
             dr=dr,
-            metadata=metadata,
         )
         self.heatmap_aggregation_method = heatmap_aggregation_method
         self.filter_predicate = filter_predicate
@@ -29,7 +27,6 @@ class FindAreaExecutor(QueryExecutor):
         heatmap_executor = HeatmapExecutor(
             dr=self.dr,
             heatmap_aggregation_method=self.heatmap_aggregation_method,
-            metadata=self.metadata.f_path,
         )
         hm = heatmap_executor.execute()
         if self.filter_predicate == ">":
