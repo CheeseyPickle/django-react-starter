@@ -21,6 +21,7 @@ long_short_name_dict = {
 @dataclass
 class DataRange:
     """A class to represent a chunk of data, including variable, aggregation, and resolutions"""
+    source: str # Source of the data, e.g. "era5"
     variable: str
     start_datetime: str
     end_datetime: str
@@ -35,6 +36,7 @@ class DataRange:
     @override
     def __copy__(self):
         return DataRange(
+            source=self.source,
             variable=self.variable,
             start_datetime=self.start_datetime,
             end_datetime=self.end_datetime,
@@ -44,7 +46,8 @@ class DataRange:
             max_lon=self.max_lon,
             temporal_resolution=self.temporal_resolution,
             spatial_resolution=self.spatial_resolution,
-            aggregation=self.aggregation)
+            aggregation=self.aggregation,
+        )
 
 
 ds_raw = xr.Dataset()
