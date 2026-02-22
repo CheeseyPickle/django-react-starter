@@ -3,61 +3,38 @@ import xarray as xr
 
 from .query_executor import QueryExecutor
 from .query_executor_timeseries import TimeseriesExecutor
+from .utils.const import DataRange
 from .utils.get_whole_period import get_whole_period_between, get_last_date_of_month, time_array_to_range
 
 
 class FindTimeExecutor(QueryExecutor):
     def __init__(
         self,
-        variable: str,
-        start_datetime: str,
-        end_datetime: str,
-        min_lat: float,
-        max_lat: float,
-        min_lon: float,
-        max_lon: float,
-        temporal_resolution: str,  # e.g., "hour", "day", "month", "year"
-        aggregation,  # e.g., "mean", "max", "min"
+        dr: DataRange,
         time_series_aggregation_method: str,  # e.g., "mean", "max", "min"
         filter_predicate: str,  # e.g., ">", "<", "==", "!=", ">=", "<="
         filter_value: float,
-        metadata=None,  # metadata file path
     ):
+        dr.spatial_resolution = 0.25
         super().__init__(
-            variable=variable,
-            start_datetime=start_datetime,
-            end_datetime=end_datetime,
-            min_lat=min_lat,
-            max_lat=max_lat,
-            min_lon=min_lon,
-            max_lon=max_lon,
-            temporal_resolution=temporal_resolution,
-            spatial_resolution=0.25,
-            aggregation=aggregation,
-            metadata=metadata,
+            dr=dr,
         )
         self.time_series_aggregation_method = time_series_aggregation_method
         self.filter_predicate = filter_predicate
         self.filter_value = filter_value
 
     def execute(self):
-        if self.temporal_resolution == "hour" and self.filter_predicate != "!=":
+        if self.dr.temporal_resolution == "hour" and self.filter_predicate != "!=":
             return self._execute_pyramid_hour()
-        return self._execute_baseline(self.start_datetime, self.end_datetime)
+        return self._execute_baseline(self.dr.start_datetime, self.dr.end_datetime)
 
     def _execute_baseline(self, start_datetime, end_datetime):
+        temp_dr = self.dr.__copy__()
+        temp_dr.start_datetime = start_datetime
+        temp_dr.end_datetime = end_datetime
         timeseries_executor = TimeseriesExecutor(
-            variable=self.variable,
-            start_datetime=start_datetime,
-            end_datetime=end_datetime,
-            min_lat=self.min_lat,
-            max_lat=self.max_lat,
-            min_lon=self.min_lon,
-            max_lon=self.max_lon,
-            temporal_resolution=self.temporal_resolution,
-            aggregation=self.aggregation,
+            dr=temp_dr,
             time_series_aggregation_method=self.time_series_aggregation_method,
-            metadata=self.metadata.f_path,
         )
         ts = timeseries_executor.execute()
         if self.filter_predicate == ">":
@@ -87,8 +64,8 @@ class FindTimeExecutor(QueryExecutor):
             - find hour >= x: if year-min >= x, return True ; if year-max <  x, return False
             - find hour <= x: if year-min >  x, return False; if year-max <= x, return True
         """
-        years, months, days, hours = get_whole_period_between(self.start_datetime, self.end_datetime)
-        time_points = pd.date_range(start=self.start_datetime, end=self.end_datetime, freq="h")
+        years, months, days, hours = get_whole_period_between(self.dr.start_datetime, self.dr.end_datetime)
+        time_points = pd.date_range(start=self.dr.start_datetime, end=self.dr.end_datetime, freq="h")
         result = xr.Dataset(
             data_vars={self.variable_short_name: (["valid_time"], [None] * len(time_points))},
             coords=dict(valid_time=time_points),
@@ -220,31 +197,26 @@ class FindTimeExecutor(QueryExecutor):
     def _get_min_max_time_series(self, _range, temporal_res):
         total_start = _range[0][0]
         total_end = _range[-1][1]
+
+        temp_dr_min = self.dr.__copy__()
+        temp_dr_min.start_datetime = total_start
+        temp_dr_min.end_datetime = total_end
+        temp_dr_min.temporal_resolution = temporal_res
+        temp_dr_min.aggregation = "min"
+
+        temp_dr_max = self.dr.__copy__()
+        temp_dr_max.start_datetime = total_start
+        temp_dr_max.end_datetime = total_end
+        temp_dr_max.temporal_resolution = temporal_res
+        temp_dr_max.aggregation = "max"
+
         min_exec = TimeseriesExecutor(
-            variable=self.variable,
-            start_datetime=total_start,
-            end_datetime=total_end,
-            min_lat=self.min_lat,
-            max_lat=self.max_lat,
-            min_lon=self.min_lon,
-            max_lon=self.max_lon,
-            temporal_resolution=temporal_res,
-            aggregation="min",
+            dr=temp_dr_min,
             time_series_aggregation_method="min",
-            metadata=self.metadata.f_path,
         )
         max_exec = TimeseriesExecutor(
-            variable=self.variable,
-            start_datetime=total_start,
-            end_datetime=total_end,
-            min_lat=self.min_lat,
-            max_lat=self.max_lat,
-            min_lon=self.min_lon,
-            max_lon=self.max_lon,
-            temporal_resolution=temporal_res,
-            aggregation="max",
+            dr=temp_dr_max,
             time_series_aggregation_method="max",
-            metadata=self.metadata.f_path,
         )
         min_ts = min_exec.execute()
         max_ts = max_exec.execute()

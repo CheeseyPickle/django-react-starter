@@ -5,49 +5,23 @@ from .query_executor_get_raster import GetRasterExecutor
 class TimeseriesExecutor(QueryExecutor):
     def __init__(
         self,
-        variable: str,
-        start_datetime: str,
-        end_datetime: str,
-        min_lat: float,
-        max_lat: float,
-        min_lon: float,
-        max_lon: float,
-        temporal_resolution: str,  # e.g., "hour", "day", "month", "year"
-        aggregation,  # e.g., "mean", "max", "min"
+        dr: DataRange,
         time_series_aggregation_method: str,  # e.g., "mean", "max", "min"
-        metadata=None,  # metadata file path
         log_info=None,
     ):
+        dr.spatial_resolution = 0.25
         super().__init__(
-            variable=variable,
-            start_datetime=start_datetime,
-            end_datetime=end_datetime,
-            min_lat=min_lat,
-            max_lat=max_lat,
-            min_lon=min_lon,
-            max_lon=max_lon,
-            temporal_resolution=temporal_resolution,
-            spatial_resolution=0.25,
-            aggregation=aggregation,
-            metadata=metadata,
+            dr=dr,
         )
         self.time_series_aggregation_method = time_series_aggregation_method
         self.log_info = log_info if log_info is not None else []
 
     def execute(self):
         # print(f"[TimeseriesExecutor] Starting execution")
+        temp_dr = self.dr.__copy__()
+        temp_dr.aggregation = self.time_series_aggregation_method
         get_raster_executor = GetRasterExecutor(
-            variable=self.variable,
-            start_datetime=self.start_datetime,
-            end_datetime=self.end_datetime,
-            min_lat=self.min_lat,
-            max_lat=self.max_lat,
-            min_lon=self.min_lon,
-            max_lon=self.max_lon,
-            temporal_resolution=self.temporal_resolution,
-            spatial_resolution=0.25,
-            aggregation=self.time_series_aggregation_method,
-            metadata=self.metadata.f_path,
+            dr=temp_dr,
         )
         raster = get_raster_executor.execute()
 
