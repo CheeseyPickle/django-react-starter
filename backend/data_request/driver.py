@@ -1,53 +1,59 @@
 import datetime
+import traceback
 import cdsapi
 import tomllib
 
-# repository classes
-
-
-
-class RequestRemoteData():
-    def __init__(
-            self,
-            log_info=None,
-    ):
-        fpath:str
-        self.log_info = log_info if log_info is not None else []
+class RequestRemoteData:
+    def __init__(self, config_path: str):
+        self.config_path = config_path
+        self.log_info = {}
 
     def execute(self):
-        
-        with open(self.fpath, "rb") as f:
-            config = tomllib.load(f)
+        try:
+            with open(self.config_path, "rb") as f:
+                config = tomllib.load(f)
 
             dataset = config["dataset"]
 
             if dataset == "era5":
                 repo = ERA5Data(config)
 
-
             elif dataset == "carra":
                 repo = CARRAData(config)
-                
-            # else:
-            #     repo = None
-            #     file_list = []
-            #     p_out = f"Query includes data from {dataset} dataset that is not in local storage and downloading it is not currently supported."
+            
+            else: 
+                raise ValueError(f"Unsupported dataset: {dataset}")
 
-            file_list, p_out = repo.download_data()
+            file_list = repo.download_data()
 
             self.log_info = {
-                f"api: {p_out}"
+                "status": "success",
+                "dataset": dataset,
+                "files": file_list,
+                "message": f"Downloaded {len(file_list)} file(s)"
+            }
+
+            return {
+                "success": True,
+                "files": file_list,
+                "log": self.log_info
+            }
+
+        except Exception as e:
+            error_msg = traceback.format_exec()
+
+            self.log_info = {
+                "status": "error",
+                "message": str(e),
+                "traceback": error_msg
             }
 
         return file_list
 
 
-class ERA5Data():
-    def __init__(
-            self,
-            params,):
-        
-        dr=params
+class ERA5Data:
+    def __init__(self, params: dict):
+        self.params = params
 
     def _gen_download_file_name(self):
         dt = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -55,42 +61,41 @@ class ERA5Data():
 
     def gen_api_calls(self):
 
-        api_calls = []
-        dataset = "reanalysis-era5-single-levels"
         request = {
             "product_type": ["reanalysis"],
-            "variable": [self.dr.variable],
-            "year": [self.dr.years],
-            "month": [self.dr.months],
-            "day": [self.dr.days],
+            "variable": [self.params["variable"]],
+            "year": self.params["years"],
+            "month": self.params["months"],
+            "day": self.params["days"],
             "time": [f"{str(i).zfill(2)}:00" for i in range(0, 24)],
             "data_format": "netcdf",
             "download_format": "unarchived",
-            "area": [self.dr.max_lat, self.dr.min_lon, self.dr.min_lat, self.dr.max_lon],
+            "area": [
+                self.params["max_lat"],
+                self.params["min_lon"],
+                self.params["min_lat"],
+                self.params["max_lon"],
+            ],
         }
-        api_calls.append((dataset, request))
-
-        return api_calls
+        return [("reanalysis-era5-single-levels", request)]
 
     def download_data(self):
+
         api_calls = self.gen_api_calls()
-
-        download_file_list = []
         c = cdsapi.Client()
+        files = []
+
         for dataset, request in api_calls:
-            file_name = self._gen_download_file_name()
-            c.retrieve(dataset, request).download(file_name)
-            download_file_list.append(file_name)
+            fname = self._gen_download_file_name()
+            c.retrieve(dataset, request).download(fname)
+            files.append(fname)
         
-        return download_file_list
+        return files
 
 
-class CARRAData():
-    def __init__(
-            self,
-            params,):
-        
-        dr=params
+class CARRAData:
+    def __init__(self, params: dict):
+        self.params = params
 
     def _gen_download_file_name(self):
         dt = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -98,31 +103,28 @@ class CARRAData():
 
     def gen_api_calls(self):
 
-        api_calls = []
-        dataset = "reanalysis-carra-height-levels"
         request = {
-            "domain":self.dr.domain,
+            "domain":self.params["domain"],
             "product_type": ["reanalysis"],
-            "variable": [self.dr.variable],
-            "height_level": [self.dr.height_level],
-            "year": [self.dr.years],
-            "month": [self.dr.months],
-            "day": [self.dr.days],
+            "variable": [self.params["variable"]],
+            "height_level": [self.params["height_level"]],
+            "year": self.params["years"],
+            "month": self.params["months"],
+            "day": self.params["days"],
             "time": [f"{str(i).zfill(2)}:00" for i in range(0, 24)],
             "data_format": "netcdf",
         }
-        api_calls.append((dataset, request))
-
-        return api_calls
+        return [("reanalysis-carra-height-levels", request)]
 
     def download_data(self):
-        api_calls = self.gen_api_calls()
 
-        download_file_list = []
+        api_calls = self.gen_api_calls()
         c = cdsapi.Client()
+        files = []
+
         for dataset, request in api_calls:
-            file_name = self._gen_download_file_name()
-            c.retrieve(dataset, request).download(file_name)
-            download_file_list.append(file_name)
+            fname = self._gen_download_file_name()
+            c.retrieve(dataset, request).download(fname)
+            files.append(fname)
         
-        return download_file_list
+        return files
