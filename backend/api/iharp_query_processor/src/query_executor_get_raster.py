@@ -1,13 +1,20 @@
+import tomli_w
+from pathlib import Path
 from datetime import datetime
 import math
 import cdsapi
 import pandas as pd
 import xarray as xr
 
+from remote.driver import RequestRemoteData
 from .metadata import query_get_overlap_and_leftover
 from .query_executor import QueryExecutor
 from .utils.const import DataRange, time_resolution_to_freq
 
+# def write_toml_config(path, config_dict):
+
+#     with open(path, "wb") as f:
+#         tomli_w.dump(config_dict, f)
 
 class GetRasterExecutor(QueryExecutor):
     def __init__(
@@ -23,6 +30,57 @@ class GetRasterExecutor(QueryExecutor):
     def get_log(self):
         # print(f"[GetRasterExecutor.get_log] log_info: {self.log_info}")
         return self.log_info
+    
+    def _gen_config_dict(self):
+
+        df_overlap, leftover = query_get_overlap_and_leftover(self.dr)
+
+        local_files = df_overlap["file_path"].tolist()
+
+        # TODO: allow multiple leftovers
+        if leftover is not None:
+            leftover_min_lat = math.floor(leftover.latitude.min().item())
+            leftover_max_lat = math.ceil(leftover.latitude.max().item())
+            leftover_min_lon = math.floor(leftover.longitude.min().item())
+            leftover_max_lon = math.ceil(leftover.longitude.max().item())
+            leftover_start_datetime = pd.Timestamp(leftover.time.min().item())
+            leftover_end_datetime = pd.Timestamp(leftover.time.max().item())
+            leftover_start_year, leftover_start_month, leftover_start_day = (
+                leftover_start_datetime.year,
+                leftover_start_datetime.month,
+                leftover_start_datetime.day,
+            )
+            leftover_end_year, leftover_end_month, leftover_end_day = (
+                leftover_end_datetime.year,
+                leftover_end_datetime.month,
+                leftover_end_datetime.day,
+            )
+
+            years = [str(i) for i in range(leftover_start_year, leftover_end_year + 1)]
+            months = [str(i).zfill(2) for i in range(1, 13)]
+            days = [str(i).zfill(2) for i in range(1, 32)]
+            if self.dr.temporal_resolution == "month":
+                if leftover_start_year == leftover_end_year:
+                    months = [str(i).zfill(2) for i in range(leftover_start_month, leftover_end_month + 1)]
+            if self.dr.temporal_resolution == "day" or self.dr.temporal_resolution == "hour":
+                if leftover_start_year == leftover_end_year:
+                    months = [str(i).zfill(2) for i in range(leftover_start_month, leftover_end_month + 1)]
+                    if leftover_start_month == leftover_end_month:
+                        days = [str(i).zfill(2) for i in range(leftover_start_day, leftover_end_day + 1)]
+
+            config = {
+                "dataset": "carra",     # TODO: add dataset variable to dr
+                "variable": self.dr.variable,
+                "years": years,
+                "months": months,
+                "days": days,
+                "min_lat": leftover_min_lat,
+                "max_lat": leftover_max_lat,
+                "min_lon": leftover_min_lon,
+                "max_lon": leftover_max_lon,
+            }
+
+        return local_files, config
 
     def _check_metadata(self):
         """
@@ -62,14 +120,6 @@ class GetRasterExecutor(QueryExecutor):
                     if leftover_start_month == leftover_end_month:
                         days = [str(i).zfill(2) for i in range(leftover_start_day, leftover_end_day + 1)]
 
-
-            """
-            TODO: 'leftover' should be a list of multiple current leftover DataArrays
-            TODO: for each leftover DataArray, we should initialize an instance of the
-                    remote data request driver that assumes the input is one continuous
-                    time interval and region
-            """
-
             dataset = "reanalysis-era5-single-levels"
             request = {
                 "product_type": ["reanalysis"],
@@ -93,29 +143,28 @@ class GetRasterExecutor(QueryExecutor):
         return f"download_{dt}.nc"
 
     def execute(self):
-        # 1. check metadata
-        file_list, api = self._check_metadata()
-        # print(f"[GetRasterExecutor] local files: {file_list}, api calls: {api}")
-
-        self.log_info = {
-            "local": file_list,
-            "api": [str(api_call) for api_call in api]
-        }
-        # self.log_info.append(cur_log_info)
+        # 1. check metadata for local data and get needed data
+        local_files, config_dict = self._gen_config_dict()
 
         # 2. call apis
-        download_file_list = []
-        if api:
-            c = cdsapi.Client()
-            for dataset, request in api:
-                file_name = self._gen_download_file_name()
-                c.retrieve(dataset, request).download(file_name)
-                download_file_list.append(file_name)
+
+        # TODO: make toml method an option to pass dict to driver.py
+        # write_toml_config("request.toml", config_dict)
+        # driver = RequestRemoteData.from_toml("request.toml")
+
+        driver = RequestRemoteData.from_dict(config_dict)
+        result = driver.execute()
+        
+        if result.success:
+            downloaded_files = result.files
+        else:
+            raise RuntimeError(result.error)
 
         # 3. execute query
         ds_list = []
+
         # 3.1 read downloaded files
-        for file in download_file_list:
+        for file in downloaded_files:
             ds = xr.open_dataset(file, engine="netcdf4")
             # drop unused variables
             # if "number" in ds.coords:
@@ -153,8 +202,9 @@ class GetRasterExecutor(QueryExecutor):
             ds_list.append(ds)
 
         # 3.2 read local files
+
         # ds_list = []
-        for file in file_list:
+        for file in local_files:
             ds = xr.open_dataset(file, engine="netcdf4").sel(
                 valid_time=slice(self.dr.start_datetime, self.dr.end_datetime),
                 latitude=slice(self.dr.max_lat, self.dr.min_lat),
@@ -163,6 +213,7 @@ class GetRasterExecutor(QueryExecutor):
             ds_list.append(ds)
 
         # 3.3 assemble result
+
         # ds = xr.concat([i.chunk() for i in ds_list], dim="valid_time", join='outer')
         # compat="override" is a temporal walkaround as pre-aggregation value conflicts with downloaded data
         # future solution: use new encoding when write pre-aggregated data
