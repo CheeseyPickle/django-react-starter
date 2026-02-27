@@ -37,7 +37,7 @@ This will give you a local host link to view the current frontend.
 
 **Quit the server with CONTROL-C**
 
-## Build
+<!-- ## Build
 ``` bash
 npm run build
 
@@ -58,7 +58,37 @@ pgrep -a python
 62932 python manage.py runserver 0.0.0.0:8000
 
 kill 62932
-```
+``` -->
 
 ## TODO
-Deny request with large API calls
+1. Deny request with large API calls
+
+2. Fix the warning that occurs when running `python manage.py makemigrations`:
+
+        System check identified some issues:
+
+        WARNINGS:
+        ?: (staticfiles.W004) The directory '~/django-react-starter/backend/frontend/dist/assets' in the STATICFILES_DIRS setting does not exist.
+        Migrations for 'api':
+        api/migrations/0001_initial.py
+            + Create model FindAreaModel
+            + Create model FindTimeModel
+            + Create model GetRasterQueryModel
+            + Create model HeatmapQueryModel
+            + Create model TimeseriesQueryModel
+
+3. Fix the warning that occurs when running `npm install --legacy-peer-deps`:
+
+        Redundant dependency in your project.
+
+        added 599 packages, and audited 600 packages in 37s
+
+        129 packages are looking for funding
+        run `npm fund` for details
+
+        12 vulnerabilities (2 low, 7 moderate, 3 high)
+
+        To address all issues, run:
+        npm audit fix
+
+        Run `npm audit` for details.
