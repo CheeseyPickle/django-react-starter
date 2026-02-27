@@ -62,6 +62,14 @@ class GetRasterExecutor(QueryExecutor):
                     if leftover_start_month == leftover_end_month:
                         days = [str(i).zfill(2) for i in range(leftover_start_day, leftover_end_day + 1)]
 
+
+            """
+            TODO: 'leftover' should be a list of multiple current leftover DataArrays
+            TODO: for each leftover DataArray, we should initialize an instance of the
+                    remote data request driver that assumes the input is one continuous
+                    time interval and region
+            """
+
             dataset = "reanalysis-era5-single-levels"
             request = {
                 "product_type": ["reanalysis"],
