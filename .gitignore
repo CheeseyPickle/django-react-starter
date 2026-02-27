@@ -4,7 +4,10 @@ __pycache__/
 *$py.class
 
 # node modules
-
+node_modules/
+dist/
+.env
+.env.local
 
 # C extensions
 *.so
@@ -168,4 +171,4 @@ frontend/node_modules/
 backend/api/migrations/
 aweek.nc
 
-/.ideanode_modules/
+/.idea
