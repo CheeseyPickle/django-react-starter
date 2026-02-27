@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# node modules
+
+
 # C extensions
 *.so
 
@@ -165,4 +168,4 @@ frontend/node_modules/
 backend/api/migrations/
 aweek.nc
 
-/.idea
+/.ideanode_modules/
