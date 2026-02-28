@@ -1,7 +1,7 @@
 import numpy as np
 import xarray as xr
 from dataclasses import dataclass
-from typing import override
+from typing import override, Optional
 
 long_short_name_dict = {
     "2m_temperature": "t2m",
@@ -21,6 +21,7 @@ long_short_name_dict = {
 @dataclass
 class DataRange:
     """A class to represent a chunk of data, including variable, aggregation, and resolutions"""
+    dataset: str
     variable: str
     start_datetime: str
     end_datetime: str
@@ -32,9 +33,14 @@ class DataRange:
     spatial_resolution: float # e.g., 0.25, 0.5, 1.0
     aggregation: str # e.g., "mean", "max", "min"
 
+    # Optional fields
+    domain: Optional[str] = None
+    height_level: Optional[str] = None
+
     @override
     def __copy__(self):
         return DataRange(
+            dataset=self.dataset,
             variable=self.variable,
             start_datetime=self.start_datetime,
             end_datetime=self.end_datetime,

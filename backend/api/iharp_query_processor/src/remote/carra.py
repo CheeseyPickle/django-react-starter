@@ -2,7 +2,7 @@ import datetime
 import cdsapi
 
 from typing import List
-from .base import RemoteRepository
+from src.remote.base import RemoteRepository
 
 class CARRARepository(RemoteRepository):
 
@@ -33,6 +33,12 @@ class CARRARepository(RemoteRepository):
         }
     
     def download(self) ->List[str]:
+
+        print("\n===== Repository.download() =====")
+        print("Dataset:", self.DATASET)
+        print("Request:")
+        print(request)
+        print("Output file:", fname)
 
         client = cdsapi.Client()
         request = self._build_request()

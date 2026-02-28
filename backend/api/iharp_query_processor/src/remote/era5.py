@@ -2,7 +2,7 @@ import datetime
 import cdsapi
 
 from typing import List
-from .base import RemoteRepository
+from src.remote.base import RemoteRepository
 
 class ERA5Repository(RemoteRepository):
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
-from .models import RemoteRequestConfig
+from src.remote.models import RemoteRequestConfig
 
 class RemoteRepository(ABC):
 

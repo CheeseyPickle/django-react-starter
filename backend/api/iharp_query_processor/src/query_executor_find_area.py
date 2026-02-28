@@ -1,7 +1,7 @@
-from .query_executor import QueryExecutor
-from .query_executor_heatmap import HeatmapExecutor
+from src.query_executor import QueryExecutor
+from src.query_executor_heatmap import HeatmapExecutor
 
-from .utils.const import DataRange
+from src.utils.const import DataRange
 
 
 class FindAreaExecutor(QueryExecutor):

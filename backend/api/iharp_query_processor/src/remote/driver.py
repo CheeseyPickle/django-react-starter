@@ -2,9 +2,9 @@ import traceback
 import tomllib
 
 from typing import Dict
-from .models import RemoteRequestConfig, RemoteDownloadResult
-from .era5 import ERA5Repository
-from .carra import CARRARepository
+from src.remote.models import RemoteRequestConfig, RemoteDownloadResult
+from src.remote.era5 import ERA5Repository
+from src.remote.carra import CARRARepository
 
 class RequestRemoteData:
     def __init__(self, config: RemoteRequestConfig):
@@ -43,6 +43,13 @@ class RequestRemoteData:
 
         try:
             repo = self._get_repository()
+
+            print("\n===== RequestRemoteData.execute() =====")
+            print("Config:")
+            print(self.config)
+            print("Repository selected:", type(repo).__name__)
+
+
             files = repo.download()
 
             return RemoteDownloadResult(

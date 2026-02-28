@@ -1,5 +1,5 @@
-from .query_executor import *
-from .query_executor_get_raster import GetRasterExecutor
+from src.query_executor import *
+from src.query_executor_get_raster import GetRasterExecutor
 
 
 class TimeseriesExecutor(QueryExecutor):
@@ -18,6 +18,10 @@ class TimeseriesExecutor(QueryExecutor):
 
     def execute(self):
         # print(f"[TimeseriesExecutor] Starting execution")
+        print("\n===== TimeseriesExecutor.execute() =====")
+        print("DataRange:", self.dr)
+        print("Aggregation:", self.time_series_aggregation_method)
+
         temp_dr = self.dr.__copy__()
         temp_dr.aggregation = self.time_series_aggregation_method
         get_raster_executor = GetRasterExecutor(
