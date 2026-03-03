@@ -59,9 +59,6 @@ def mock_query_get_overlap_and_leftover(dr):
 
     return df_overlap, leftover
 
-# injecting mock function for testing
-raster_module.query_get_overlap_and_leftover = mock_query_get_overlap_and_leftover
-
 def fake_download(self):
 
     print("FAKE DOWNLOAD CALLED")
@@ -87,31 +84,42 @@ def fake_download(self):
 
     return [downloaded_file]
 
-# injecting mock function for testing
-ERA5Repository.download = fake_download
-
 dr = DataRange(
-    dataset="era5",
-    variable="2m_temperature",
+    dataset="carra",
+    variable="temperature",
 
-    start_datetime=datetime(2024,1,1),
-    end_datetime=datetime(2024,1,2),
+    start_datetime=datetime(2020,1,1),
+    end_datetime=datetime(2021,1,1),
 
-    min_lat=40,
-    max_lat=45,
-    min_lon=-110,
-    max_lon=-100,
+    min_lat=65,
+    max_lat=85,
+    min_lon=15,
+    max_lon=70,
 
     temporal_resolution="hour",
     spatial_resolution=0.25,
     aggregation="mean",
 
-    domain=None,
-    height_level=None,
+    domain="east_domain",
+    height_level="15_m",
 )
 
 print("\n===== TEST DATARANGE =====")
 print(dr)
+
+
+### CALL
+
+download = True
+
+
+# injecting mock function for testing
+raster_module.query_get_overlap_and_leftover = mock_query_get_overlap_and_leftover
+
+
+if not download:
+    # injecting mock function for testing
+    ERA5Repository.download = fake_download
 
 executor = TimeseriesExecutor(
     dr=dr,

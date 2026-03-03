@@ -22,17 +22,21 @@ class CARRARepository(RemoteRepository):
 
         return {
             "domain": cfg.domain,
-            "product_type": ["reanalysis"],
+            "product_type": ["analysis"],
             "variable": [cfg.variable],
             "height_level": [cfg.height_level],
             "year": cfg.years,
             "month": cfg.months,
             "day": cfg.days,
-            "time": [f"{i:02d}" for i in range(24)],
+            "time": ["00:00", "03:00", "06:00","09:00", "12:00", "15:00","18:00", "21:00"],
             "data_format": "netcdf",
         }
     
     def download(self) ->List[str]:
+
+        client = cdsapi.Client()
+        request = self._build_request()
+        fname = self._gen_filename()
 
         print("\n===== Repository.download() =====")
         print("Dataset:", self.DATASET)
@@ -40,9 +44,6 @@ class CARRARepository(RemoteRepository):
         print(request)
         print("Output file:", fname)
 
-        client = cdsapi.Client()
-        request = self._build_request()
-        fname = self._gen_filename()
         client.retrieve(self.DATASET, request).download(fname)
 
         return[fname]

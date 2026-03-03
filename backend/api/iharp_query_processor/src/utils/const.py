@@ -16,6 +16,7 @@ long_short_name_dict = {
     "ice_temperature_layer_2": "istl2",
     "ice_temperature_layer_3": "istl3",
     "ice_temperature_layer_4": "istl4",
+    "temperature": "temperature",
 }
 
 @dataclass
@@ -50,7 +51,9 @@ class DataRange:
             max_lon=self.max_lon,
             temporal_resolution=self.temporal_resolution,
             spatial_resolution=self.spatial_resolution,
-            aggregation=self.aggregation)
+            aggregation=self.aggregation,
+            domain=self.domain,
+            height_level=self.height_level)
 
 
 ds_raw = xr.Dataset()

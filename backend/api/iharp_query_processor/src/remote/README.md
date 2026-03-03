@@ -36,17 +36,21 @@
 
 2. Register the dataset in the driver (`driver.py`) by 
 
-    * adding `from .newdataset import NewDatasetRepository` to the imports 
+    * adding `from src.remote.newdataset import NewDatasetRepository` to the imports 
     * the following code to the `_get_repository` function:
 
             if dataset == "newdataset":
                 return NewDataset(self.config)
 
-3. Add any additional variable inputs this dataset needs to the `DataRange` class, e.g.,
+3. Add any additional variable inputs this dataset needs to the `DataRange` class in `/src/utils/const.py`, e.g.,
 
             <new input name> : Optional[<input type>] = None
+    
+    and as a parameter in the `long_short_name_dict`
 
-    Add the additional variables to the `request_params` dictionary in the function `_data_files_for_query()` in `query_executor_get_raster.py`.
+            <new input name> : <new input name or short form used by remote repository>
+
+4. Add the additional variables to the `request_params` dictionary in the function `_data_files_for_query()` in `query_executor_get_raster.py`.
 
             if self.dr.<new input name> is not None:
                 request_params["<new input name>"] = self.dr.<new input name>

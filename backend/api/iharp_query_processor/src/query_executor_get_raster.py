@@ -80,8 +80,6 @@ class GetRasterExecutor(QueryExecutor):
 
             request_params = {
                 "dataset": self.dr.dataset,
-                "domain": "east",
-                "height_level": ["15m"],
                 "variable": self.dr.variable,
                 "years": years,
                 "months": months,
@@ -237,6 +235,7 @@ class GetRasterExecutor(QueryExecutor):
                 
                 with xr.open_dataset(file, engine="netcdf4") as ds:
                     
+                    # TODO: process dataset to keep in storage (create index) / send data to be processed later
                     ds = self._process_dataset(ds)
 
                     ds_list.append(ds)
