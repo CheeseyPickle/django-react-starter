@@ -65,7 +65,7 @@ kill 62932
 
 2. Fix the warning that occurs when running `python manage.py makemigrations`:
 
-        System check identified some issues:
+        <!-- System check identified some issues:
 
         WARNINGS:
         ?: (staticfiles.W004) The directory '~/django-react-starter/backend/frontend/dist/assets' in the STATICFILES_DIRS setting does not exist.
@@ -75,11 +75,11 @@ kill 62932
             + Create model FindTimeModel
             + Create model GetRasterQueryModel
             + Create model HeatmapQueryModel
-            + Create model TimeseriesQueryModel
+            + Create model TimeseriesQueryModel -->
 
 3. Fix the warning that occurs when running `npm install --legacy-peer-deps`:
 
-        Redundant dependency in your project.
+        <!-- Redundant dependency in your project.
 
         added 599 packages, and audited 600 packages in 37s
 
@@ -91,4 +91,4 @@ kill 62932
         To address all issues, run:
         npm audit fix
 
-        Run `npm audit` for details.
+        Run `npm audit` for details. -->
