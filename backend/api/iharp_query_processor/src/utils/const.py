@@ -1,7 +1,8 @@
 import numpy as np
 import xarray as xr
 from dataclasses import dataclass
-from typing import override, Optional
+from typing import override, Optional, List
+from numpy import dtype, nan
 
 long_short_name_dict = {
     "2m_temperature": "t2m",
@@ -17,6 +18,16 @@ long_short_name_dict = {
     "ice_temperature_layer_3": "istl3",
     "ice_temperature_layer_4": "istl4",
     "temperature": "temperature",
+    "pressure": "pressure",
+    "relative_humidity":"relative_humidity",
+    "specific_cloud_ice_water_content":"specific_cloud_ice_water_content",
+    "specific_cloud_liquid_water_content":"specific_cloud_liquid_water_content",
+    "wind_direction":"wind_direction",
+    "wind_speed":"wind_speed",
+}
+
+encodings = {
+    "era5": {"dtype": dtype("float32"), "zlib": True, "_FillValue": np.float32(nan), "complevel": 1}
 }
 
 @dataclass
@@ -55,15 +66,32 @@ class DataRange:
             domain=self.domain,
             height_level=self.height_level)
 
+# TODO: can we change np.arange to params for it so we only have one np.arange?
+dat_range_and_res = {
+    "era5": {   
+                "lat":np.arange(-90,90.1,0.25),
+                "lon":np.arange(-180,180.1,0.25)},
 
-ds_raw = xr.Dataset()
-ds_raw["latitude"] = np.arange(-90, 90.1, 0.25)
-ds_raw["longitude"] = np.arange(-180, 180.1, 0.25)
-ds_05 = ds_raw.coarsen(latitude=2, longitude=2, boundary="trim").max()
-ds_10 = ds_raw.coarsen(latitude=4, longitude=4, boundary="trim").max()
+    # TODO: figure out carra ranges for lat/lon for get_lat_lon_range function to use
+    #           save in .npz file, then load in with dims=np.load(file.npz) and then lat = dims['lat'] etc.
+    "carra": {
+                "lat":np.arange(),
+                "lon": np.arange()},
+}
 
+# TODO: NEED TO REWRITE FOR DIFFERENT DATASETS
+def make_empty_datasets(dataset):
+    ds_raw = xr.Dataset()
 
-def get_lat_lon_range(spatial_resolution):
+    ds_raw["latitude"] = dat_range_and_res[dataset]["lat"]
+    ds_raw["longitude"] = dat_range_and_res[dataset]["lon"]
+    ds_05 = ds_raw.coarsen(latitude=2, longitude=2, boundary="trim").max()
+    ds_10 = ds_raw.coarsen(latitude=4, longitude=4, boundary="trim").max()
+
+    return ds_raw, ds_05, ds_10
+
+def get_lat_lon_range(spatial_resolution, dataset):
+    ds_raw, ds_05, ds_10 = make_empty_datasets(dataset)
     if spatial_resolution == 0.25:
         lat_range = ds_raw.latitude.values
         lon_range = ds_raw.longitude.values

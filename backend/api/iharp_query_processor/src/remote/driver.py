@@ -47,10 +47,10 @@ class RequestRemoteData:
             
             repo = self._get_repository()
 
-            print("\n===== RequestRemoteData.execute() =====")
-            print("Config:")
-            print(self.config)
-            print("Repository selected:", type(repo).__name__)
+            # print("\n===== RequestRemoteData.execute() =====")
+            # print("Config:")
+            # print(self.config)
+            # print("Repository selected:", type(repo).__name__)
 
             # TODO: decide where downloaded files will go
             files = repo.download()
