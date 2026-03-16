@@ -2,7 +2,7 @@
 from pathlib import Path
 from datetime import datetime
 import math
-import cdsapi
+import time
 import pandas as pd
 import xarray as xr
 
@@ -10,6 +10,7 @@ from src.remote.driver import RequestRemoteData
 from src.metadata import query_get_overlap_and_leftover
 from src.query_executor import QueryExecutor
 from src.utils.const import DataRange, time_resolution_to_freq
+from src.query_monitor import log_query
 
 # def write_toml_config(path, config_dict):
 
@@ -206,11 +207,7 @@ class GetRasterExecutor(QueryExecutor):
         for file in local_files:
 
             with xr.open_dataset(file, engine="netcdf4") as ds:
-                ds = ds.sel(
-                valid_time=slice(self.dr.start_datetime, self.dr.end_datetime),
-                latitude=slice(self.dr.max_lat, self.dr.min_lat),
-                longitude=slice(self.dr.min_lon, self.dr.max_lon),
-                )
+                ds = self._process_dataset(ds)
 
                 ds_list.append(ds)
             log_query(self.dr, file, time.time())
