@@ -213,6 +213,7 @@ class GetRasterExecutor(QueryExecutor):
                 )
 
                 ds_list.append(ds)
+            log_query(self.dr, file, time.time())
 
         # 3. if local data cannot answer query, call APIs to download needed data
         if params:
@@ -243,6 +244,7 @@ class GetRasterExecutor(QueryExecutor):
                     ds = self._process_dataset(ds)
 
                     ds_list.append(ds)
+                log_query(self.dr, file, time.time())
 
         if not ds_list:
             raise RuntimeError("No data found locally or remotely")
