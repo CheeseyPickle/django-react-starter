@@ -85,10 +85,20 @@ def _resolutions_to_precision_level(temporal_resolution: str, spatial_resolution
     else:
         return 1
 
-# Adds metadata for a given DataRange up to a precision level
-# Files in list should be ordered from least to most precise
+# Adds metadata for a given DataRange
 def add_metadata(dr: DataRange, file: str):
-    pass
+    precision = _resolutions_to_precision_level(dr.temporal_resolution, dr.spatial_resolution)
+    _df_meta = pd.concat(_df_meta, pd.DataFrame({
+        "variable": dr.variable, 
+        "min_lat": dr.min_lat,
+        "max_lat": dr.max_lat,
+        "min_lon": dr.min_lon,
+        "max_lon": dr.max_lon,
+        "start_datetime": dr.start_datetime,
+        "end_datetime": dr.end_datetime,
+        "precision_level": precision,
+        "aggregation":dr.aggregation
+        }))
 
 # Removes metadata down to and including a given DataRange
 def remove_metadata(dr: DataRange):
